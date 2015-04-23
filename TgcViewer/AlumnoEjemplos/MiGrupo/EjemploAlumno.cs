@@ -55,6 +55,7 @@ namespace AlumnoEjemplos.MiGrupo
             //Carpeta de archivos Media del alumno
             string alumnoMediaFolder = GuiController.Instance.AlumnoEjemplosMediaDir;
 
+            //Ramiro estuvo aquí!
 
             ///////////////USER VARS//////////////////
 
