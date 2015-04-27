@@ -95,66 +95,22 @@ namespace AlumnoEjemplos.MiGrupo
         {
             {
                 Microsoft.DirectX.Direct3D.Device d3dDevice = GuiController.Instance.D3dDevice;
-                /*
 
-                //Procesamos input de teclado para mover el objeto principal en el plano XZ
-                TgcD3dInput input = GuiController.Instance.D3dInput;
-                
-                if (input.keyDown(Key.Left) || input.keyDown(Key.A))
-                {
-                    mainMesh.rotateY(elapsedTime * -(velocidadActual / 300));
-                    
-                }
-                else if (input.keyDown(Key.Right) || input.keyDown(Key.D))
-                {
-                    mainMesh.rotateY(elapsedTime * (velocidadActual / 300));
-                    
-                }
-                if (input.keyDown(Key.Up) || input.keyDown(Key.W))
-                {
-                    velocidadActual = velocidadActual + 200 * elapsedTime;
-
-                }
-                /*else if (input.keyDown(Key.Down) || input.keyDown(Key.S))
-                {
-                    velocidadActual = velocidadActual - 1;
-               
-                }*/
-                /*
-               if (velocidadActual > 0 && !input.keyDown(Key.Up))
-                    velocidadActual -= 400 * elapsedTime;
-                if (velocidadActual > 0 && input.keyDown(Key.Down))
-                    velocidadActual -= 800 * elapsedTime;
-                if (velocidadActual <= 0 && velocidadActual >= -500f && input.keyDown(Key.Down))
-                    velocidadActual -= 100f * elapsedTime;
-                if (velocidadActual < 0 && !input.keyDown(Key.Down))
-                    velocidadActual += 100f * elapsedTime;
-                if (velocidadActual > 2000)
-                    velocidadActual = 2000;
-                //  if (velocidadActual < -500f)
-                //    velocidadActual = -500f*elapsedTime;
-
-                mainMesh.moveOrientedY(-velocidadActual * elapsedTime);
-
-                //Aplicar movimiento
-                /*
-                movement *= MOVEMENT_SPEED * elapsedTime;
-                mainMesh.move(movement);
-                */
-                //Hacer que la cámara en 3ra persona se ajuste a la nueva posición del objeto
                 auto.elapsedTime = elapsedTime;
+
                 jugador.jugar();
+
                 mainMesh.Rotation = new Vector3(0f, auto.rotacion, 0f);
                 
                 mainMesh.moveOrientedY(-auto.velocidad*elapsedTime);
-
-<<<<<<< HEAD
+                
                 GuiController.Instance.ThirdPersonCamera.Target = mainMesh.Position;
                 
                 while (prevCameraRotation > 360)
                 {
                     prevCameraRotation-=-360;
                 }
+                
                 GuiController.Instance.ThirdPersonCamera.RotationY +=  5*(mainMesh.Rotation.Y - prevCameraRotation) * elapsedTime;
                 prevCameraRotation = GuiController.Instance.ThirdPersonCamera.RotationY;
 
@@ -163,54 +119,7 @@ namespace AlumnoEjemplos.MiGrupo
                 mainMesh.render();
                 box.render();
             }
-=======
-            //Procesamos input de teclado para mover el objeto principal en el plano XZ
-            TgcD3dInput input = GuiController.Instance.D3dInput;
-            Vector3 movement = new Vector3(0, 0, 0);
 
-            if (input.keyDown(Key.Left) || input.keyDown(Key.A))
-            {
-                mainMesh.rotateY(-(velocidadActual / 500) * elapsedTime);
-            }
-            else if (input.keyDown(Key.Right) || input.keyDown(Key.D))
-            {
-                mainMesh.rotateY((velocidadActual / 500) * elapsedTime);
-            }
-            if (input.keyDown(Key.Up) || input.keyDown(Key.W))
-            {
-                velocidadActual = velocidadActual + (500 * elapsedTime);
-            }
-            else if (input.keyDown(Key.L)) //L marcha atrás
-            {
-                velocidadActual = velocidadActual - (200 * elapsedTime);
-            }
-
-            if (velocidadActual > 0 && !input.keyDown(Key.Up) && !(input.keyDown(Key.W)))
-                velocidadActual -= (1000f * elapsedTime);
-            if (velocidadActual > 0 && (input.keyDown(Key.Down) || (input.keyDown(Key.S)))) //Para frenar en movimiento rápidamente
-                velocidadActual -= (2000f * elapsedTime);
-            if (velocidadActual < 0 && !input.keyDown(Key.Down) && !input.keyDown(Key.L) && !(input.keyDown(Key.S)))
-                velocidadActual += (200f * elapsedTime);
-            if (velocidadActual > 2000f)
-                velocidadActual = 2000f;
-            if (velocidadActual < -500f)
-                velocidadActual = -500f;
-
-         mainMesh.moveOrientedY(-velocidadActual * elapsedTime);
-         //Aplicar movimiento
-         /*
-         movement *= MOVEMENT_SPEED * elapsedTime;
-         mainMesh.move(movement);
-         */
-            //Hacer que la cámara en 3ra persona se ajuste a la nueva posición del objeto
-            GuiController.Instance.ThirdPersonCamera.Target = mainMesh.Position;
-
-
-            //Dibujar objeto principal
-            //Siempre primero hacer todos los cálculos de lógica e input y luego al final dibujar todo (ciclo update-render)
-            mainMesh.render();
-            box.render();
->>>>>>> 83c51531d468cc1af7e4ef57b835f6e44bbbc642
         }
          
         public override void close()
