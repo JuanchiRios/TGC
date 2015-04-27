@@ -19,10 +19,12 @@ namespace AlumnoEjemplos.MiGrupo
     /// </summary>
     public class ProbandoMovAuto : TgcExample
     {
-        const float MOVEMENT_SPEED = 10f;
-        float velocidadActual = 0;
         TgcMesh mainMesh;
         TgcBox box;
+        float prevCameraRotation=90;
+        Auto auto;
+        Jugador jugador;
+
 
         public override string getCategory()
         {
@@ -53,11 +55,12 @@ namespace AlumnoEjemplos.MiGrupo
             //Podemos acceder al path de la carpeta "Media" utilizando la variable "GuiController.Instance.ExamplesMediaDir".
             //Esto evita que tengamos que hardcodear el path de instalación del framework.
 
-            TgcTexture texture = TgcTexture.createTexture(GuiController.Instance.ExamplesMediaDir + "MeshCreator\\Textures\\Suelo\\adoquin2.jpg");
+            TgcTexture texture = TgcTexture.createTexture(GuiController.Instance.ExamplesMediaDir + "MeshCreator\\Textures\\Suelo\\pistaCarreras.png");
+            
 
             //Creamos una caja 3D de color rojo, ubicada en el origen y lado 10
             Vector3 center = new Vector3(0, 0, 0);
-            Vector3 size = new Vector3(3000, 3, 3000);
+            Vector3 size = new Vector3(16000, 3, 7660);
             box = TgcBox.fromSize(center, size, texture);
 
 
@@ -66,73 +69,101 @@ namespace AlumnoEjemplos.MiGrupo
 
             //Luego cargamos otro modelo aparte que va a hacer el objeto que controlamos con el teclado
             TgcScene scene2 = loader.loadSceneFromFile(GuiController.Instance.ExamplesMediaDir + "MeshCreator\\Meshes\\Vehiculos\\Hummer\\Hummer-TgcScene.xml");
+            
 
+            
             //Solo nos interesa el primer modelo de esta escena (tiene solo uno)
             mainMesh = scene2.Meshes[0];
-
+            
             //Vamos a utilizar la cámara en 3ra persona para que siga al objeto principal a medida que se mueve
             GuiController.Instance.ThirdPersonCamera.Enable = true;
-            GuiController.Instance.ThirdPersonCamera.setCamera(mainMesh.Position, 200, 500);
+            mainMesh.Position = new Vector3(0f,0f,-900f);
+            mainMesh.rotateY(90);
+            GuiController.Instance.ThirdPersonCamera.RotationY = 90;
+            GuiController.Instance.ThirdPersonCamera.setCamera(mainMesh.Position, 200, 500);                      
+            GuiController.Instance.BackgroundColor = Color.Black;
+
+            //creo al auto y al jugador
+            auto = new Auto(0);
+            jugador = new Jugador(auto);
         }
+
+
 
 
         public override void render(float elapsedTime)
         {
-            Microsoft.DirectX.Direct3D.Device d3dDevice = GuiController.Instance.D3dDevice;
+            {
+                Microsoft.DirectX.Direct3D.Device d3dDevice = GuiController.Instance.D3dDevice;
+                /*
 
-
-            //Procesamos input de teclado para mover el objeto principal en el plano XZ
-            TgcD3dInput input = GuiController.Instance.D3dInput;
-            Vector3 movement = new Vector3(0, 0, 0);
-            if (input.keyDown(Key.Left) || input.keyDown(Key.A))
-            {
-                mainMesh.rotateY(elapsedTime * -(velocidadActual/500));
-            }
-            else if (input.keyDown(Key.Right) || input.keyDown(Key.D))
-            {
-                mainMesh.rotateY(elapsedTime * (velocidadActual/500));
-            }
-            if (input.keyDown(Key.Up) || input.keyDown(Key.W))
-            {
-                velocidadActual = velocidadActual + 1;
+                //Procesamos input de teclado para mover el objeto principal en el plano XZ
+                TgcD3dInput input = GuiController.Instance.D3dInput;
                 
-            }
-            /*else if (input.keyDown(Key.Down) || input.keyDown(Key.S))
-            {
-                velocidadActual = velocidadActual - 1;
+                if (input.keyDown(Key.Left) || input.keyDown(Key.A))
+                {
+                    mainMesh.rotateY(elapsedTime * -(velocidadActual / 300));
+                    
+                }
+                else if (input.keyDown(Key.Right) || input.keyDown(Key.D))
+                {
+                    mainMesh.rotateY(elapsedTime * (velocidadActual / 300));
+                    
+                }
+                if (input.keyDown(Key.Up) || input.keyDown(Key.W))
+                {
+                    velocidadActual = velocidadActual + 200 * elapsedTime;
+
+                }
+                /*else if (input.keyDown(Key.Down) || input.keyDown(Key.S))
+                {
+                    velocidadActual = velocidadActual - 1;
                
-            }*/
-        
-            if (velocidadActual > 0 && !input.keyDown(Key.Up))
-                velocidadActual -= 2f;
-            if (velocidadActual > 0 && input.keyDown(Key.Down))
-                velocidadActual -= 4f;
-            if (velocidadActual <= 0 && input.keyDown(Key.Down))
-                velocidadActual -= 0.5f;
-            if (velocidadActual < 0 && !input.keyDown(Key.Down))
-                velocidadActual += 0.5f;
-            if (velocidadActual > 2000f)
-                velocidadActual = 2000f;
-            if (velocidadActual < -500f)
-                velocidadActual = -500f;
+                }*/
+                /*
+               if (velocidadActual > 0 && !input.keyDown(Key.Up))
+                    velocidadActual -= 400 * elapsedTime;
+                if (velocidadActual > 0 && input.keyDown(Key.Down))
+                    velocidadActual -= 800 * elapsedTime;
+                if (velocidadActual <= 0 && velocidadActual >= -500f && input.keyDown(Key.Down))
+                    velocidadActual -= 100f * elapsedTime;
+                if (velocidadActual < 0 && !input.keyDown(Key.Down))
+                    velocidadActual += 100f * elapsedTime;
+                if (velocidadActual > 2000)
+                    velocidadActual = 2000;
+                //  if (velocidadActual < -500f)
+                //    velocidadActual = -500f*elapsedTime;
 
-            mainMesh.moveOrientedY(-velocidadActual * elapsedTime);
-            
-            //Aplicar movimiento
-            /*
-            movement *= MOVEMENT_SPEED * elapsedTime;
-            mainMesh.move(movement);
-            */
-            //Hacer que la cámara en 3ra persona se ajuste a la nueva posición del objeto
-            GuiController.Instance.ThirdPersonCamera.Target = mainMesh.Position;
+                mainMesh.moveOrientedY(-velocidadActual * elapsedTime);
 
+                //Aplicar movimiento
+                /*
+                movement *= MOVEMENT_SPEED * elapsedTime;
+                mainMesh.move(movement);
+                */
+                //Hacer que la cámara en 3ra persona se ajuste a la nueva posición del objeto
+                auto.elapsedTime = elapsedTime;
+                jugador.jugar();
+                mainMesh.Rotation = new Vector3(0f, auto.rotacion, 0f);
+                
+                mainMesh.moveOrientedY(-auto.velocidad*elapsedTime);
 
-            //Dibujar objeto principal
-            //Siempre primero hacer todos los cálculos de lógica e input y luego al final dibujar todo (ciclo update-render)
-            mainMesh.render();
-            box.render();
+                GuiController.Instance.ThirdPersonCamera.Target = mainMesh.Position;
+                
+                while (prevCameraRotation > 360)
+                {
+                    prevCameraRotation-=-360;
+                }
+                GuiController.Instance.ThirdPersonCamera.RotationY +=  5*(mainMesh.Rotation.Y - prevCameraRotation) * elapsedTime;
+                prevCameraRotation = GuiController.Instance.ThirdPersonCamera.RotationY;
+
+                //Dibujar objeto principal
+                //Siempre primero hacer todos los cálculos de lógica e input y luego al final dibujar todo (ciclo update-render)
+                mainMesh.render();
+                box.render();
+            }
         }
-
+         
         public override void close()
         {
             box.dispose();
@@ -141,3 +172,5 @@ namespace AlumnoEjemplos.MiGrupo
 
     }
 }
+    
+
