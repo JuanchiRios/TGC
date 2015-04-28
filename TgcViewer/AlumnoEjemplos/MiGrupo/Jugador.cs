@@ -24,11 +24,11 @@ namespace AlumnoEjemplos.MiGrupo
         {
             if (input.keyDown(Key.Left) || input.keyDown(Key.A))
             {
-                auto.rotar(-1);
+                auto.rotar(-1); //-1 representa la izquierda
             }
             if (input.keyDown(Key.Right) || input.keyDown(Key.D))
             {
-                auto.rotar(1);
+                auto.rotar(1); //1 representa la derecha
             }
             if (input.keyDown(Key.Up) || input.keyDown(Key.W))
             {

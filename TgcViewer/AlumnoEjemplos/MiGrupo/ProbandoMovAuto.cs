@@ -84,7 +84,7 @@ namespace AlumnoEjemplos.MiGrupo
             GuiController.Instance.BackgroundColor = Color.Black;
 
             //creo al auto y al jugador
-            auto = new Auto(0);
+            auto = new Auto(90);
             jugador = new Jugador(auto);
         }
 
@@ -96,24 +96,30 @@ namespace AlumnoEjemplos.MiGrupo
             {
                 Microsoft.DirectX.Direct3D.Device d3dDevice = GuiController.Instance.D3dDevice;
 
+                //Le paso el elapsed time al auto porque sus metodos no deben depender de los FPS
                 auto.elapsedTime = elapsedTime;
-
+                
+                //El jugador envia mensajes al auto dependiendo de que tecla presiono
                 jugador.jugar();
 
+                //Transfiero la rotacion del auto abstracto al mesh
                 mainMesh.Rotation = new Vector3(0f, auto.rotacion, 0f);
                 
+                //Calculo el movimiento del mesh dependiendo de la velocidad del auto
                 mainMesh.moveOrientedY(-auto.velocidad*elapsedTime);
                 
                 GuiController.Instance.ThirdPersonCamera.Target = mainMesh.Position;
                 
+                //Ajusto la camara a menos de 360 porque voy a necesitar hacer calculos entre angulos
                 while (prevCameraRotation > 360)
                 {
                     prevCameraRotation-=-360;
                 }
                 
+                //La camara no rota exactamente a la par del auto, hay un pequeño retraso
                 GuiController.Instance.ThirdPersonCamera.RotationY +=  5*(mainMesh.Rotation.Y - prevCameraRotation) * elapsedTime;
                 prevCameraRotation = GuiController.Instance.ThirdPersonCamera.RotationY;
-
+                
                 //Dibujar objeto principal
                 //Siempre primero hacer todos los cálculos de lógica e input y luego al final dibujar todo (ciclo update-render)
                 mainMesh.render();

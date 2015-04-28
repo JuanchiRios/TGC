@@ -17,37 +17,11 @@ namespace AlumnoEjemplos.MiGrupo
         float velocidadMinima=-1000f;
         float velocidadMaxima=5000f;
                 
+        //Interfaz de usuario
 
         public Auto(float rot)
         {
             rotacion = rot;
-        }
-
-        private void acelerar(float aumento)
-        {
-            if((velocidad>=velocidadMinima) && (velocidad<=velocidadMaxima))
-                {
-                velocidad += (aumento-rozamiento())*elapsedTime;
-                }
-        }
-        
-        public float rozamiento()
-        {
-            return rozamientoCoef * Math.Sign(velocidad);
-        }
-
-        public void rotar(int direccion)
-        {
-            rotacion += (elapsedTime * direccion * (velocidad / 300));
-            ajustarRotacion();
-        }
-
-        public void ajustarRotacion()
-        {
-            while (rotacion > 360)
-            {
-                rotacion -= 360;
-            }
         }
 
         public void avanzar()
@@ -57,23 +31,60 @@ namespace AlumnoEjemplos.MiGrupo
 
         public void retroceder()
         {
-            if(velocidad>0) frenar();
-            if(velocidad<=0) marchaAtras();
+            if (velocidad > 0) frenar();
+            if (velocidad <= 0) marchaAtras();
+        }
+
+        public void noMover()
+        {
+            acelerar(0);
+        } 
+
+        public void rotar(int direccion)
+        {
+            rotacion += (elapsedTime * direccion * (velocidad / 300)); //direccion puede ser 1 o -1, 1 es derecha y -1 izquierda
+            ajustarRotacion();
+        }
+
+        //Metodos Internos
+            //DeVelocidad
+
+        private void acelerar(float aumento)
+        {
+                velocidad += (aumento-rozamiento())*elapsedTime;
+                ajustarVelocidad();
+        }
+
+        public void ajustarVelocidad()
+        {
+            if (velocidad > velocidadMaxima) velocidad = velocidadMaxima;
+            if (velocidad < velocidadMinima) velocidad = velocidadMinima;
+        }
+
+        public float rozamiento()
+        {
+            return rozamientoCoef * Math.Sign(velocidad);
         }
 
         private void frenar()
         {
             acelerar(-aceleracionFrenar);
-        }        
+        }
 
         private void marchaAtras()
         {
             acelerar(-aceleracionMarchaAtras);
         }
 
-        public void noMover()
+        
+            //DeRotacion
+        private void ajustarRotacion()
         {
-            acelerar(0);
+            while (rotacion > 360)
+            {
+                rotacion -= 360;
+            }
         }
+        
     }
 }
