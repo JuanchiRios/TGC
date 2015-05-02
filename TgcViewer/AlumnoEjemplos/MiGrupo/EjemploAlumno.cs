@@ -123,8 +123,6 @@ namespace AlumnoEjemplos.MiGrupo
             {
                 string element = lista[i];
             }
-
-
         }
 
 
