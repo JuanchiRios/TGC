@@ -19,13 +19,14 @@ namespace AlumnoEjemplos.MiGrupo
     /// </summary>
     public class ProbandoMovAuto : TgcExample
     {
+        TgcScene scene2;
         TgcMesh mainMesh;
         TgcBox box;
         TgcBox obstaculoPrueba;
         float prevCameraRotation=90;
         Auto auto;
         Jugador jugador;
-        TgcObb orientedBoundingBox;
+        TgcObb orientedBoundingBox, oBBOBstaculo;
 
 
         public override string getCategory()
@@ -71,11 +72,12 @@ namespace AlumnoEjemplos.MiGrupo
 
             //Crear completo el objeto obtaculo de prueba de colisiones
             TgcTexture texturaMadera = TgcTexture.createTexture(GuiController.Instance.ExamplesMediaDir + "MeshCreator\\Textures\\Madera\\A3d-Fl3.jpg");
-            Vector3 tamañoObstaculoPrueba = new Vector3(100, 100, 100);
+            Vector3 tamañoObstaculoPrueba = new Vector3(500, 500, 500);
             obstaculoPrueba = TgcBox.fromSize(center, tamañoObstaculoPrueba, texturaMadera);
+            oBBOBstaculo = TgcObb.computeFromAABB(obstaculoPrueba.BoundingBox);
 
             //Luego cargamos otro modelo aparte que va a hacer el objeto que controlamos con el teclado
-            TgcScene scene2 = loader.loadSceneFromFile(GuiController.Instance.ExamplesMediaDir + "MeshCreator\\Meshes\\Vehiculos\\Hummer\\Hummer-TgcScene.xml");
+            scene2 = loader.loadSceneFromFile(GuiController.Instance.ExamplesMediaDir + "MeshCreator\\Meshes\\Vehiculos\\Hummer\\Hummer-TgcScene.xml");
             
 
             
@@ -120,6 +122,8 @@ namespace AlumnoEjemplos.MiGrupo
             //El jugador envia mensajes al auto dependiendo de que tecla presiono
             jugador.jugar();
 
+            //Guardar rotacion original anted de cambiarla
+            Vector3 rotacionOriginal = mainMesh.Rotation;
             //Transfiero la rotacion del auto abstracto al mesh
             mainMesh.Rotation = new Vector3(0f, auto.rotacion, 0f);
 
@@ -127,8 +131,32 @@ namespace AlumnoEjemplos.MiGrupo
             orientedBoundingBox.Center = mainMesh.Position;
             orientedBoundingBox.setRotation(mainMesh.Rotation);
 
+            //Guardar posicion original antes de cambiarla y su velocidad
+            Vector3 originalPos = mainMesh.Position;
+            float velocidadOriginal = auto.velocidad;
+
             //Calculo el movimiento del mesh dependiendo de la velocidad del auto
             mainMesh.moveOrientedY(-auto.velocidad * elapsedTime);
+
+
+            //Probando la colision de dos boundig box
+            bool collisionFound = false;
+
+            Boolean colisiona = Colisiones.testObbObb2(orientedBoundingBox, oBBOBstaculo);
+
+            if (colisiona)
+            {
+                collisionFound = true;
+            }
+
+
+            //Si hubo alguna colisión, voy para atrás un poco y pongo velocidad contraria para "despegarme" del otro objeto
+            //Obviamente hay mucho que mejorar en esto.
+            if (collisionFound)
+            {
+                mainMesh.moveOrientedY(20 * auto.velocidad * elapsedTime);
+                auto.velocidad = -(velocidadOriginal * 0.3f); //Voy con 0.3 de la velocidad que venia para atrás.
+            }
 
             GuiController.Instance.ThirdPersonCamera.Target = mainMesh.Position;
 
@@ -159,7 +187,6 @@ namespace AlumnoEjemplos.MiGrupo
             obstaculoPrueba.dispose();
             orientedBoundingBox.dispose();
         }
-
     }
 }
     
