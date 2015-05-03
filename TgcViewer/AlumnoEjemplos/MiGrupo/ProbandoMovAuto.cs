@@ -21,11 +21,9 @@ namespace AlumnoEjemplos.MiGrupo
     {
         TgcMesh mainMesh;
         TgcBox box;
-        TgcBox obstaculoPrueba;
         float prevCameraRotation=90;
         Auto auto;
         Jugador jugador;
-        TgcObb orientedBoundingBox;
 
 
         public override string getCategory()
@@ -69,11 +67,6 @@ namespace AlumnoEjemplos.MiGrupo
             //En este ejemplo primero cargamos una escena 3D entera.
             TgcSceneLoader loader = new TgcSceneLoader();
 
-            //Crear completo el objeto obtaculo de prueba de colisiones
-            TgcTexture texturaMadera = TgcTexture.createTexture(GuiController.Instance.ExamplesMediaDir + "MeshCreator\\Textures\\Madera\\A3d-Fl3.jpg");
-            Vector3 tamañoObstaculoPrueba = new Vector3(100, 100, 100);
-            obstaculoPrueba = TgcBox.fromSize(center, tamañoObstaculoPrueba, texturaMadera);
-
             //Luego cargamos otro modelo aparte que va a hacer el objeto que controlamos con el teclado
             TgcScene scene2 = loader.loadSceneFromFile(GuiController.Instance.ExamplesMediaDir + "MeshCreator\\Meshes\\Vehiculos\\Hummer\\Hummer-TgcScene.xml");
             
@@ -89,9 +82,6 @@ namespace AlumnoEjemplos.MiGrupo
             GuiController.Instance.ThirdPersonCamera.RotationY = 90;
             GuiController.Instance.ThirdPersonCamera.setCamera(mainMesh.Position, 200, 500);                      
             GuiController.Instance.BackgroundColor = Color.Black;
-
-            //No se bien como funciona esto, pero como que genera al OBB a partir del BB original del auto
-            orientedBoundingBox = TgcObb.computeFromAABB(mainMesh.BoundingBox);
 
             //creo al auto y al jugador
             //auto = new Auto(90);
@@ -123,10 +113,6 @@ namespace AlumnoEjemplos.MiGrupo
             //Transfiero la rotacion del auto abstracto al mesh
             mainMesh.Rotation = new Vector3(0f, auto.rotacion, 0f);
 
-            //Asocia la posicion y rotacion del auto al OrientedBoundingBox correspondiente
-            orientedBoundingBox.Center = mainMesh.Position;
-            orientedBoundingBox.setRotation(mainMesh.Rotation);
-
             //Calculo el movimiento del mesh dependiendo de la velocidad del auto
             mainMesh.moveOrientedY(-auto.velocidad * elapsedTime);
 
@@ -147,17 +133,13 @@ namespace AlumnoEjemplos.MiGrupo
             mainMesh.render();
             box.render();
 
-            obstaculoPrueba.render();
-            obstaculoPrueba.BoundingBox.render();
-            orientedBoundingBox.render();
+
         }
          
         public override void close()
         {
             box.dispose();
             mainMesh.dispose();
-            obstaculoPrueba.dispose();
-            orientedBoundingBox.dispose();
         }
 
     }
