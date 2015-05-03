@@ -14,19 +14,14 @@ namespace AlumnoEjemplos.MiGrupo
         float aceleracionAvanzar=600f;
         float aceleracionFrenar=800f;
         float aceleracionMarchaAtras=300f;
-
-        float velocidadMinima = -500f;
-        float velocidadMaxima = 2000f;
+        float velocidadMinima=-1000f;
+        float velocidadMaxima=5000f;
                 
         //Interfaz de usuario
 
         public Auto(float rot)
         {
             rotacion = rot;
-        }
-        public void establecerVelocidadMáximaEn(float velMaxima)
-        {
-            this.velocidadMaxima = velMaxima;
         }
 
         public void avanzar()
@@ -47,8 +42,7 @@ namespace AlumnoEjemplos.MiGrupo
 
         public void rotar(int direccion)
         {
-            //rotacion += (elapsedTime * direccion * (velocidad / 300)); //direccion puede ser 1 o -1, 1 es derecha y -1 izquierda
-            rotacion += (elapsedTime * direccion * (velocidad / 1000));
+            rotacion += (elapsedTime * direccion * (velocidad / 1000)); //direccion puede ser 1 o -1, 1 es derecha y -1 izquierda
             ajustarRotacion();
         }
 
@@ -65,6 +59,11 @@ namespace AlumnoEjemplos.MiGrupo
         {
             if (velocidad > velocidadMaxima) velocidad = velocidadMaxima;
             if (velocidad < velocidadMinima) velocidad = velocidadMinima;
+        }
+
+        public void establecerVelocidadMáximaEn(float velMaxima)
+        {
+            velocidadMaxima = velMaxima;
         }
 
         public float rozamiento()
