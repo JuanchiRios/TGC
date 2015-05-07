@@ -21,10 +21,11 @@ namespace AlumnoEjemplos.MiGrupo
     {
         TgcMesh mainMesh;
         TgcBox box;
+        TgcBox obstaculoDePrueba;
         float prevCameraRotation=90;
         Auto auto;
         Jugador jugador;
-
+        TgcObb oBBAuto, oBBObstaculoPrueba;
 
         public override string getCategory()
         {
@@ -56,7 +57,7 @@ namespace AlumnoEjemplos.MiGrupo
             //Esto evita que tengamos que hardcodear el path de instalación del framework.
 
             TgcTexture texture = TgcTexture.createTexture(GuiController.Instance.ExamplesMediaDir + "MeshCreator\\Textures\\Suelo\\pistaCarreras.png");
-            
+            TgcTexture texturaMadera = TgcTexture.createTexture(GuiController.Instance.ExamplesMediaDir + "MeshCreator\\Textures\\Madera\\A3d-Fl3.jpg");
 
             //Creamos una caja 3D de color rojo, ubicada en el origen y lado 10
             Vector3 center = new Vector3(0, 0, 0);
@@ -70,8 +71,11 @@ namespace AlumnoEjemplos.MiGrupo
             //Luego cargamos otro modelo aparte que va a hacer el objeto que controlamos con el teclado
             TgcScene scene2 = loader.loadSceneFromFile(GuiController.Instance.ExamplesMediaDir + "MeshCreator\\Meshes\\Vehiculos\\Hummer\\Hummer-TgcScene.xml");
             
+            //Creo un obstaculo de prueba de colsiones y demás
+            obstaculoDePrueba = TgcBox.fromSize(new Vector3(0f, 0f, -500f), new Vector3(200, 200, 200), texturaMadera);
+            //Le asigno su oriented bounding box que me permite rotar la caja de colisiones (no así bounding box)
+            oBBObstaculoPrueba = TgcObb.computeFromAABB(obstaculoDePrueba.BoundingBox);
 
-            
             //Solo nos interesa el primer modelo de esta escena (tiene solo uno)
             mainMesh = scene2.Meshes[0];
             
@@ -82,6 +86,10 @@ namespace AlumnoEjemplos.MiGrupo
             GuiController.Instance.ThirdPersonCamera.RotationY = 90;
             GuiController.Instance.ThirdPersonCamera.setCamera(mainMesh.Position, 200, 500);                      
             GuiController.Instance.BackgroundColor = Color.Black;
+
+            //Le asigno su oriented bounding box que me permite rotar la caja de colisiones (no así bounding box)
+            oBBAuto = TgcObb.computeFromAABB(mainMesh.BoundingBox);
+            
 
             //creo al auto y al jugador
             //auto = new Auto(90);
@@ -110,11 +118,30 @@ namespace AlumnoEjemplos.MiGrupo
             //El jugador envia mensajes al auto dependiendo de que tecla presiono
             jugador.jugar();
 
-            //Transfiero la rotacion del auto abstracto al mesh
+            //Transfiero la rotacion del auto abstracto al mesh, y su obb
             mainMesh.Rotation = new Vector3(0f, auto.rotacion, 0f);
+            oBBAuto.Center = mainMesh.Position;
+            oBBAuto.setRotation(mainMesh.Rotation);
 
             //Calculo el movimiento del mesh dependiendo de la velocidad del auto
             mainMesh.moveOrientedY(-auto.velocidad * elapsedTime);
+
+            //Detección de colisiones
+            bool collisionFound = false;
+
+            //Hubo colisión con un objeto. Guardar resultado y abortar loop.
+            if (Colisiones.testObbObb2(oBBAuto, oBBObstaculoPrueba))
+            {
+                collisionFound = true;
+            }
+
+
+            //Si hubo alguna colisión, hacer esto:
+            if (collisionFound)
+            {
+                mainMesh.moveOrientedY(20 * auto.velocidad * elapsedTime); //Lo hago "como que rebote un poco" para no seguir colisionando
+                auto.velocidad = -(auto.velocidad * 0.3f); //Lo hago ir atrás un tercio de velocidad de choque
+            }
 
             GuiController.Instance.ThirdPersonCamera.Target = mainMesh.Position;
 
@@ -133,13 +160,20 @@ namespace AlumnoEjemplos.MiGrupo
             mainMesh.render();
             box.render();
 
-
+            obstaculoDePrueba.render();
+            //Hago visibles los obb
+            oBBAuto.render();
+            oBBObstaculoPrueba.render();
         }
          
         public override void close()
         {
             box.dispose();
             mainMesh.dispose();
+
+            obstaculoDePrueba.dispose();
+            oBBObstaculoPrueba.dispose();
+            oBBAuto.dispose();
         }
 
     }

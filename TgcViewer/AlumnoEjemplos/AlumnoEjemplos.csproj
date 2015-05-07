@@ -87,7 +87,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="MiGrupo\Auto.cs" />
+    <Compile Include="MiGrupo\Colisiones.cs" />
     <Compile Include="MiGrupo\EjemploAlumno.cs" />
+    <Compile Include="MiGrupo\Jugador.cs" />
+    <Compile Include="MiGrupo\ProbandoMovAuto.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
