@@ -1,4 +1,4 @@
-﻿using System;
+﻿/*using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -8,10 +8,8 @@ using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using AlumnoEjemplos.MeantToLiveGeo.Terrain;
 
-/*
- * Esta clase es la encargada de todo el moviemiento y actualizacion de una rueda.
- * 
- */
+// Esta clase es la encargada de todo el moviemiento y actualizacion de una rueda.
+ 
 namespace AlumnoEjemplos.MeantToLiveGeo.Vehicle
 {
     class Wheel
@@ -130,10 +128,8 @@ namespace AlumnoEjemplos.MeantToLiveGeo.Vehicle
             return Vector3.Add(this.mesh.Position, this.offset);
         }
 
-        /*
-         * Ubica la rueda en la posicion que le corresponde dentro del vehiculo.
-         * 
-         */
+        // Ubica la rueda en la posicion que le corresponde dentro del vehiculo.
+         
         public void setPositionInVehicle(TgcMesh vehicle, Vector3 center, float angleY)
         {
             this.mesh.Position = vehicle.Position;
@@ -172,3 +168,4 @@ namespace AlumnoEjemplos.MeantToLiveGeo.Vehicle
         }
     }
 }
+*/

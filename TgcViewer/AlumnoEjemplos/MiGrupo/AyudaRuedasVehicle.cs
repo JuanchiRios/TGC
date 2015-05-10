@@ -1,4 +1,4 @@
-﻿using System;
+﻿/*using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,10 +9,11 @@ using TgcViewer.Utils.Input;
 using Microsoft.DirectX.DirectInput;
 using Microsoft.DirectX.Direct3D;
 using AlumnoEjemplos.MeantToLiveGeo.Terrain;
-/*
- * Esta clase es la encargada de todo el moviemiento y actualizacion del vehiculo.
- * 
- */
+
+ // Esta clase es la encargada de todo el moviemiento y actualizacion del vehiculo.
+ 
+ 
+ 
 namespace AlumnoEjemplos.MeantToLiveGeo.Vehicle
 {
     class Vehicle
@@ -139,20 +140,18 @@ namespace AlumnoEjemplos.MeantToLiveGeo.Vehicle
             return mesh.Position;
         }
 
-        /*
-         * Acelera el vehiculo haciendolo avanzar
-         * 
-         */
+        
+         // Acelera el vehiculo haciendolo avanzar
+          
+        
         public void accelerate()
         {
             float newSpeed = this.speed + ACELERATION;
             this.speed = newSpeed > MAX_SPEED ? MAX_SPEED : newSpeed;
         }
 
-        /*
-         * Si el usuario dejo de acelerar, entonces el vehiculo desacelera lentamente simulando una inercia.
-         * 
-         */
+        // Si el usuario dejo de acelerar, entonces el vehiculo desacelera lentamente simulando una inercia.
+         
         public void desaccelerate()
         {
             if(this.speed > 0) {
@@ -164,49 +163,43 @@ namespace AlumnoEjemplos.MeantToLiveGeo.Vehicle
             }
         }
 
-        /*
-         * Aplica una desaceleracion para frenar el vehiculo, si el vehiculo frena completamente este empieza a retroceder.
-         * 
-         */
+        // Aplica una desaceleracion para frenar el vehiculo, si el vehiculo frena completamente este empieza a retroceder.
+          
+         
         public void brake()
         {
             float newSpeed = this.speed - (this.speed > 0 ? BRAKE_ACELERATION : ACELERATION);
             this.speed = newSpeed < MIN_SPEED ? MIN_SPEED : newSpeed;
         }
 
-        /*
-         * Gira las ruedas a la derecha
-         * 
-         */
+        
+         // Gira las ruedas a la derecha
+          
+        
         public void turnRight()
         {
             this.frontLeft.turnRight();
             this.frontRight.turnRight();
         }
-        /*
-         * Gira las ruedas a la izquierda
-         * 
-         */
+        // Gira las ruedas a la izquierda
+         
         public void turnLeft()
         {
             this.frontLeft.turnLeft();
             this.frontRight.turnLeft();
         }
 
-        /*
-         * Si el usuario no presiono ninguna tecla de direccion, las ruedas vuelven a su posicion.
-         * 
-         */
+        // Si el usuario no presiono ninguna tecla de direccion, las ruedas vuelven a su posicion.
+         
+       
         public void straighten()
         {
             this.frontLeft.straighten();
             this.frontRight.straighten();
         }
 
-        /*
-         * Mueve el vehiculo a la nueva pocision de acuerdo a las teclas que presiono el usuario. 
-         * 
-         */
+        // Mueve el vehiculo a la nueva pocision de acuerdo a las teclas que presiono el usuario. 
+         
         public void move(float elapsedTime)
         {
             float distance;
@@ -236,9 +229,8 @@ namespace AlumnoEjemplos.MeantToLiveGeo.Vehicle
             }
         }
 
-        /*
-         * Calcula el angulo de rotacion en el eje Y 
-         */
+        // Calcula el angulo de rotacion en el eje Y 
+         
         private float calculateYRotationAngle()
         {
             float angle = 0f;
@@ -255,9 +247,8 @@ namespace AlumnoEjemplos.MeantToLiveGeo.Vehicle
             return angle * 0.3f;
         }
 
-        /* 
-         * Actualiza la posicion del vehiculo de acuerdo al angulo de giro calculado 
-         */
+        // Actualiza la posicion del vehiculo de acuerdo al angulo de giro calculado 
+         
         private void updateVehiclePosition(float angleY)
         {
             Vector3 newFrontDisplacement = Vector3.Subtract(this.newPivotPoint, this.backPivotPoint);
@@ -379,3 +370,4 @@ namespace AlumnoEjemplos.MeantToLiveGeo.Vehicle
         }
     }
 }
+*/
