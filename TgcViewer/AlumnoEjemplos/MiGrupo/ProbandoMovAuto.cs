@@ -27,6 +27,10 @@ namespace AlumnoEjemplos.MiGrupo
         Jugador jugador;
         TgcObb oBBAuto, oBBObstaculoPrueba;
 
+        //Creo un listado de puntos de control
+        List<PuntoDeControl> trayecto = new List<PuntoDeControl>();
+        PuntoDeControl unPuntoDeControl;
+
         public override string getCategory()
         {
             return "Otros";
@@ -96,6 +100,15 @@ namespace AlumnoEjemplos.MiGrupo
             auto = new Auto(90);
             jugador = new Jugador(auto);
 
+            //Creo un punto de control para probarlo
+            for (int i = 0; i < 10;i++)
+            {
+                unPuntoDeControl = new PuntoDeControl(100, 50, new Vector3(-300 - (i*1000) , 20, -1000 - (i * 300)));
+
+                trayecto.Add(unPuntoDeControl);
+            }
+                
+
             ///////////////MODIFIERS//////////////////
             GuiController.Instance.Modifiers.addFloat("velocidadMaxima", 1000, 7000, 1000f);
 
@@ -106,6 +119,7 @@ namespace AlumnoEjemplos.MiGrupo
 
         public override void render(float elapsedTime)
         {
+            TgcTexture texture = TgcTexture.createTexture(GuiController.Instance.AlumnoEjemplosMediaDir + "TheC#\\Pista\\pistaCarreras.png");
 
             Microsoft.DirectX.Direct3D.Device d3dDevice = GuiController.Instance.D3dDevice;
 
@@ -164,6 +178,27 @@ namespace AlumnoEjemplos.MiGrupo
             //Hago visibles los obb
             oBBAuto.render();
             oBBObstaculoPrueba.render();
+
+            //Muestro el trayecto de puntos de control
+            for(int i=0;i<trayecto.Count;i++)
+            {
+                trayecto[i].tgcCilindro().render();
+                trayecto[i].tgcCilindro().BoundingCylinder.render();
+            }
+            
+            //Colision con puntos de control
+            for (int i = 0; i < trayecto.Count; i++)
+            {
+                unPuntoDeControl = trayecto[i];
+                if(TgcCollisionUtils.testPointCylinder(oBBAuto.Position, unPuntoDeControl.tgcCilindro().BoundingCylinder))
+                {
+                    unPuntoDeControl.tgcCilindro().setTexture(texture);
+                    TgcCylinder cilindroModificado = new TgcCylinder(unPuntoDeControl.tgcCilindro().Center, 200, 30);
+                    
+                    trayecto[i].setCilindro(cilindroModificado);
+                }
+            }
+            
         }
          
         public override void close()
@@ -174,6 +209,14 @@ namespace AlumnoEjemplos.MiGrupo
             obstaculoDePrueba.dispose();
             oBBObstaculoPrueba.dispose();
             oBBAuto.dispose();
+
+            //borro los puntos de control del trayecto
+            for (int i = 0; i < trayecto.Count; i++)
+            {
+                trayecto[i].tgcCilindro().dispose();
+                trayecto[i].tgcCilindro().BoundingCylinder.dispose();
+            }
+            trayecto.Clear();
         }
 
     }
