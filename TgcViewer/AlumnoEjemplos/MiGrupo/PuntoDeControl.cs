@@ -17,33 +17,24 @@ namespace AlumnoEjemplos.MiGrupo
 {
     class PuntoDeControl
     {
-        Vector3 posicion;
-        TgcCylinder cilindro;
-        TgcFixedYBoundingCylinder fixedBoundingDelCilindro;
-        float radio;
-        float espesorAltura;
+        bool activado;
 
-        public PuntoDeControl(float unRadio, float espesorAltura, Vector3 unaPosicion) 
+        public PuntoDeControl(bool unActivado) 
         {
-            radio = unRadio;
-            posicion = unaPosicion;
-            this.espesorAltura = espesorAltura;
-
-            cilindro = new TgcCylinder(unaPosicion, radio, espesorAltura);
-            fixedBoundingDelCilindro = new TgcFixedYBoundingCylinder(unaPosicion, radio, espesorAltura);
+            activado = unActivado;
         }
 
-        public TgcCylinder tgcCilindro()
+        public void activarPunto()
         {
-            return cilindro;
+            this.activado = true;
         }
-        public void setCilindro(TgcCylinder cilindroNuevo)
+        public void desactivarPunto()
         {
-            this.cilindro = cilindroNuevo;
+            this.activado = true;
         }
-        public TgcFixedYBoundingCylinder fixedBounding()
+        public bool estaActivado()
         {
-            return fixedBoundingDelCilindro;
+            return activado;
         }
     }
 }
