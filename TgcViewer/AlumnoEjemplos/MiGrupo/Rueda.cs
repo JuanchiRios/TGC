@@ -1,176 +1,226 @@
-﻿/*using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using TgcViewer.Utils.TgcSceneLoader;
+using TgcViewer.Example;
 using TgcViewer;
-using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
-using AlumnoEjemplos.MeantToLiveGeo.Terrain;
+using System.Drawing;
+using Microsoft.DirectX;
+using TgcViewer.Utils.Modifiers;
+using TgcViewer.Utils.TgcGeometry;
+using TgcViewer.Utils.TgcSceneLoader;
+using TgcViewer.Utils.Input;
+using Microsoft.DirectX.DirectInput;
 
-
-//  Esta clase es la encargada de todo el moviemiento y actualizacion de una rueda.
- 
- 
 namespace AlumnoEjemplos.MiGrupo
 {
-    class Rueda
+    /// <summary>
+    /// Probando Rueda
+    /// </summary>
+    public class ProbandoRueda : TgcExample
     {
-        private float ROTATION_SPEED = Geometry.DegreeToRadian(30);
+        TgcMesh mainMesh;
+        TgcBox box;
+        TgcBox obstaculoDePrueba;
+        float prevCameraRotation = 90;
+        Auto auto;
+        Jugador jugador;
+        TgcObb oBBAuto, oBBObstaculoPrueba;
 
-        private float MAX_ANGLE = Geometry.DegreeToRadian(15);
-        private float MIN_ANGLE = Geometry.DegreeToRadian(-15);
+        //Creo un listado de puntos de control
+        List<PuntoDeControl> trayecto = new List<PuntoDeControl>();
+        PuntoDeControl unPuntoDeControl;
 
-        public const float RADIO_WHEEL = 0.45f;
-
-        private TgcMesh mesh;
-
-        private float angle;
-
-        private int direction;
-
-        private float gradesRotated = 0f;
-
-        private Vector3 offset;
-
-        private HeightMap heightMap;
-
-        public Rueda(TgcMesh mesh, int direction, Vector3 offset, HeightMap heightMap)
+        public override string getCategory()
         {
-            this.mesh = mesh;
-            this.offset = offset;
-            this.direction = direction;
-            this.heightMap = heightMap;
-            if (this.direction == -1)
+            return "Otros";
+        }
+
+        public override string getName()
+        {
+            return "Probando Rueda";
+        }
+
+        public override string getDescription()
+        {
+            return "Ejemplo para ir probando el movimiento de la rueda del auto.";
+        }
+
+        public override void init()
+        {
+            Microsoft.DirectX.Direct3D.Device d3dDevice = GuiController.Instance.D3dDevice;
+            //Cargamos una textura
+            //Una textura es una imágen 2D que puede dibujarse arriba de un polígono 3D para darle color.
+            //Es muy útil para generar efectos de relieves y superficies.
+            //Puede ser cualquier imágen 2D (jpg, png, gif, etc.) y puede ser editada con cualquier editor
+            //normal (photoshop, paint, descargada de goole images, etc).
+            //El framework viene con un montón de texturas incluidas y organizadas en categorias (texturas de
+            //madera, cemento, ladrillo, pasto, etc). Se encuentran en la carpeta del framework:
+            //  TgcViewer\Examples\Media\MeshCreator\Textures
+            //Podemos acceder al path de la carpeta "Media" utilizando la variable "GuiController.Instance.ExamplesMediaDir".
+            //Esto evita que tengamos que hardcodear el path de instalación del framework.
+
+            //Inicializamos texturas
+            TgcTexture texture = TgcTexture.createTexture(GuiController.Instance.AlumnoEjemplosMediaDir + "TheC#\\Pista\\pistaCarreras.png");
+            TgcTexture texturaMadera = TgcTexture.createTexture(GuiController.Instance.AlumnoEjemplosMediaDir + "TheC#\\Texturas\\Madera\\A3d-Fl3.jpg");
+
+            //Creamos una caja 3D de color rojo, ubicada en el origen y lado 10
+            Vector3 center = new Vector3(0, 0, 0);
+            Vector3 size = new Vector3(16000, 3, 7660);
+            box = TgcBox.fromSize(center, size, texture);
+
+
+            //En este ejemplo primero cargamos una escena 3D entera.
+            TgcSceneLoader loader = new TgcSceneLoader();
+
+            //Luego cargamos otro modelo aparte que va a hacer el objeto que controlamos con el teclado
+            TgcScene scene2 = loader.loadSceneFromFile(GuiController.Instance.AlumnoEjemplosMediaDir + "TheC#\\Auto\\\\Auto_Rueda-TgcScene.xml");
+
+            //Creo un obstaculo de prueba de colsiones y demás
+            obstaculoDePrueba = TgcBox.fromSize(new Vector3(0f, 0f, -500f), new Vector3(200, 200, 200), texturaMadera);
+            //Le asigno su oriented bounding box que me permite rotar la caja de colisiones (no así bounding box)
+            oBBObstaculoPrueba = TgcObb.computeFromAABB(obstaculoDePrueba.BoundingBox);
+
+            //Solo nos interesa el primer modelo de esta escena (tiene solo uno)
+            mainMesh = scene2.Meshes[0];
+
+            //Vamos a utilizar la cámara en 3ra persona para que siga al objeto principal a medida que se mueve
+            GuiController.Instance.ThirdPersonCamera.Enable = true;
+            mainMesh.Position = new Vector3(0f, 0f, -900f);
+            mainMesh.rotateY(90);
+            GuiController.Instance.ThirdPersonCamera.RotationY = 90;
+            GuiController.Instance.ThirdPersonCamera.setCamera(mainMesh.Position, 200, 500);
+            GuiController.Instance.BackgroundColor = Color.Black;
+
+            //Le asigno su oriented bounding box que me permite rotar la caja de colisiones (no así bounding box)
+            oBBAuto = TgcObb.computeFromAABB(mainMesh.BoundingBox);
+
+
+            //creo al auto y al jugador
+            //auto = new Auto(90);
+            auto = new Auto(90);
+            jugador = new Jugador(auto);
+
+            //Creo un punto de control para probarlo
+            for (int i = 0; i < 10; i++)
             {
-                float angRotar = Geometry.DegreeToRadian(180);
-                this.mesh.rotateY(angRotar);
+                unPuntoDeControl = new PuntoDeControl(100, 50, new Vector3(-300 - (i * 1000), 20, -1000 - (i * 300)));
+
+                trayecto.Add(unPuntoDeControl);
             }
-            this.move(this.offset);
+
+
+            ///////////////MODIFIERS//////////////////
+            GuiController.Instance.Modifiers.addFloat("velocidadMaxima", 1000, 7000, 1000f);
+
         }
 
-        public void position(Vector3 position)
-        {
-            this.mesh.Position = position;
-        }
 
-        public void move(Vector3 movement)
-        {
-            this.mesh.move(movement);
-        }
 
-        public void moveOrientedY(float distance)
-        {
-            float realDistance = this.direction * distance;
-            this.mesh.moveOrientedY(realDistance);
-            this.rotateX(realDistance / RADIO_WHEEL);
-        }
 
-        public void rotateWheel(float distance)
+        public override void render(float elapsedTime)
         {
-            float realDistance = this.direction * distance;
-            this.rotateX(realDistance / RADIO_WHEEL);
-        }
+            TgcTexture texture = TgcTexture.createTexture(GuiController.Instance.AlumnoEjemplosMediaDir + "TheC#\\Pista\\pistaCarreras.png");
 
-        public void rotateY(float rotAngle)
-        {
-            this.move(-this.offset);
-            this.mesh.rotateY(rotAngle);
-            this.move(this.offset);
-        }
+            Microsoft.DirectX.Direct3D.Device d3dDevice = GuiController.Instance.D3dDevice;
 
-        public void rotateX(float rotAngle)
-        {
-            this.mesh.rotateX(rotAngle);
-        }
+            //Le paso el elapsed time al auto porque sus metodos no deben depender de los FPS
+            auto.elapsedTime = elapsedTime;
 
-        public void rotateZ(float rotAngle)
-        {
-            this.mesh.rotateZ(rotAngle);
-        }
+            //Varío la velocidad Máxima del vehículo con el modifier "velocidadMáxima" 
+            auto.establecerVelocidadMáximaEn((float)GuiController.Instance.Modifiers["velocidadMaxima"]);
 
-        public void turnLeft()
-        {
-            this.angle = 0;
-            this.angle = this.gradesRotated > MIN_ANGLE ? -ROTATION_SPEED : 0;
-        }
+            //El jugador envia mensajes al auto dependiendo de que tecla presiono
+            jugador.jugar();
 
-        public void turnRight()
-        {
-            this.angle = 0;
-            this.angle = this.gradesRotated < MAX_ANGLE ? ROTATION_SPEED : 0;
-        }
+            //Transfiero la rotacion del auto abstracto al mesh, y su obb
+            mainMesh.Rotation = new Vector3(0f, auto.rotacion, 0f);
+            oBBAuto.Center = mainMesh.Position;
+            oBBAuto.setRotation(mainMesh.Rotation);
 
-        public void straighten()
-        {
-            if (this.isRotated())
+            //Calculo el movimiento del mesh dependiendo de la velocidad del auto
+            mainMesh.moveOrientedY(-auto.velocidad * elapsedTime);
+
+            //Detección de colisiones
+            bool collisionFound = false;
+
+            //Hubo colisión con un objeto. Guardar resultado y abortar loop.
+            if (Colisiones.testObbObb2(oBBAuto, oBBObstaculoPrueba))
             {
-                this.angle = this.gradesRotated > 0f ? -ROTATION_SPEED : ROTATION_SPEED;
+                collisionFound = true;
             }
+
+
+            //Si hubo alguna colisión, hacer esto:
+            if (collisionFound)
+            {
+                mainMesh.moveOrientedY(20 * auto.velocidad * elapsedTime); //Lo hago "como que rebote un poco" para no seguir colisionando
+                auto.velocidad = -(auto.velocidad * 0.3f); //Lo hago ir atrás un tercio de velocidad de choque
+            }
+
+            GuiController.Instance.ThirdPersonCamera.Target = mainMesh.Position;
+
+            //Ajusto la camara a menos de 360 porque voy a necesitar hacer calculos entre angulos
+            while (prevCameraRotation > 360)
+            {
+                prevCameraRotation -= -360;
+            }
+
+            //La camara no rota exactamente a la par del auto, hay un pequeño retraso
+            GuiController.Instance.ThirdPersonCamera.RotationY += 5 * (mainMesh.Rotation.Y - prevCameraRotation) * elapsedTime;
+            prevCameraRotation = GuiController.Instance.ThirdPersonCamera.RotationY;
+
+            //Dibujar objeto principal
+            //Siempre primero hacer todos los cálculos de lógica e input y luego al final dibujar todo (ciclo update-render)
+            mainMesh.render();
+            box.render();
+
+            obstaculoDePrueba.render();
+            //Hago visibles los obb
+            oBBAuto.render();
+            oBBObstaculoPrueba.render();
+
+            //Muestro el trayecto de puntos de control
+            for (int i = 0; i < trayecto.Count; i++)
+            {
+                trayecto[i].tgcCilindro().render();
+                trayecto[i].tgcCilindro().BoundingCylinder.render();
+            }
+
+            //Colision con puntos de control
+            for (int i = 0; i < trayecto.Count; i++)
+            {
+                unPuntoDeControl = trayecto[i];
+                if (TgcCollisionUtils.testPointCylinder(oBBAuto.Position, unPuntoDeControl.tgcCilindro().BoundingCylinder))
+                {
+                    unPuntoDeControl.tgcCilindro().setTexture(texture);
+                    TgcCylinder cilindroModificado = new TgcCylinder(unPuntoDeControl.tgcCilindro().Center, 200, 30);
+
+                    trayecto[i].setCilindro(cilindroModificado);
+                }
+            }
+
         }
 
-        public void turn(float elapsedTime)
+        public override void close()
         {
-            float twirl = this.angle * elapsedTime;
-            this.rotateY(twirl);
-            this.gradesRotated += twirl;
+            box.dispose();
+            mainMesh.dispose();
+
+            obstaculoDePrueba.dispose();
+            oBBObstaculoPrueba.dispose();
+            oBBAuto.dispose();
+
+            //borro los puntos de control del trayecto
+            for (int i = 0; i < trayecto.Count; i++)
+            {
+                trayecto[i].tgcCilindro().dispose();
+                trayecto[i].tgcCilindro().BoundingCylinder.dispose();
+            }
+            trayecto.Clear();
         }
 
-        public void render()
-        {
-            this.mesh.render();
-        }
-
-        public Vector3 getPosition()
-        {
-            return this.mesh.Position;
-        }
-
-        public Vector3 getPositionInVehicle()
-        {
-            return Vector3.Add(this.mesh.Position, this.offset);
-        }
-
-        
-         // Ubica la rueda en la posicion que le corresponde dentro del vehiculo.
-         
- 
-        public void setPositionInVehicle(TgcMesh vehicle, Vector3 center, float angleY)
-        {
-            this.mesh.Position = vehicle.Position;
-            float x = center.X + (float)Math.Sin((float)vehicle.Rotation.Y) * this.offset.Z;
-            float y = 0f;
-            float z = center.X + (float)Math.Cos((float)vehicle.Rotation.Y) * this.offset.Z;
-            this.mesh.move(x, y, z);
-            this.mesh.rotateY(angleY);
-            this.mesh.move((float)Math.Cos(-this.mesh.Rotation.Y) * (this.offset.X * this.direction), 0f, (float)Math.Sin(-this.mesh.Rotation.Y) * (this.offset.X * this.direction));
-            //this.mesh.Position = new Vector3(this.mesh.Position.X, this.getHeightInYourPosition(), this.mesh.Position.Z);
-        }
-
-        public void move(float x, float y, float z)
-        {
-            this.mesh.move(x, y, z);
-        }
-
-        public float getHeightInYourPosition()
-        {
-            return this.heightMap.get(this.mesh.Position.X / LandscapeRenderer.kGridSpacing, this.mesh.Position.Z / LandscapeRenderer.kGridSpacing) + RADIO_WHEEL;
-        }
-
-        public float getGradesRotated()
-        {
-            return this.gradesRotated;
-        }
-
-        public bool isRotated()
-        {
-            return this.gradesRotated != 0f;
-        }
-
-        public void dispose()
-        {
-            this.mesh.dispose();
-        }
     }
 }
-*/
+
+
