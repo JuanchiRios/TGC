@@ -11,6 +11,7 @@ using TgcViewer.Utils.TgcGeometry;
 using TgcViewer.Utils.TgcSceneLoader;
 using TgcViewer.Utils.Input;
 using Microsoft.DirectX.DirectInput;
+using TgcViewer.Utils._2D;
 
 namespace AlumnoEjemplos.MiGrupo
 {
@@ -27,9 +28,13 @@ namespace AlumnoEjemplos.MiGrupo
         Jugador jugador;
         TgcObb oBBAuto, oBBObstaculoPrueba;
 
+        //texto
+        TgcText2d text1;
+
         //Creo un listado de puntos de control
-        List<PuntoDeControl> trayecto = new List<PuntoDeControl>();
-        PuntoDeControl unPuntoDeControl;
+        List<TgcCylinder> trayecto = new List<TgcCylinder>();
+        List<PuntoDeControl> puntosDelTrayecto = new List<PuntoDeControl>();
+        int contadorDeActivacionesDePuntosDeControl = 0;
 
         public override string getCategory()
         {
@@ -103,11 +108,18 @@ namespace AlumnoEjemplos.MiGrupo
             //Creo un punto de control para probarlo
             for (int i = 0; i < 10;i++)
             {
-                unPuntoDeControl = new PuntoDeControl(100, 50, new Vector3(-300 - (i*1000) , 20, -1000 - (i * 300)));
-
-                trayecto.Add(unPuntoDeControl);
+                TgcCylinder unCilindro = new TgcCylinder(new Vector3(-300 - (i * 1000), 20, -1000 - (i * 300)), 100, 50);
+                trayecto.Add(unCilindro);
+                puntosDelTrayecto.Add(new PuntoDeControl(false));
             }
-                
+            //Activo el primer punto de control
+            puntosDelTrayecto[0].activarPunto();
+
+            /////////////TEXTOS///////////////////////
+            //Crear texto 1, básico
+            text1 = new TgcText2d();
+            text1.Text = "Texto de prueba";
+            text1.Color = Color.White;
 
             ///////////////MODIFIERS//////////////////
             GuiController.Instance.Modifiers.addFloat("velocidadMaxima", 1000, 7000, 1000f);
@@ -182,23 +194,30 @@ namespace AlumnoEjemplos.MiGrupo
             //Muestro el trayecto de puntos de control
             for(int i=0;i<trayecto.Count;i++)
             {
-                trayecto[i].tgcCilindro().render();
-                trayecto[i].tgcCilindro().BoundingCylinder.render();
+                trayecto[i].render();
+                trayecto[i].BoundingCylinder.render();
             }
+
             
+
             //Colision con puntos de control
             for (int i = 0; i < trayecto.Count; i++)
             {
-                unPuntoDeControl = trayecto[i];
-                if(TgcCollisionUtils.testPointCylinder(oBBAuto.Position, unPuntoDeControl.tgcCilindro().BoundingCylinder))
+                //Pregunto si colisiona con un punto de control activado
+                if (puntosDelTrayecto[i].estaActivado() && TgcCollisionUtils.testPointCylinder(oBBAuto.Position, trayecto[i].BoundingCylinder))
                 {
-                    unPuntoDeControl.tgcCilindro().setTexture(texture);
-                    TgcCylinder cilindroModificado = new TgcCylinder(unPuntoDeControl.tgcCilindro().Center, 200, 30);
-                    
-                    trayecto[i].setCilindro(cilindroModificado);
+                    TgcCylinder cilindroModificado = new TgcCylinder(trayecto[i].Center, 200, 30);
+
+                    trayecto.RemoveAt(i);
+                    trayecto.Add(cilindroModificado);
+                    puntosDelTrayecto.Add(new PuntoDeControl(false));
+                    contadorDeActivacionesDePuntosDeControl++;
+                    text1.Text = contadorDeActivacionesDePuntosDeControl.ToString();
                 }
             }
-            
+
+            //Renderizar los tres textoss
+            text1.render();
         }
          
         public override void close()
@@ -213,12 +232,14 @@ namespace AlumnoEjemplos.MiGrupo
             //borro los puntos de control del trayecto
             for (int i = 0; i < trayecto.Count; i++)
             {
-                trayecto[i].tgcCilindro().dispose();
-                trayecto[i].tgcCilindro().BoundingCylinder.dispose();
+                trayecto[i].dispose();
+                trayecto[i].BoundingCylinder.dispose();
             }
             trayecto.Clear();
+   
+            //Liberar textos
+            text1.dispose();
         }
-
     }
 }
     
