@@ -27,9 +27,6 @@ namespace AlumnoEjemplos.MiGrupo
         Jugador jugador;
         TgcObb oBBAuto, oBBObstaculoPrueba;
 
-        //Creo un listado de puntos de control
-        List<PuntoDeControl> trayecto = new List<PuntoDeControl>();
-        PuntoDeControl unPuntoDeControl;
 
         public override string getCategory()
         {
@@ -183,7 +180,6 @@ namespace AlumnoEjemplos.MiGrupo
             oBBObstaculoPrueba.dispose();
             oBBAuto.dispose();
 
-            trayecto.Clear();
         }
 
     }
