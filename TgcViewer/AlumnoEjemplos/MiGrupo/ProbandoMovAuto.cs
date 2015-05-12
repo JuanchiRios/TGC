@@ -27,6 +27,7 @@ namespace AlumnoEjemplos.MiGrupo
         Auto auto;
         Jugador jugador;
         TgcObb oBBAuto, oBBObstaculoPrueba;
+        variablesEnPantalla textoVelocidad = new variablesEnPantalla();
 
         //texto
         TgcText2d text1;
@@ -120,6 +121,7 @@ namespace AlumnoEjemplos.MiGrupo
             text1 = new TgcText2d();
             text1.Text = "Texto de prueba";
             text1.Color = Color.White;
+         
 
             ///////////////MODIFIERS//////////////////
             GuiController.Instance.Modifiers.addFloat("velocidadMaxima", 1000, 7000, 1000f);
@@ -218,6 +220,7 @@ namespace AlumnoEjemplos.MiGrupo
 
             //Renderizar los tres textoss
             text1.render();
+            textoVelocidad.mostrarVelocidad(auto.velocidad).render();
         }
          
         public override void close()
@@ -239,6 +242,7 @@ namespace AlumnoEjemplos.MiGrupo
    
             //Liberar textos
             text1.dispose();
+            
         }
     }
 }
