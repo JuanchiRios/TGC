@@ -29,7 +29,8 @@ namespace AlumnoEjemplos.MiGrupo
         TgcObb oBBAuto, oBBObstaculoPrueba;
 
         //texto
-        TgcText2d text1;
+        TgcText2d textPuntosDeControlAlcanzados;
+        TgcText2d textPosicionDelAutoActual;
 
         //Creo un listado de puntos de control
         List<TgcCylinder> trayecto = new List<TgcCylinder>();
@@ -117,9 +118,14 @@ namespace AlumnoEjemplos.MiGrupo
 
             /////////////TEXTOS///////////////////////
             //Crear texto 1, básico
-            text1 = new TgcText2d();
-            text1.Text = "Texto de prueba";
-            text1.Color = Color.White;
+            textPuntosDeControlAlcanzados = new TgcText2d();
+            textPuntosDeControlAlcanzados.Position = new Point(0, 50);
+            textPuntosDeControlAlcanzados.Text = "Puntos De Control Alcanzados = ";
+            textPuntosDeControlAlcanzados.Color = Color.White;
+
+            textPosicionDelAutoActual = new TgcText2d();
+            textPosicionDelAutoActual.Text = "Posicion del auto actual = ";
+            textPosicionDelAutoActual.Color = Color.White;
 
             ///////////////MODIFIERS//////////////////
             GuiController.Instance.Modifiers.addFloat("velocidadMaxima", 1000, 7000, 1000f);
@@ -132,7 +138,7 @@ namespace AlumnoEjemplos.MiGrupo
         public override void render(float elapsedTime)
         {
             TgcTexture texture = TgcTexture.createTexture(GuiController.Instance.AlumnoEjemplosMediaDir + "TheC#\\Pista\\pistaCarreras.png");
-
+            
             Microsoft.DirectX.Direct3D.Device d3dDevice = GuiController.Instance.D3dDevice;
 
             //Le paso el elapsed time al auto porque sus metodos no deben depender de los FPS
@@ -191,13 +197,14 @@ namespace AlumnoEjemplos.MiGrupo
             oBBAuto.render();
             oBBObstaculoPrueba.render();
 
-            //Muestro el trayecto de puntos de control
-            for(int i=0;i<trayecto.Count;i++)
+            //Muestro todo el trayecto de puntos de control
+            /*for(int i=0;i<trayecto.Count;i++)
             {
                 trayecto[i].render();
                 trayecto[i].BoundingCylinder.render();
-            }
-
+            }*/
+            //Muestro el punto siguiente
+            trayecto[0].render();
             
 
             //Colision con puntos de control
@@ -208,15 +215,19 @@ namespace AlumnoEjemplos.MiGrupo
                 {
                     TgcCylinder cilindroModificado = new TgcCylinder(trayecto[i].Center, 200, 30);
 
+                    trayecto[1].UseTexture = true;
+
                     trayecto.RemoveAt(i);
                     trayecto.Add(cilindroModificado);
                     contadorDeActivacionesDePuntosDeControl++;
-                    text1.Text = contadorDeActivacionesDePuntosDeControl.ToString();
+                    textPuntosDeControlAlcanzados.Text = "Puntos De Control Alcanzados = " + contadorDeActivacionesDePuntosDeControl.ToString();
                 }
             }
+            textPosicionDelAutoActual.Text = mainMesh.Position.ToString();
 
             //Renderizar los tres textoss
-            text1.render();
+            textPuntosDeControlAlcanzados.render();
+            textPosicionDelAutoActual.render();
         }
          
         public override void close()
@@ -237,7 +248,8 @@ namespace AlumnoEjemplos.MiGrupo
             trayecto.Clear();
    
             //Liberar textos
-            text1.dispose();
+            textPuntosDeControlAlcanzados.dispose();
+            textPosicionDelAutoActual.dispose();
         }
     }
 }
