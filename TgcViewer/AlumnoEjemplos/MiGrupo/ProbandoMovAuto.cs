@@ -33,9 +33,9 @@ namespace AlumnoEjemplos.MiGrupo
 
         //Creo un listado de puntos de control
         List<TgcCylinder> trayecto = new List<TgcCylinder>();
-        List<PuntoDeControl> puntosDelTrayecto = new List<PuntoDeControl>();
+        //List<PuntoDeControl> puntosDelTrayecto = new List<PuntoDeControl>();
         int contadorDeActivacionesDePuntosDeControl = 0;
-
+        
         public override string getCategory()
         {
             return "Otros";
@@ -110,10 +110,10 @@ namespace AlumnoEjemplos.MiGrupo
             {
                 TgcCylinder unCilindro = new TgcCylinder(new Vector3(-300 - (i * 1000), 20, -1000 - (i * 300)), 100, 50);
                 trayecto.Add(unCilindro);
-                puntosDelTrayecto.Add(new PuntoDeControl(false));
+                //puntosDelTrayecto.Add(new PuntoDeControl(false));
             }
             //Activo el primer punto de control
-            puntosDelTrayecto[0].activarPunto();
+            //puntosDelTrayecto[0].activarPunto();
 
             /////////////TEXTOS///////////////////////
             //Crear texto 1, básico
@@ -204,13 +204,12 @@ namespace AlumnoEjemplos.MiGrupo
             for (int i = 0; i < trayecto.Count; i++)
             {
                 //Pregunto si colisiona con un punto de control activado
-                if (puntosDelTrayecto[i].estaActivado() && TgcCollisionUtils.testPointCylinder(oBBAuto.Position, trayecto[i].BoundingCylinder))
+                if ( (i == 0) && TgcCollisionUtils.testPointCylinder(oBBAuto.Position, trayecto[i].BoundingCylinder))
                 {
                     TgcCylinder cilindroModificado = new TgcCylinder(trayecto[i].Center, 200, 30);
 
                     trayecto.RemoveAt(i);
                     trayecto.Add(cilindroModificado);
-                    puntosDelTrayecto.Add(new PuntoDeControl(false));
                     contadorDeActivacionesDePuntosDeControl++;
                     text1.Text = contadorDeActivacionesDePuntosDeControl.ToString();
                 }
