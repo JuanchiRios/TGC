@@ -82,12 +82,11 @@ namespace AlumnoEjemplos.MiGrupo
             //Solo nos interesa el primer modelo de esta escena (tiene solo uno)
             mainMesh = scene2.Meshes[0];
 
-            //Vamos a utilizar la cámara en 3ra persona para que siga al objeto principal a medida que se mueve
-            GuiController.Instance.ThirdPersonCamera.Enable = false;
+            //Vamos a utilizar la cámara en 1ra persona
+            GuiController.Instance.FpsCamera.Enable = true;
             mainMesh.Position = new Vector3(0f, 0f, -900f);
             mainMesh.rotateY(90);
-            GuiController.Instance.ThirdPersonCamera.RotationY = 90;
-            GuiController.Instance.ThirdPersonCamera.setCamera(mainMesh.Position, 200, 500);
+            GuiController.Instance.FpsCamera.setCamera(new Vector3(0, 100, -700), (mainMesh.Position));
             GuiController.Instance.BackgroundColor = Color.Black;
 
             //Le asigno su oriented bounding box que me permite rotar la caja de colisiones (no así bounding box)
@@ -148,8 +147,8 @@ namespace AlumnoEjemplos.MiGrupo
                 auto.velocidad = -(auto.velocidad * 0.3f); //Lo hago ir atrás un tercio de velocidad de choque
             }
 
-            GuiController.Instance.ThirdPersonCamera.Target = mainMesh.Position;
-
+            //GuiController.Instance.FpsCamera.Position = mainMesh.Position;
+            /*
             //Ajusto la camara a menos de 360 porque voy a necesitar hacer calculos entre angulos
             while (prevCameraRotation > 360)
             {
@@ -159,7 +158,7 @@ namespace AlumnoEjemplos.MiGrupo
             //La camara no rota exactamente a la par del auto, hay un pequeño retraso
             GuiController.Instance.ThirdPersonCamera.RotationY += 5 * (mainMesh.Rotation.Y - prevCameraRotation) * elapsedTime;
             prevCameraRotation = GuiController.Instance.ThirdPersonCamera.RotationY;
-
+            */
             //Dibujar objeto principal
             //Siempre primero hacer todos los cálculos de lógica e input y luego al final dibujar todo (ciclo update-render)
             mainMesh.render();
