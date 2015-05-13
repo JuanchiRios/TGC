@@ -26,6 +26,7 @@ namespace AlumnoEjemplos.MiGrupo
         Auto auto;
         Jugador jugador;
         TgcObb oBBAuto, oBBObstaculoPrueba;
+        float rotacionVertical;
 
 
         public override string getCategory()
@@ -82,7 +83,7 @@ namespace AlumnoEjemplos.MiGrupo
             mainMesh = scene2.Meshes[0];
 
             //Vamos a utilizar la cámara en 3ra persona para que siga al objeto principal a medida que se mueve
-            GuiController.Instance.ThirdPersonCamera.Enable = true;
+            GuiController.Instance.ThirdPersonCamera.Enable = false;
             mainMesh.Position = new Vector3(0f, 0f, -900f);
             mainMesh.rotateY(90);
             GuiController.Instance.ThirdPersonCamera.RotationY = 90;
@@ -122,7 +123,8 @@ namespace AlumnoEjemplos.MiGrupo
             jugador.jugar();
 
             //Transfiero la rotacion del auto abstracto al mesh, y su obb
-            mainMesh.Rotation = new Vector3(0f, auto.rotacion, 0f);
+            rotacionVertical += auto.velocidad * elapsedTime /20;
+            mainMesh.Rotation = new Vector3(rotacionVertical, auto.rotacion, 0f);
             oBBAuto.Center = mainMesh.Position;
             oBBAuto.setRotation(mainMesh.Rotation);
 

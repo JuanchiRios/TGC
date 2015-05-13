@@ -1,0 +1,40 @@
+﻿
+# Please enter the commit message for your changes. Lines starting
+# with '#' will be ignored, and an empty message aborts the commit.
+# On branch master
+# Your branch is up-to-date with 'origin/master'.
+#
+# Changes to be committed:
+#	new file:   TgcViewer/AlumnoEjemplos/MiGrupo/Auto.cs
+#	new file:   TgcViewer/AlumnoEjemplos/MiGrupo/Jugador.cs
+#	modified:   TgcViewer/AlumnoEjemplos/MiGrupo/ProbandoMovAuto.cs
+#
+# Changes not staged for commit:
+#	modified:   TgcViewer/AlumnoEjemplos/AlumnoEjemplos.csproj
+#	modified:   TgcViewer/AlumnoEjemplos/AlumnoEjemplos.dll
+#	modified:   TgcViewer/AlumnoEjemplos/AlumnoEjemplos.pdb
+#	modified:   TgcViewer/AlumnoEjemplos/TgcViewer.exe
+#	modified:   TgcViewer/AlumnoEjemplos/TgcViewer.pdb
+#	modified:   TgcViewer/AlumnoEjemplos/obj/Debug/AlumnoEjemplos.csproj.FileListAbsolute.txt
+#	modified:   TgcViewer/AlumnoEjemplos/obj/Debug/AlumnoEjemplos.csprojResolveAssemblyReference.cache
+#	modified:   TgcViewer/AlumnoEjemplos/obj/Debug/AlumnoEjemplos.dll
+#	modified:   TgcViewer/AlumnoEjemplos/obj/Debug/AlumnoEjemplos.pdb
+#	modified:   TgcViewer/AlumnoEjemplos/obj/Debug/DesignTimeResolveAssemblyReferencesInput.cache
+#	modified:   TgcViewer/TgcViewer.exe
+#	modified:   TgcViewer/TgcViewer.pdb
+#	modified:   TgcViewer/TgcViewer.v12.suo
+#	modified:   TgcViewer/shadtextures-gothic_light-pentagram_light1_1K.txt
+#	modified:   TgcViewer/shadtextures-gothic_trim-pitted_rust2_trans.txt
+#	modified:   TgcViewer/shadtextures-sfx-computer_blocks17.txt
+#	modified:   TgcViewer/shadtextures-sfx-flame1_hell.txt
+#	modified:   TgcViewer/shadtextures-sfx-flame1side.txt
+#	modified:   TgcViewer/shadtextures-sfx-flame2.txt
+#	modified:   TgcViewer/shadtextures-skin-chapthroat2.txt
+#	modified:   TgcViewer/shadtextures-skin-chapthroatooz.txt
+#	modified:   TgcViewer/shadtextures-skin-surface8_trans.txt
+#	modified:   TgcViewer/shadtextures-skin-tongue_trans.txt
+#
+
+Commit objetoso
+Cambiado el modelado a una version mas orientada a objetos.
+Tambien agregue un par de lineas para tratar que la camara siga al auto pero con un ligero retraso.
