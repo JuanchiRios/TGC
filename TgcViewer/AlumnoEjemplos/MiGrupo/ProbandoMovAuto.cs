@@ -28,12 +28,10 @@ namespace AlumnoEjemplos.MiGrupo
         Jugador jugador;
         TgcObb oBBAuto, oBBObstaculoPrueba;
         variablesEnPantalla textoVelocidad = new variablesEnPantalla();
-         TgcText2d text1;
 
         //texto
         TgcText2d textPuntosDeControlAlcanzados;
         TgcText2d textPosicionDelAutoActual;
-
         //Creo un listado de puntos de control
         List<TgcCylinder> trayecto = new List<TgcCylinder>();
         //List<PuntoDeControl> puntosDelTrayecto = new List<PuntoDeControl>();
@@ -104,7 +102,6 @@ namespace AlumnoEjemplos.MiGrupo
             
 
             //creo al auto y al jugador
-            //auto = new Auto(90);
             auto = new Auto(90);
             jugador = new Jugador(auto);
 
@@ -119,13 +116,7 @@ namespace AlumnoEjemplos.MiGrupo
             //puntosDelTrayecto[0].activarPunto();
 
             /////////////TEXTOS///////////////////////
-            //Crear texto 1, básico
-
-            text1 = new TgcText2d();
-            text1.Text = "Texto de prueba";
-            text1.Color = Color.White;
-         
-
+              
             textPuntosDeControlAlcanzados = new TgcText2d();
             textPuntosDeControlAlcanzados.Position = new Point(0, 50);
             textPuntosDeControlAlcanzados.Text = "Puntos De Control Alcanzados = ";
@@ -137,6 +128,7 @@ namespace AlumnoEjemplos.MiGrupo
             textPosicionDelAutoActual.Position = new Point(100, 450);
 
 
+            textoVelocidad.inicializarTextoVelocidad(auto.velocidad);
             ///////////////MODIFIERS//////////////////
             GuiController.Instance.Modifiers.addFloat("velocidadMaxima", 1000, 7000, 1000f);
 
@@ -237,10 +229,8 @@ namespace AlumnoEjemplos.MiGrupo
 
             //Renderizar los tres textoss
 
-            text1.render();
-            if (elapsedTime<0.15)
-            textoVelocidad.mostrarVelocidad(auto.velocidad/10).render();
-
+            textoVelocidad.mostrarVelocidad(auto.velocidad/10).render(); //renderiza la velocidad 
+          
             textPuntosDeControlAlcanzados.render();
             textPosicionDelAutoActual.render();
 
@@ -264,9 +254,6 @@ namespace AlumnoEjemplos.MiGrupo
             trayecto.Clear();
    
             //Liberar textos
-
-            text1.dispose();
-            
 
             textPuntosDeControlAlcanzados.dispose();
             textPosicionDelAutoActual.dispose();
