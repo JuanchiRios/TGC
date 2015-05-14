@@ -40,6 +40,8 @@ namespace AlumnoEjemplos.MiGrupo
         Jugador jugador;
         TgcObb oBBAuto, oBBObstaculoPrueba;
         variablesEnPantalla textoVelocidad = new variablesEnPantalla();
+        List<Vector3> posicionesPuntosDeControl;
+        TgcCylinder unCilindro;
 
         //texto
         TgcText2d textPuntosDeControlAlcanzados;
@@ -143,14 +145,41 @@ namespace AlumnoEjemplos.MiGrupo
             jugador = new Jugador(auto);
 
             //Creo un punto de control para probarlo
-            for (int i = 0; i < 10;i++)
+            /*for (int i = 0; i < 10;i++)
             {
                 TgcCylinder unCilindro = new TgcCylinder(new Vector3(-300 - (i * 1000), 20, -1000 - (i * 300)), 100, 50);
                 trayecto.Add(unCilindro);
                 //puntosDelTrayecto.Add(new PuntoDeControl(false));
-            }
+            }*/
             //Activo el primer punto de control
             //puntosDelTrayecto[0].activarPunto();
+
+            //inicializo puntos de control en prov mov auto.
+            /*posicionesPuntosDeControl = new List<Vector3> { new Vector3 (-1088, 20, -2503), 
+                new Vector3 (2377, 20, -2528), new Vector3 (5721, 20, -2547), new Vector3 (7367, 20, -1606),
+                new Vector3 (2170, 20, 2743), new Vector3 (2120, 20, 363), new Vector3 (-193, 20, -625),
+                new Vector3 (-2067, 20, 981), new Vector3 (-4548, 20, 2366), new Vector3 (-6951, 20, 450),
+                new Vector3 (-6210, 20, -2318), new Vector3 (-5490, 20, -248), new Vector3 (-2903, 20, -1212)};
+            */
+            posicionesPuntosDeControl = new List<Vector3>();
+            posicionesPuntosDeControl.Add(new Vector3(-1088, 20, -2503));
+            posicionesPuntosDeControl.Add(new Vector3(2377, 20, -2528));
+            posicionesPuntosDeControl.Add(new Vector3(5721, 20, -2547));
+            posicionesPuntosDeControl.Add(new Vector3(7367, 20, -1606));
+            posicionesPuntosDeControl.Add(new Vector3(2170, 20, 2743));
+            posicionesPuntosDeControl.Add(new Vector3(2120, 20, 363));
+            posicionesPuntosDeControl.Add(new Vector3(-193, 20, -625));
+            posicionesPuntosDeControl.Add(new Vector3 (-2067, 20, 981));
+            posicionesPuntosDeControl.Add(new Vector3(-4548, 20, 2366));
+            posicionesPuntosDeControl.Add(new Vector3(-6951, 20, 450));
+            posicionesPuntosDeControl.Add(new Vector3(-6210, 20, -2318));
+            posicionesPuntosDeControl.Add( new Vector3 (-5490, 20, -248));
+            posicionesPuntosDeControl.Add(new Vector3(-2903, 20, -1212));
+            for (int i = 0; i < 12; i++)
+            {
+                TgcCylinder unCilindro = new TgcCylinder(posicionesPuntosDeControl[i], 100, 50);
+                trayecto.Add(unCilindro);
+            }
 
             /////////////TEXTOS///////////////////////
               
