@@ -23,6 +23,10 @@ namespace AlumnoEjemplos.MiGrupo
         TgcMesh ruedaDerechaTraseraMesh;
         TgcMesh ruedaIzquierdaDelanteraMesh;
         TgcMesh ruedaIzquierdaTraseraMesh;
+        Vector3 ruedaDerechaDelanteraPos;
+        Vector3 ruedaDerechaTraseraPos;
+        Vector3 ruedaIzquierdaDelanteraPos;
+        Vector3 ruedaIzquierdaTraseraPos;
         TgcMesh autoMesh;
         TgcBox box;
         TgcBox obstaculoDePrueba;
@@ -32,6 +36,7 @@ namespace AlumnoEjemplos.MiGrupo
         TgcObb oBBAuto, oBBObstaculoPrueba;
         float rotacionVertical;
         List<TgcViewer.Utils.TgcSceneLoader.TgcMesh> ruedas;
+        List<Vector3> posiciones;
 
         public override string getCategory()
         {
@@ -96,18 +101,20 @@ namespace AlumnoEjemplos.MiGrupo
             //Son ruedas izquierdas asi que las roto
             ruedaIzquierdaDelanteraMesh.rotateY(180);
             ruedaIzquierdaTraseraMesh.rotateY(180);
+            ruedaDerechaDelanteraPos = new Vector3(0f, 44.5f, -900f);
+            ruedaDerechaTraseraPos = new Vector3(-500f, 44.5f, -900f);
+            ruedaIzquierdaDelanteraPos = new Vector3(0f, 44.5f, -1200f);
+            ruedaIzquierdaTraseraPos = new Vector3(-500f, 44.5f, -1200f);
 
             //creo la lista de ruedas
             ruedas = new List<TgcViewer.Utils.TgcSceneLoader.TgcMesh> { ruedaDerechaDelanteraMesh, ruedaDerechaTraseraMesh, ruedaIzquierdaDelanteraMesh, ruedaIzquierdaTraseraMesh };
-           
+            posiciones = new List<Vector3> { ruedaDerechaDelanteraPos, ruedaDerechaTraseraPos, ruedaIzquierdaDelanteraPos, ruedaIzquierdaTraseraPos };
             //inicializamos posicion de ruedas
-            ruedaDerechaDelanteraMesh.Position = new Vector3(0f, 44.5f, -900f);
-            ruedaDerechaTraseraMesh.Position = new Vector3(-500f, 44.5f, -900f);
-            ruedaIzquierdaDelanteraMesh.Position = new Vector3(0f, 44.5f, -1200f);
-            ruedaIzquierdaTraseraMesh.Position = new Vector3(-500f, 44.5f, -1200f);
             for (int i = 0; i < 4; i++)
             {
+                ruedas[i].Position = posiciones[i];
                 ruedas[i].rotateY(90);
+
             }
             //Vamos a utilizar la cámara en 1ra persona
             GuiController.Instance.FpsCamera.Enable = true;
