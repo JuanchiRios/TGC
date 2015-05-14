@@ -19,7 +19,10 @@ namespace AlumnoEjemplos.MiGrupo
     /// </summary>
     public class ProbandoRueda : TgcExample
     {
-        TgcMesh mainMesh;
+        TgcMesh ruedaDerechaDelanteraMesh;
+        TgcMesh ruedaDerechaTraseraMesh;
+        TgcMesh ruedaIzquierdaDelanteraMesh;
+        TgcMesh ruedaIzquierdaTraseraMesh;
         TgcBox box;
         TgcBox obstaculoDePrueba;
         float prevCameraRotation = 90;
@@ -27,7 +30,7 @@ namespace AlumnoEjemplos.MiGrupo
         Jugador jugador;
         TgcObb oBBAuto, oBBObstaculoPrueba;
         float rotacionVertical;
-
+        List<TgcViewer.Utils.TgcSceneLoader.TgcMesh> ruedas;
 
         public override string getCategory()
         {
@@ -79,18 +82,34 @@ namespace AlumnoEjemplos.MiGrupo
             //Le asigno su oriented bounding box que me permite rotar la caja de colisiones (no así bounding box)
             oBBObstaculoPrueba = TgcObb.computeFromAABB(obstaculoDePrueba.BoundingBox);
 
-            //Solo nos interesa el primer modelo de esta escena (tiene solo uno)
-            mainMesh = scene2.Meshes[0];
+            //El modelo de las cuatro ruedas
+            ruedaDerechaDelanteraMesh = scene2.Meshes[0];
+            ruedaDerechaTraseraMesh = scene2.Meshes[0];
+            ruedaIzquierdaDelanteraMesh = scene2.Meshes[0];
+            ruedaIzquierdaTraseraMesh = scene2.Meshes[0];
+            //Son ruedas izquierdas asi que las roto
+            ruedaIzquierdaDelanteraMesh.rotateY(180);
+            ruedaIzquierdaTraseraMesh.rotateY(180);
 
+            //creo la lista de ruedas
+            ruedas = new List<TgcViewer.Utils.TgcSceneLoader.TgcMesh> { ruedaDerechaDelanteraMesh, ruedaDerechaTraseraMesh, ruedaIzquierdaDelanteraMesh, ruedaIzquierdaTraseraMesh };
+           
+            //inicializamos posicion de ruedas
+            ruedaDerechaDelanteraMesh.Position = new Vector3(0f, 44.5f, -900f);
+            ruedaDerechaTraseraMesh.Position = new Vector3(-500f, 44.5f, -900f);
+            ruedaIzquierdaDelanteraMesh.Position = new Vector3(0f, 44.5f, -1200f);
+            ruedaIzquierdaTraseraMesh.Position = new Vector3(-500f, 44.5f, -1200f);
+            for (int i = 0; i < 4; i++)
+            {
+                ruedas[i].rotateY(90);
+            }
             //Vamos a utilizar la cámara en 1ra persona
             GuiController.Instance.FpsCamera.Enable = true;
-            mainMesh.Position = new Vector3(0f, 0f, -900f);
-            mainMesh.rotateY(90);
-            GuiController.Instance.FpsCamera.setCamera(new Vector3(0, 100, -700), (mainMesh.Position));
+            GuiController.Instance.FpsCamera.setCamera(new Vector3(0, 100, -700), (ruedaDerechaDelanteraMesh.Position));
             GuiController.Instance.BackgroundColor = Color.Black;
 
             //Le asigno su oriented bounding box que me permite rotar la caja de colisiones (no así bounding box)
-            oBBAuto = TgcObb.computeFromAABB(mainMesh.BoundingBox);
+            oBBAuto = TgcObb.computeFromAABB(ruedaDerechaDelanteraMesh.BoundingBox);
 
 
             //creo al auto y al jugador
@@ -121,14 +140,22 @@ namespace AlumnoEjemplos.MiGrupo
             //El jugador envia mensajes al auto dependiendo de que tecla presiono
             jugador.jugar();
 
-            //Transfiero la rotacion del auto abstracto al mesh, y su obb
-            rotacionVertical += auto.velocidad * elapsedTime /20;
-            mainMesh.Rotation = new Vector3(rotacionVertical, auto.rotacion, 0f);
-            oBBAuto.Center = mainMesh.Position;
-            oBBAuto.setRotation(mainMesh.Rotation);
 
+
+
+            //Transfiero la rotacion del auto abstracto al mesh, y su obb
             //Calculo el movimiento del mesh dependiendo de la velocidad del auto
-            mainMesh.moveOrientedY(-auto.velocidad * elapsedTime);
+            for (int i = 0; i < 4; i++)
+            {
+                ruedas[i].Rotation = new Vector3(rotacionVertical, auto.rotacion, 0f);
+                ruedas[i].moveOrientedY(-auto.velocidad * elapsedTime);
+                if (i == 0)
+                {
+                    oBBAuto.Center = ruedaDerechaDelanteraMesh.Position;
+                    oBBAuto.setRotation(ruedaDerechaDelanteraMesh.Rotation);
+                }
+
+            }
 
             //Detección de colisiones
             bool collisionFound = false;
@@ -143,7 +170,7 @@ namespace AlumnoEjemplos.MiGrupo
             //Si hubo alguna colisión, hacer esto:
             if (collisionFound)
             {
-                mainMesh.moveOrientedY(20 * auto.velocidad * elapsedTime); //Lo hago "como que rebote un poco" para no seguir colisionando
+                ruedaDerechaDelanteraMesh.moveOrientedY(20 * auto.velocidad * elapsedTime); //Lo hago "como que rebote un poco" para no seguir colisionando
                 auto.velocidad = -(auto.velocidad * 0.3f); //Lo hago ir atrás un tercio de velocidad de choque
             }
 
@@ -161,7 +188,10 @@ namespace AlumnoEjemplos.MiGrupo
             */
             //Dibujar objeto principal
             //Siempre primero hacer todos los cálculos de lógica e input y luego al final dibujar todo (ciclo update-render)
-            mainMesh.render();
+            for (int i = 0; i < 4; i++)
+            {
+                ruedas[i].render();
+            }
             box.render();
 
             obstaculoDePrueba.render();
@@ -175,7 +205,10 @@ namespace AlumnoEjemplos.MiGrupo
         public override void close()
         {
             box.dispose();
-            mainMesh.dispose();
+            for (int i = 0; i < 4; i++)
+            {
+                ruedas[i].dispose();
+            }
 
             obstaculoDePrueba.dispose();
             oBBObstaculoPrueba.dispose();
