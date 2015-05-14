@@ -28,6 +28,8 @@ namespace AlumnoEjemplos.MiGrupo
         Vector3 ruedaIzquierdaDelanteraPos;
         Vector3 ruedaIzquierdaTraseraPos;
         TgcMesh autoMesh;
+        float autoMeshPrevZ;
+        float autoMeshPrevX;
         TgcBox box;
         TgcBox obstaculoDePrueba;
         float prevCameraRotation = 90;
@@ -101,7 +103,7 @@ namespace AlumnoEjemplos.MiGrupo
             //Son ruedas izquierdas asi que las roto
             ruedaIzquierdaDelanteraMesh.rotateY(180);
             ruedaIzquierdaTraseraMesh.rotateY(180);
-            autoMesh.Position = new Vector3(0, 44.5f, -900f);
+            autoMesh.Position = new Vector3(0, 0, 0);
             ruedaDerechaDelanteraPos = new Vector3(0f, 0, 0);
             ruedaDerechaTraseraPos = new Vector3(-500f, 0, 0);
             ruedaIzquierdaDelanteraPos = new Vector3(0f, 0, -300f);
@@ -158,10 +160,11 @@ namespace AlumnoEjemplos.MiGrupo
             autoMesh.Rotation = new Vector3(0, auto.rotacion, 0f);
             autoMesh.moveOrientedY(-auto.velocidad * elapsedTime);
             
-            for (int i = 0; i < 4; i++)
+            
+           for (int i = 0; i < 4; i++)
             {
                 ruedas[i].Rotation = new Vector3(rotacionVertical, auto.rotacion, 0f);
-                ruedas[i].move(autoMesh.Position.X, autoMesh.Position.Y, autoMesh.Position.Z); //*FastMath.Cos(auto.rotacion)*FastMath.Sin(auto.rotacion)
+                ruedas[i].move((autoMesh.Position.X - autoMeshPrevX) * FastMath.Cos(auto.rotacion), 0, (autoMesh.Position.Z - autoMeshPrevZ) * FastMath.Sin(auto.rotacion));
                 if (i == 0)
                 {
                     oBBAuto.Center = ruedaDerechaDelanteraMesh.Position;
@@ -169,6 +172,8 @@ namespace AlumnoEjemplos.MiGrupo
                 }
             }
 
+            autoMeshPrevX=autoMesh.Position.X;
+            autoMeshPrevZ = autoMesh.Position.Z;
 
             //Detección de colisiones
             bool collisionFound = false;
