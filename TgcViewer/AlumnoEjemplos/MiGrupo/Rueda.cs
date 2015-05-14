@@ -164,7 +164,7 @@ namespace AlumnoEjemplos.MiGrupo
            for (int i = 0; i < 4; i++)
             {
                 ruedas[i].Rotation = new Vector3(rotacionVertical, auto.rotacion, 0f);
-                ruedas[i].move((autoMesh.Position.X - autoMeshPrevX) * FastMath.Cos(auto.rotacion), 0, (autoMesh.Position.Z - autoMeshPrevZ) * FastMath.Sin(auto.rotacion));
+                ruedas[i].move((autoMesh.Position.X - autoMeshPrevX) , 0, (autoMesh.Position.Z - autoMeshPrevZ));
                 if (i == 0)
                 {
                     oBBAuto.Center = ruedaDerechaDelanteraMesh.Position;
