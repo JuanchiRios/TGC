@@ -108,7 +108,7 @@ namespace AlumnoEjemplos.MiGrupo
             ruedaIzquierdaTraseraMesh = scene5.Meshes[0];
             autoMesh = scene6.Meshes[0];
             //Son ruedas izquierdas asi que las roto
-            ruedaIzquierdaDelanteraMesh.rotateY(180);
+           /* ruedaIzquierdaDelanteraMesh.rotateY(180);
             ruedaIzquierdaTraseraMesh.rotateY(180);
             autoMesh.Position = new Vector3(0, 0, 0);
             ruedaDerechaDelanteraPos = new Vector3(0f, 0, 0);
@@ -120,9 +120,10 @@ namespace AlumnoEjemplos.MiGrupo
             ruedaIzquierdaDelanteraDistAng = new Vector2(500,225);
             ruedaIzquierdaTraseraDistAng = new Vector2(500,315);
             distanciasYAngulos = new List<Vector2> { ruedaDerechaDelanteraDistAng, ruedaDerechaTraseraDistAng, ruedaIzquierdaDelanteraDistAng, ruedaIzquierdaTraseraDistAng };
+            */
             //creo la lista de ruedas
             ruedas = new List<TgcViewer.Utils.TgcSceneLoader.TgcMesh> { ruedaDerechaDelanteraMesh, ruedaDerechaTraseraMesh, ruedaIzquierdaDelanteraMesh, ruedaIzquierdaTraseraMesh };
-            posiciones = new List<Vector3> { ruedaDerechaDelanteraPos, ruedaDerechaTraseraPos, ruedaIzquierdaDelanteraPos, ruedaIzquierdaTraseraPos };
+           // posiciones = new List<Vector3> { ruedaDerechaDelanteraPos, ruedaDerechaTraseraPos, ruedaIzquierdaDelanteraPos, ruedaIzquierdaTraseraPos };
             //inicializamos posicion de ruedas
             for (int i = 0; i < 4; i++)
             {
@@ -193,8 +194,8 @@ namespace AlumnoEjemplos.MiGrupo
                 
                 if (i == 0)
                 {
-                    oBBAuto.Center = ruedaDerechaDelanteraMesh.Position;
-                    oBBAuto.setRotation(ruedaDerechaDelanteraMesh.Rotation);
+                    //oBBAuto.Center = ruedaDerechaDelanteraMesh.Position;
+                    //oBBAuto.setRotation(ruedaDerechaDelanteraMesh.Rotation);
                 }
             }
 
