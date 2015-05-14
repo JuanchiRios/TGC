@@ -20,18 +20,7 @@ namespace AlumnoEjemplos.MiGrupo
     /// </summary>
     public class ProbandoMovAuto : TgcExample
     {
-        TgcMesh autoMesh;
-        TgcMesh ruedaDerechaDelanteraMesh;
-        TgcMesh ruedaDerechaTraseraMesh;
-        TgcMesh ruedaIzquierdaDelanteraMesh;
-        TgcMesh ruedaIzquierdaTraseraMesh;
-        Vector3 ruedaDerechaDelanteraPos;
-        Vector3 ruedaDerechaTraseraPos;
-        Vector3 ruedaIzquierdaDelanteraPos;
-        Vector3 ruedaIzquierdaTraseraPos;
-        float rotacionVertical;
-        float autoMeshPrevZ;
-        float autoMeshPrevX;
+        TgcMesh mainMesh;
         TgcBox box;
         TgcBox obstaculoDePrueba;
         float prevCameraRotation=90;
@@ -39,8 +28,6 @@ namespace AlumnoEjemplos.MiGrupo
         Jugador jugador;
         TgcObb oBBAuto, oBBObstaculoPrueba;
         variablesEnPantalla textoVelocidad = new variablesEnPantalla();
-        List<TgcViewer.Utils.TgcSceneLoader.TgcMesh> ruedas;
-        List<Vector3> posiciones;
 
         //texto
         TgcText2d textPuntosDeControlAlcanzados;
@@ -91,53 +78,27 @@ namespace AlumnoEjemplos.MiGrupo
             //En este ejemplo primero cargamos una escena 3D entera.
             TgcSceneLoader loader = new TgcSceneLoader();
 
-            //Luego cargamos el auto y las ruedas aparte que va a hacer el objeto que controlamos con el teclado
-            TgcScene scene1 = loader.loadSceneFromFile(GuiController.Instance.AlumnoEjemplosMediaDir + "TheC#\\Auto\\\\Auto-TgcScene.xml");
-            TgcScene scene2 = loader.loadSceneFromFile(GuiController.Instance.AlumnoEjemplosMediaDir + "TheC#\\Auto\\\\Auto_Rueda_Derecha-TgcScene.xml");
-            TgcScene scene3 = loader.loadSceneFromFile(GuiController.Instance.AlumnoEjemplosMediaDir + "TheC#\\Auto\\\\Auto_Rueda_Derecha-TgcScene.xml");
-            TgcScene scene4 = loader.loadSceneFromFile(GuiController.Instance.AlumnoEjemplosMediaDir + "TheC#\\Auto\\\\Auto_Rueda_Izquierda-TgcScene.xml");
-            TgcScene scene5 = loader.loadSceneFromFile(GuiController.Instance.AlumnoEjemplosMediaDir + "TheC#\\Auto\\\\Auto_Rueda_Izquierda-TgcScene.xml");
-
-
-
-            //Creo un obstaculo de prueba de colisiones y demás
+            //Luego cargamos otro modelo aparte que va a hacer el objeto que controlamos con el teclado
+            TgcScene scene2 = loader.loadSceneFromFile(GuiController.Instance.AlumnoEjemplosMediaDir + "TheC#\\Auto\\\\Auto-TgcScene.xml");
+            
+            //Creo un obstaculo de prueba de colsiones y demás
             obstaculoDePrueba = TgcBox.fromSize(new Vector3(0f, 0f, -500f), new Vector3(200, 200, 200), texturaMadera);
             //Le asigno su oriented bounding box que me permite rotar la caja de colisiones (no así bounding box)
             oBBObstaculoPrueba = TgcObb.computeFromAABB(obstaculoDePrueba.BoundingBox);
 
             //Solo nos interesa el primer modelo de esta escena (tiene solo uno)
-            autoMesh = scene1.Meshes[0];
-            ruedaDerechaDelanteraMesh = scene2.Meshes[0];
-            ruedaDerechaTraseraMesh = scene3.Meshes[0];
-            ruedaIzquierdaDelanteraMesh = scene4.Meshes[0];
-            ruedaIzquierdaTraseraMesh = scene5.Meshes[0];
-            //Los posicionamos
-            autoMesh.Position = new Vector3(0f, 0f, -900f);
-            //Inicilizo vectores posicion iniciales innecesarios
-            ruedaDerechaDelanteraPos = new Vector3(0f, 44.5f, -700f);
-            ruedaDerechaTraseraPos = new Vector3(-500f, 44.5f, -700f);
-            ruedaIzquierdaDelanteraPos = new Vector3(0f, 44.5f, -1100f);
-            ruedaIzquierdaTraseraPos = new Vector3(-500f, 44.5f, -1100f);
-
-            //creo la lista de ruedas
-            ruedas = new List<TgcViewer.Utils.TgcSceneLoader.TgcMesh> { ruedaDerechaDelanteraMesh, ruedaDerechaTraseraMesh, ruedaIzquierdaDelanteraMesh, ruedaIzquierdaTraseraMesh };
-            posiciones = new List<Vector3> { ruedaDerechaDelanteraPos, ruedaDerechaTraseraPos, ruedaIzquierdaDelanteraPos, ruedaIzquierdaTraseraPos };
-            //inicializamos posicion de ruedas
-            for (int i = 0; i < 4; i++)
-            {
-                ruedas[i].Position = posiciones[i];
-                ruedas[i].rotateY(90);
-
-            }
-
+            mainMesh = scene2.Meshes[0];
+            
             //Vamos a utilizar la cámara en 3ra persona para que siga al objeto principal a medida que se mueve
             GuiController.Instance.ThirdPersonCamera.Enable = true;
+            mainMesh.Position = new Vector3(0f,0f,-900f);
+            mainMesh.rotateY(90);
             GuiController.Instance.ThirdPersonCamera.RotationY = 90;
-            GuiController.Instance.ThirdPersonCamera.setCamera(autoMesh.Position, 200, 500);                      
+            GuiController.Instance.ThirdPersonCamera.setCamera(mainMesh.Position, 200, 500);                      
             GuiController.Instance.BackgroundColor = Color.Black;
 
             //Le asigno su oriented bounding box que me permite rotar la caja de colisiones (no así bounding box)
-            oBBAuto = TgcObb.computeFromAABB(autoMesh.BoundingBox);
+            oBBAuto = TgcObb.computeFromAABB(mainMesh.BoundingBox);
             
 
             //creo al auto y al jugador
@@ -168,7 +129,6 @@ namespace AlumnoEjemplos.MiGrupo
 
 
             textoVelocidad.inicializarTextoVelocidad(auto.velocidad);
-           
             ///////////////MODIFIERS//////////////////
             GuiController.Instance.Modifiers.addFloat("velocidadMaxima", 1000, 7000, 1000f);
 
@@ -192,26 +152,13 @@ namespace AlumnoEjemplos.MiGrupo
             //El jugador envia mensajes al auto dependiendo de que tecla presiono
             jugador.jugar();
 
-            rotacionVertical -= auto.velocidad * elapsedTime / 20;
-
-
             //Transfiero la rotacion del auto abstracto al mesh, y su obb
-            autoMesh.Rotation = new Vector3(0f, auto.rotacion, 0f);
-            oBBAuto.Center = autoMesh.Position;
-            oBBAuto.setRotation(autoMesh.Rotation);
-
-            for (int i = 0; i < 4; i++)
-            {
-                ruedas[i].Rotation = new Vector3(rotacionVertical, auto.rotacion, 0f);
-                ruedas[i].move((autoMesh.Position.X - autoMeshPrevX), 0, (autoMesh.Position.Z - autoMeshPrevZ));
-            }
-            autoMeshPrevX = autoMesh.Position.X;
-            autoMeshPrevZ = autoMesh.Position.Z;
-
-            
+            mainMesh.Rotation = new Vector3(0f, auto.rotacion, 0f);
+            oBBAuto.Center = mainMesh.Position;
+            oBBAuto.setRotation(mainMesh.Rotation);
 
             //Calculo el movimiento del mesh dependiendo de la velocidad del auto
-            autoMesh.moveOrientedY(-auto.velocidad * elapsedTime);
+            mainMesh.moveOrientedY(-auto.velocidad * elapsedTime);
 
             //Detección de colisiones
             bool collisionFound = false;
@@ -226,11 +173,11 @@ namespace AlumnoEjemplos.MiGrupo
             //Si hubo alguna colisión, hacer esto:
             if (collisionFound)
             {
-                autoMesh.moveOrientedY(20 * auto.velocidad * elapsedTime); //Lo hago "como que rebote un poco" para no seguir colisionando
+                mainMesh.moveOrientedY(20 * auto.velocidad * elapsedTime); //Lo hago "como que rebote un poco" para no seguir colisionando
                 auto.velocidad = -(auto.velocidad * 0.3f); //Lo hago ir atrás un tercio de velocidad de choque
             }
 
-            GuiController.Instance.ThirdPersonCamera.Target = autoMesh.Position;
+            GuiController.Instance.ThirdPersonCamera.Target = mainMesh.Position;
 
             //Ajusto la camara a menos de 360 porque voy a necesitar hacer calculos entre angulos
             while (prevCameraRotation > 360)
@@ -239,17 +186,14 @@ namespace AlumnoEjemplos.MiGrupo
             }
 
             //La camara no rota exactamente a la par del auto, hay un pequeño retraso
-            GuiController.Instance.ThirdPersonCamera.RotationY += 5 * (autoMesh.Rotation.Y - prevCameraRotation) * elapsedTime;
+            GuiController.Instance.ThirdPersonCamera.RotationY += 5 * (mainMesh.Rotation.Y - prevCameraRotation) * elapsedTime;
             prevCameraRotation = GuiController.Instance.ThirdPersonCamera.RotationY;
 
             //Dibujar objeto principal
             //Siempre primero hacer todos los cálculos de lógica e input y luego al final dibujar todo (ciclo update-render)
-            autoMesh.render();
+            mainMesh.render();
             box.render();
-            for (int i = 0; i < 4; i++)
-            {
-                ruedas[i].render();
-            }
+
             obstaculoDePrueba.render();
             //Hago visibles los obb
             oBBAuto.render();
@@ -281,7 +225,7 @@ namespace AlumnoEjemplos.MiGrupo
                     textPuntosDeControlAlcanzados.Text = "Puntos De Control Alcanzados = " + contadorDeActivacionesDePuntosDeControl.ToString();
                 }
             }
-            textPosicionDelAutoActual.Text = autoMesh.Position.ToString();
+            textPosicionDelAutoActual.Text = mainMesh.Position.ToString();
 
             //Renderizar los tres textoss
 
@@ -295,11 +239,8 @@ namespace AlumnoEjemplos.MiGrupo
         public override void close()
         {
             box.dispose();
-            autoMesh.dispose();
-            for (int i = 0; i < 4; i++)
-            {
-                ruedas[i].dispose();
-            }
+            mainMesh.dispose();
+
             obstaculoDePrueba.dispose();
             oBBObstaculoPrueba.dispose();
             oBBAuto.dispose();
