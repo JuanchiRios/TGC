@@ -20,6 +20,7 @@ namespace AlumnoEjemplos.MiGrupo
     /// </summary>
     public class ProbandoMovAuto : TgcExample
     {
+
         TgcMesh mainMesh;
         TgcBox box;
         TgcBox obstaculoDePrueba;

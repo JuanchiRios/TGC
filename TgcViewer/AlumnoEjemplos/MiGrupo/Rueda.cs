@@ -39,6 +39,13 @@ namespace AlumnoEjemplos.MiGrupo
         float rotacionVertical;
         List<TgcViewer.Utils.TgcSceneLoader.TgcMesh> ruedas;
         List<Vector3> posiciones;
+        Vector2 ruedaDerechaDelanteraDistAng;
+        Vector2 ruedaDerechaTraseraDistAng;
+        Vector2 ruedaIzquierdaDelanteraDistAng;
+        Vector2 ruedaIzquierdaTraseraDistAng;
+        List<Vector2> distanciasYAngulos;
+        List<float> dx;
+        List<float> dy;
 
         public override string getCategory()
         {
@@ -108,7 +115,11 @@ namespace AlumnoEjemplos.MiGrupo
             ruedaDerechaTraseraPos = new Vector3(-500f, 0, 0);
             ruedaIzquierdaDelanteraPos = new Vector3(0f, 0, -300f);
             ruedaIzquierdaTraseraPos = new Vector3(-500f, 0, -300f);
-
+            ruedaDerechaDelanteraDistAng = new Vector2(500,45);
+            ruedaDerechaTraseraDistAng = new Vector2(500,135);
+            ruedaIzquierdaDelanteraDistAng = new Vector2(500,225);
+            ruedaIzquierdaTraseraDistAng = new Vector2(500,315);
+            distanciasYAngulos = new List<Vector2> { ruedaDerechaDelanteraDistAng, ruedaDerechaTraseraDistAng, ruedaIzquierdaDelanteraDistAng, ruedaIzquierdaTraseraDistAng };
             //creo la lista de ruedas
             ruedas = new List<TgcViewer.Utils.TgcSceneLoader.TgcMesh> { ruedaDerechaDelanteraMesh, ruedaDerechaTraseraMesh, ruedaIzquierdaDelanteraMesh, ruedaIzquierdaTraseraMesh };
             posiciones = new List<Vector3> { ruedaDerechaDelanteraPos, ruedaDerechaTraseraPos, ruedaIzquierdaDelanteraPos, ruedaIzquierdaTraseraPos };
@@ -119,6 +130,9 @@ namespace AlumnoEjemplos.MiGrupo
                 ruedas[i].rotateY(90);
 
             }
+            
+            dx = new List<float> {-75, -75, 75, 75};
+            dy = new List<float> {75, 150, 75, 150};
             //Vamos a utilizar la cámara en 1ra persona
             GuiController.Instance.FpsCamera.Enable = true;
             GuiController.Instance.FpsCamera.setCamera(new Vector3(0, 100, -700), (ruedaDerechaDelanteraMesh.Position));
@@ -163,14 +177,30 @@ namespace AlumnoEjemplos.MiGrupo
             
            for (int i = 0; i < 4; i++)
             {
+
+                float ro, alfa_rueda;
+                float posicion_x;
+                float posicion_y;
+                ro = FastMath.Sqrt(dx[i] * dx[i] + dy[i] * dy[i]);
+                alfa_rueda = FastMath.Asin(dx[i] / ro);
+                posicion_x = FastMath.Sin(alfa_rueda + auto.rotacion) * ro;
+                posicion_y = FastMath.Cos(alfa_rueda + auto.rotacion) * ro;
+               
+                ruedas[i].Position = (new Vector3(posicion_x, 0, posicion_y) + autoMesh.Position);
                 ruedas[i].Rotation = new Vector3(rotacionVertical, auto.rotacion, 0f);
-                ruedas[i].move((autoMesh.Position.X - autoMeshPrevX) , 0, (autoMesh.Position.Z - autoMeshPrevZ));
+                
+                //ruedas[i].move(autoMesh.Position.X - autoMeshPrevX, 0, autoMesh.Position.Z-autoMeshPrevZ);
+                
                 if (i == 0)
                 {
                     oBBAuto.Center = ruedaDerechaDelanteraMesh.Position;
                     oBBAuto.setRotation(ruedaDerechaDelanteraMesh.Rotation);
                 }
             }
+
+            
+            
+            
 
             autoMeshPrevX=autoMesh.Position.X;
             autoMeshPrevZ = autoMesh.Position.Z;
@@ -192,8 +222,8 @@ namespace AlumnoEjemplos.MiGrupo
                 auto.velocidad = -(auto.velocidad * 0.3f); //Lo hago ir atrás un tercio de velocidad de choque
             }
 
-            //GuiController.Instance.FpsCamera.Position = mainMesh.Position;
-            /*
+            GuiController.Instance.ThirdPersonCamera.Target = autoMesh.Position;
+            
             //Ajusto la camara a menos de 360 porque voy a necesitar hacer calculos entre angulos
             while (prevCameraRotation > 360)
             {
@@ -201,9 +231,9 @@ namespace AlumnoEjemplos.MiGrupo
             }
 
             //La camara no rota exactamente a la par del auto, hay un pequeño retraso
-            GuiController.Instance.ThirdPersonCamera.RotationY += 5 * (mainMesh.Rotation.Y - prevCameraRotation) * elapsedTime;
+            GuiController.Instance.ThirdPersonCamera.RotationY += 5 * (autoMesh.Rotation.Y - prevCameraRotation) * elapsedTime;
             prevCameraRotation = GuiController.Instance.ThirdPersonCamera.RotationY;
-            */
+            
             //Dibujar objeto principal
             //Siempre primero hacer todos los cálculos de lógica e input y luego al final dibujar todo (ciclo update-render)
             for (int i = 0; i < 4; i++)
@@ -216,6 +246,8 @@ namespace AlumnoEjemplos.MiGrupo
             //Hago visibles los obb
             oBBAuto.render();
             oBBObstaculoPrueba.render();
+
+            autoMesh.render();
 
 
         }
