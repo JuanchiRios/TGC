@@ -23,6 +23,7 @@ namespace AlumnoEjemplos.MiGrupo
         TgcMesh ruedaDerechaTraseraMesh;
         TgcMesh ruedaIzquierdaDelanteraMesh;
         TgcMesh ruedaIzquierdaTraseraMesh;
+        TgcMesh autoMesh;
         TgcBox box;
         TgcBox obstaculoDePrueba;
         float prevCameraRotation = 90;
@@ -79,6 +80,7 @@ namespace AlumnoEjemplos.MiGrupo
             TgcScene scene3 = loader.loadSceneFromFile(GuiController.Instance.AlumnoEjemplosMediaDir + "TheC#\\Auto\\\\Auto_Rueda-TgcScene.xml");
             TgcScene scene4 = loader.loadSceneFromFile(GuiController.Instance.AlumnoEjemplosMediaDir + "TheC#\\Auto\\\\Auto_Rueda-TgcScene.xml");
             TgcScene scene5 = loader.loadSceneFromFile(GuiController.Instance.AlumnoEjemplosMediaDir + "TheC#\\Auto\\\\Auto_Rueda-TgcScene.xml");
+            TgcScene scene6 = loader.loadSceneFromFile(GuiController.Instance.AlumnoEjemplosMediaDir + "TheC#\\Auto\\\\Auto-TgcScene.xml");
 
             //Creo un obstaculo de prueba de colsiones y demás
             obstaculoDePrueba = TgcBox.fromSize(new Vector3(0f, 0f, -500f), new Vector3(200, 200, 200), texturaMadera);
@@ -90,6 +92,7 @@ namespace AlumnoEjemplos.MiGrupo
             ruedaDerechaTraseraMesh = scene3.Meshes[0];
             ruedaIzquierdaDelanteraMesh = scene4.Meshes[0];
             ruedaIzquierdaTraseraMesh = scene5.Meshes[0];
+            autoMesh = scene6.Meshes[0];
             //Son ruedas izquierdas asi que las roto
             ruedaIzquierdaDelanteraMesh.rotateY(180);
             ruedaIzquierdaTraseraMesh.rotateY(180);
@@ -124,10 +127,6 @@ namespace AlumnoEjemplos.MiGrupo
             GuiController.Instance.Modifiers.addFloat("velocidadMaxima", 1000, 7000, 1000f);
 
         }
-
-
-
-
         public override void render(float elapsedTime)
         {
             TgcTexture texture = TgcTexture.createTexture(GuiController.Instance.AlumnoEjemplosMediaDir + "TheC#\\Pista\\pistaCarreras.png");
@@ -145,20 +144,20 @@ namespace AlumnoEjemplos.MiGrupo
 
 
 
-
+            rotacionVertical -= auto.velocidad * elapsedTime/20;
             //Transfiero la rotacion del auto abstracto al mesh, y su obb
             //Calculo el movimiento del mesh dependiendo de la velocidad del auto
             for (int i = 0; i < 4; i++)
             {
-                ruedas[i].Rotation = new Vector3(rotacionVertical, auto.rotacion, 0f);
-                ruedas[i].moveOrientedY(-auto.velocidad * elapsedTime);
+                ruedas[i].Rotation = new Vector3(rotacionVertical, auto.rotacion, 0f); //El coeficienteDeZurdez es para que las ruedas de la izquierda miren para la izquierda y aun asi se muevan para adelante
+                ruedas[i].moveOrientedY(-auto.velocidad *elapsedTime);
                 if (i == 0)
                 {
                     oBBAuto.Center = ruedaDerechaDelanteraMesh.Position;
                     oBBAuto.setRotation(ruedaDerechaDelanteraMesh.Rotation);
                 }
-
             }
+
 
             //Detección de colisiones
             bool collisionFound = false;

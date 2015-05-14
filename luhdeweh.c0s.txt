@@ -1,0 +1,15 @@
+﻿Rueda desbuggeada
+# Please enter the commit message for your changes. Lines starting
+# with '#' will be ignored, and an empty message aborts the commit.
+# On branch master
+# Your branch is up-to-date with 'origin/master'.
+#
+# Changes to be committed:
+#	modified:   TgcViewer/AlumnoEjemplos/AlumnoEjemplos.dll
+#	modified:   TgcViewer/AlumnoEjemplos/AlumnoEjemplos.pdb
+#	modified:   TgcViewer/AlumnoEjemplos/MiGrupo/Rueda.cs
+#	modified:   TgcViewer/AlumnoEjemplos/obj/Debug/AlumnoEjemplos.csprojResolveAssemblyReference.cache
+#	modified:   TgcViewer/AlumnoEjemplos/obj/Debug/AlumnoEjemplos.dll
+#	modified:   TgcViewer/AlumnoEjemplos/obj/Debug/AlumnoEjemplos.pdb
+#
+
