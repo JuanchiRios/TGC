@@ -76,6 +76,9 @@ namespace AlumnoEjemplos.MiGrupo
 
             //Luego cargamos otro modelo aparte que va a hacer el objeto que controlamos con el teclado
             TgcScene scene2 = loader.loadSceneFromFile(GuiController.Instance.AlumnoEjemplosMediaDir + "TheC#\\Auto\\\\Auto_Rueda-TgcScene.xml");
+            TgcScene scene3 = loader.loadSceneFromFile(GuiController.Instance.AlumnoEjemplosMediaDir + "TheC#\\Auto\\\\Auto_Rueda-TgcScene.xml");
+            TgcScene scene4 = loader.loadSceneFromFile(GuiController.Instance.AlumnoEjemplosMediaDir + "TheC#\\Auto\\\\Auto_Rueda-TgcScene.xml");
+            TgcScene scene5 = loader.loadSceneFromFile(GuiController.Instance.AlumnoEjemplosMediaDir + "TheC#\\Auto\\\\Auto_Rueda-TgcScene.xml");
 
             //Creo un obstaculo de prueba de colsiones y demás
             obstaculoDePrueba = TgcBox.fromSize(new Vector3(0f, 0f, -500f), new Vector3(200, 200, 200), texturaMadera);
@@ -84,9 +87,9 @@ namespace AlumnoEjemplos.MiGrupo
 
             //El modelo de las cuatro ruedas
             ruedaDerechaDelanteraMesh = scene2.Meshes[0];
-            ruedaDerechaTraseraMesh = scene2.Meshes[0];
-            ruedaIzquierdaDelanteraMesh = scene2.Meshes[0];
-            ruedaIzquierdaTraseraMesh = scene2.Meshes[0];
+            ruedaDerechaTraseraMesh = scene3.Meshes[0];
+            ruedaIzquierdaDelanteraMesh = scene4.Meshes[0];
+            ruedaIzquierdaTraseraMesh = scene5.Meshes[0];
             //Son ruedas izquierdas asi que las roto
             ruedaIzquierdaDelanteraMesh.rotateY(180);
             ruedaIzquierdaTraseraMesh.rotateY(180);
