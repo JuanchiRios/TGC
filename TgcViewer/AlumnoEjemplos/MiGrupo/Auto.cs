@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using TgcViewer;
 
 namespace AlumnoEjemplos.MiGrupo
 {
@@ -16,12 +17,16 @@ namespace AlumnoEjemplos.MiGrupo
         float aceleracionMarchaAtras=300f;
         float velocidadMinima=-1000f;
         float velocidadMaxima=5000f;
+        List<TgcViewer.Utils.TgcSceneLoader.TgcMesh> ruedas;
+        int direccion;
+
                 
         //Interfaz de usuario
 
-        public Auto(float rot)
+        public Auto(float rot, List<TgcViewer.Utils.TgcSceneLoader.TgcMesh> unasRuedas)
         {
             rotacion = rot;
+            ruedas = unasRuedas;
         }
 
         public void avanzar()
@@ -39,11 +44,20 @@ namespace AlumnoEjemplos.MiGrupo
         {
             acelerar(0);
         } 
-
-        public void rotar(int direccion)
+    
+        public void rotar(int unaDireccion)
         {
+            direccion = unaDireccion;
             rotacion += (elapsedTime * direccion * (velocidad / 1000)); //direccion puede ser 1 o -1, 1 es derecha y -1 izquierda
             ajustarRotacion();
+        }
+        //       ruedas = new List<TgcViewer.Utils.TgcSceneLoader.TgcMesh> { ruedaDerechaDelanteraMesh, ruedaDerechaTraseraMesh, ruedaIzquierdaDelanteraMesh, ruedaIzquierdaTraseraMesh }
+        public float rotarRueda(int i){
+                if (i == 0 || i == 2)
+                {
+                    return 0.5f * direccion;
+                }
+            return 0;
         }
 
         //Metodos Internos

@@ -139,7 +139,7 @@ namespace AlumnoEjemplos.MiGrupo
             
 
             //creo al auto y al jugador
-            auto = new Auto(90);
+            auto = new Auto(90,ruedas);
             jugador = new Jugador(auto);
 
             //Creo un punto de control para probarlo
@@ -195,7 +195,7 @@ namespace AlumnoEjemplos.MiGrupo
             oBBAuto.setRotation(autoMesh.Rotation);
 
             //Calculo de giro de la rueda
-            rotacionVertical -= auto.velocidad * elapsedTime / 20;
+            rotacionVertical -= auto.velocidad * elapsedTime / 60;
 
             //Calculo el movimiento del mesh dependiendo de la velocidad del auto
             autoMesh.moveOrientedY(-auto.velocidad * elapsedTime);
@@ -218,7 +218,7 @@ namespace AlumnoEjemplos.MiGrupo
                 posicion_y = FastMath.Cos(alfa_rueda + auto.rotacion) * ro;
 
                 ruedas[i].Position = (new Vector3(posicion_x, 15.5f, posicion_y) + autoMesh.Position);
-                ruedas[i].Rotation = new Vector3(rotacionVertical, auto.rotacion, 0f);
+                ruedas[i].Rotation = new Vector3(rotacionVertical, auto.rotacion + auto.rotarRueda(i), 0f);
 
                 //ruedas[i].move(autoMesh.Position.X - autoMeshPrevX, 0, autoMesh.Position.Z-autoMeshPrevZ);
             }
