@@ -23,6 +23,10 @@ namespace AlumnoEjemplos.MiGrupo
         TgcMesh ruedaDerechaTraseraMesh;
         TgcMesh ruedaIzquierdaDelanteraMesh;
         TgcMesh ruedaIzquierdaTraseraMesh;
+        Vector3 ruedaDerechaDelanteraPos;
+        Vector3 ruedaDerechaTraseraPos;
+        Vector3 ruedaIzquierdaDelanteraPos;
+        Vector3 ruedaIzquierdaTraseraPos;
         TgcMesh autoMesh;
         TgcBox box;
         TgcBox obstaculoDePrueba;
@@ -32,6 +36,7 @@ namespace AlumnoEjemplos.MiGrupo
         TgcObb oBBAuto, oBBObstaculoPrueba;
         float rotacionVertical;
         List<TgcViewer.Utils.TgcSceneLoader.TgcMesh> ruedas;
+        List<Vector3> posiciones;
 
         public override string getCategory()
         {
@@ -76,10 +81,10 @@ namespace AlumnoEjemplos.MiGrupo
             TgcSceneLoader loader = new TgcSceneLoader();
 
             //Luego cargamos otro modelo aparte que va a hacer el objeto que controlamos con el teclado
-            TgcScene scene2 = loader.loadSceneFromFile(GuiController.Instance.AlumnoEjemplosMediaDir + "TheC#\\Auto\\\\Auto_Rueda-TgcScene.xml");
-            TgcScene scene3 = loader.loadSceneFromFile(GuiController.Instance.AlumnoEjemplosMediaDir + "TheC#\\Auto\\\\Auto_Rueda-TgcScene.xml");
-            TgcScene scene4 = loader.loadSceneFromFile(GuiController.Instance.AlumnoEjemplosMediaDir + "TheC#\\Auto\\\\Auto_Rueda-TgcScene.xml");
-            TgcScene scene5 = loader.loadSceneFromFile(GuiController.Instance.AlumnoEjemplosMediaDir + "TheC#\\Auto\\\\Auto_Rueda-TgcScene.xml");
+            TgcScene scene2 = loader.loadSceneFromFile(GuiController.Instance.AlumnoEjemplosMediaDir + "TheC#\\Auto\\\\Auto_Rueda_Derecha-TgcScene.xml");
+            TgcScene scene3 = loader.loadSceneFromFile(GuiController.Instance.AlumnoEjemplosMediaDir + "TheC#\\Auto\\\\Auto_Rueda_Derecha-TgcScene.xml");
+            TgcScene scene4 = loader.loadSceneFromFile(GuiController.Instance.AlumnoEjemplosMediaDir + "TheC#\\Auto\\\\Auto_Rueda_Izquierda-TgcScene.xml");
+            TgcScene scene5 = loader.loadSceneFromFile(GuiController.Instance.AlumnoEjemplosMediaDir + "TheC#\\Auto\\\\Auto_Rueda_Izquierda-TgcScene.xml");
             TgcScene scene6 = loader.loadSceneFromFile(GuiController.Instance.AlumnoEjemplosMediaDir + "TheC#\\Auto\\\\Auto-TgcScene.xml");
 
             //Creo un obstaculo de prueba de colsiones y demás
@@ -96,18 +101,21 @@ namespace AlumnoEjemplos.MiGrupo
             //Son ruedas izquierdas asi que las roto
             ruedaIzquierdaDelanteraMesh.rotateY(180);
             ruedaIzquierdaTraseraMesh.rotateY(180);
+            autoMesh.Position = new Vector3(0, 44.5f, -900f);
+            ruedaDerechaDelanteraPos = new Vector3(0f, 0, 0);
+            ruedaDerechaTraseraPos = new Vector3(-500f, 0, 0);
+            ruedaIzquierdaDelanteraPos = new Vector3(0f, 0, -300f);
+            ruedaIzquierdaTraseraPos = new Vector3(-500f, 0, -300f);
 
             //creo la lista de ruedas
             ruedas = new List<TgcViewer.Utils.TgcSceneLoader.TgcMesh> { ruedaDerechaDelanteraMesh, ruedaDerechaTraseraMesh, ruedaIzquierdaDelanteraMesh, ruedaIzquierdaTraseraMesh };
-           
+            posiciones = new List<Vector3> { ruedaDerechaDelanteraPos, ruedaDerechaTraseraPos, ruedaIzquierdaDelanteraPos, ruedaIzquierdaTraseraPos };
             //inicializamos posicion de ruedas
-            ruedaDerechaDelanteraMesh.Position = new Vector3(0f, 44.5f, -900f);
-            ruedaDerechaTraseraMesh.Position = new Vector3(-500f, 44.5f, -900f);
-            ruedaIzquierdaDelanteraMesh.Position = new Vector3(0f, 44.5f, -1200f);
-            ruedaIzquierdaTraseraMesh.Position = new Vector3(-500f, 44.5f, -1200f);
             for (int i = 0; i < 4; i++)
             {
+                ruedas[i].Position = posiciones[i];
                 ruedas[i].rotateY(90);
+
             }
             //Vamos a utilizar la cámara en 1ra persona
             GuiController.Instance.FpsCamera.Enable = true;
@@ -147,10 +155,13 @@ namespace AlumnoEjemplos.MiGrupo
             rotacionVertical -= auto.velocidad * elapsedTime/20;
             //Transfiero la rotacion del auto abstracto al mesh, y su obb
             //Calculo el movimiento del mesh dependiendo de la velocidad del auto
+            autoMesh.Rotation = new Vector3(0, auto.rotacion, 0f);
+            autoMesh.moveOrientedY(-auto.velocidad * elapsedTime);
+            
             for (int i = 0; i < 4; i++)
             {
-                ruedas[i].Rotation = new Vector3(rotacionVertical, auto.rotacion, 0f); //El coeficienteDeZurdez es para que las ruedas de la izquierda miren para la izquierda y aun asi se muevan para adelante
-                ruedas[i].moveOrientedY(-auto.velocidad *elapsedTime);
+                ruedas[i].Rotation = new Vector3(rotacionVertical, auto.rotacion, 0f);
+                ruedas[i].move(autoMesh.Position.X, autoMesh.Position.Y, autoMesh.Position.Z); //*FastMath.Cos(auto.rotacion)*FastMath.Sin(auto.rotacion)
                 if (i == 0)
                 {
                     oBBAuto.Center = ruedaDerechaDelanteraMesh.Position;
