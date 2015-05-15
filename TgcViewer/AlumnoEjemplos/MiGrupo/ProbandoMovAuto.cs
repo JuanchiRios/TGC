@@ -192,7 +192,7 @@ namespace AlumnoEjemplos.MiGrupo
 
             textoVelocidad.inicializarTextoVelocidad(auto.velocidad);
             ///////////////MODIFIERS//////////////////
-            GuiController.Instance.Modifiers.addFloat("velocidadMaxima", 1000, 7000, 1000f);
+            GuiController.Instance.Modifiers.addFloat("velocidadMaxima", 1000, 7000, 2200f);
 
         }
 
