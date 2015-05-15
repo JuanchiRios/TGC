@@ -43,6 +43,8 @@ namespace AlumnoEjemplos.MiGrupo
         List<Vector3> posicionesPuntosDeControl;
         TgcCylinder unCilindro;
 
+        TgcD3dInput input = GuiController.Instance.D3dInput;
+
         //texto
         TgcText2d textPuntosDeControlAlcanzados;
         TgcText2d textPosicionDelAutoActual;
@@ -241,7 +243,14 @@ namespace AlumnoEjemplos.MiGrupo
                 posicion_y = FastMath.Cos(alfa_rueda + auto.rotacion) * ro;
 
                 ruedas[i].Position = (new Vector3(posicion_x, 15.5f, posicion_y) + autoMesh.Position);
-                ruedas[i].Rotation = new Vector3(rotacionVertical, auto.rotacion + auto.rotarRueda(i), 0f);
+                //Si no aprieta para los costados, dejo la rueda derecha (por ahora, esto se puede modificar)
+                if (input.keyDown(Key.Left) || input.keyDown(Key.A) || input.keyDown(Key.Right) || input.keyDown(Key.D))
+                {
+
+                    ruedas[i].Rotation = new Vector3(rotacionVertical, auto.rotacion + auto.rotarRueda(i), 0f);
+                }
+                else
+                    ruedas[i].Rotation = new Vector3(rotacionVertical, auto.rotacion, 0f);
 
                 //ruedas[i].move(autoMesh.Position.X - autoMeshPrevX, 0, autoMesh.Position.Z-autoMeshPrevZ);
             }
