@@ -35,7 +35,7 @@ namespace AlumnoEjemplos.MiGrupo
         List<float> dx;
         List<float> dy;
         float rotacionVertical;
-        float prevCameraRotation=90;
+        float prevCameraRotation=300;
         Auto auto;
         Jugador jugador;
         TgcObb oBBAuto, oBBObstaculoPrueba;
@@ -119,7 +119,7 @@ namespace AlumnoEjemplos.MiGrupo
 
 
             //posicion del auto
-            autoMesh.Position = new Vector3(-1960f, 0f, -2236f);
+            autoMesh.Position = new Vector3(-1406f, 0f, -2523f);
             //posiciones relativas al auto
             dx = new List<float> { 38, -38, -38, 38 };
             dy = new List<float> { -63, 63, -63, 63 };
@@ -136,7 +136,7 @@ namespace AlumnoEjemplos.MiGrupo
             
 
             //creo al auto y al jugador
-            auto = new Auto(90,ruedas);
+            auto = new Auto(300,ruedas);
             jugador = new Jugador(auto);
 
             //Creo un punto de control para probarlo
@@ -183,7 +183,7 @@ namespace AlumnoEjemplos.MiGrupo
             textPuntosDeControlAlcanzados.Position = new Point(0, 50);
             textPuntosDeControlAlcanzados.Text = "Puntos De Control Alcanzados = ";
             textPuntosDeControlAlcanzados.Color = Color.White;
-
+            
             textPosicionDelAutoActual = new TgcText2d();
             textPosicionDelAutoActual.Text = "Posicion del auto actual = ";
             textPosicionDelAutoActual.Color = Color.White;
@@ -327,6 +327,7 @@ namespace AlumnoEjemplos.MiGrupo
                     textPuntosDeControlAlcanzados.Text = "Puntos De Control Alcanzados = " + contadorDeActivacionesDePuntosDeControl.ToString();
                 }
             }
+
             textPosicionDelAutoActual.Text = autoMesh.Position.ToString();
 
             //Renderizar los tres textoss
