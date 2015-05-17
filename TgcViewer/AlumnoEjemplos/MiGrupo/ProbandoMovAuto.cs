@@ -24,7 +24,7 @@ namespace AlumnoEjemplos.MiGrupo
         
         TgcBox box;
         TgcMesh autoMesh;
-        TgcBox obstaculoDePrueba;
+        TgcBox obstaculoDePrueba, fronteraDerecha, fronteraIzquierda;
         TgcMesh ruedaDerechaDelanteraMesh;
         TgcMesh ruedaDerechaTraseraMesh;
         TgcMesh ruedaIzquierdaDelanteraMesh;
@@ -38,7 +38,7 @@ namespace AlumnoEjemplos.MiGrupo
         float prevCameraRotation=300;
         Auto auto;
         Jugador jugador;
-        TgcObb oBBAuto, oBBObstaculoPrueba;
+        TgcObb oBBAuto, oBBObstaculoPrueba, oBBfronteraDerecha;
         variablesEnPantalla textoVelocidad = new variablesEnPantalla();
         List<Vector3> posicionesPuntosDeControl;
         TgcCylinder unCilindro;
@@ -84,6 +84,7 @@ namespace AlumnoEjemplos.MiGrupo
 
             TgcTexture texture = TgcTexture.createTexture(GuiController.Instance.AlumnoEjemplosMediaDir + "TheC#\\Pista\\pistaCarreras.png");
             TgcTexture texturaMadera = TgcTexture.createTexture(GuiController.Instance.AlumnoEjemplosMediaDir + "TheC#\\Texturas\\Madera\\A3d-Fl3.jpg");
+            TgcTexture texturaLadrillo = TgcTexture.createTexture(GuiController.Instance.AlumnoEjemplosMediaDir + "TheC#\\Texturas\\ladrillo\\ladrillo.jpg");
 
             //Creamos una caja 3D de color rojo, ubicada en el origen y lado 10
             Vector3 center = new Vector3(0, 0, 0);
@@ -176,6 +177,14 @@ namespace AlumnoEjemplos.MiGrupo
                 TgcCylinder unCilindro = new TgcCylinder(posicionesPuntosDeControl[i], 100, 50);
                 trayecto.Add(unCilindro);
             }
+           //Creo un obstaculo de prueba de colsiones y demás
+           fronteraDerecha = TgcBox.fromSize(new Vector3(-8000f, 60f, -00f), new Vector3(200, 150, 10000), texturaLadrillo);
+           //Le asigno su oriented bounding box que me permite rotar la caja de colisiones (no así bounding box)
+           oBBfronteraDerecha = TgcObb.computeFromAABB(fronteraDerecha.BoundingBox);
+          
+         
+           fronteraIzquierda = TgcBox.fromSize(new Vector3(8000f, 60f, -00f), new Vector3(200, 150, 10000), texturaLadrillo);
+          
 
             /////////////TEXTOS///////////////////////
               
@@ -296,10 +305,14 @@ namespace AlumnoEjemplos.MiGrupo
             autoMesh.render();
             box.render();
 
+            fronteraDerecha.render();
+            fronteraIzquierda.render();
             obstaculoDePrueba.render();
             //Hago visibles los obb
             oBBAuto.render();
             oBBObstaculoPrueba.render();
+            oBBfronteraDerecha.render();
+
 
             //Muestro todo el trayecto de puntos de control
             /*for(int i=0;i<trayecto.Count;i++)
