@@ -128,7 +128,7 @@ namespace AlumnoEjemplos.MiGrupo
             //Vamos a utilizar la cámara en 3ra persona para que siga al objeto principal a medida que se mueve
             GuiController.Instance.ThirdPersonCamera.Enable = true;
     
-            GuiController.Instance.ThirdPersonCamera.RotationY = 90;
+            GuiController.Instance.ThirdPersonCamera.RotationY = 300;
             GuiController.Instance.ThirdPersonCamera.setCamera(autoMesh.Position, 200, 500);                      
             GuiController.Instance.BackgroundColor = Color.Black;
 
@@ -287,13 +287,14 @@ namespace AlumnoEjemplos.MiGrupo
             GuiController.Instance.ThirdPersonCamera.Target = autoMesh.Position;
 
             //Ajusto la camara a menos de 360 porque voy a necesitar hacer calculos entre angulos
-            while (prevCameraRotation > 360)
-            {
-                prevCameraRotation -= -360;
-            }
+
 
             //La camara no rota exactamente a la par del auto, hay un pequeño retraso
-            GuiController.Instance.ThirdPersonCamera.RotationY += 5 * (autoMesh.Rotation.Y - prevCameraRotation) * elapsedTime;
+            GuiController.Instance.ThirdPersonCamera.RotationY += 5 * (auto.rotacion -90 - prevCameraRotation) * elapsedTime;
+            while (prevCameraRotation > 360)
+            {
+                prevCameraRotation -= 360;
+            }
             prevCameraRotation = GuiController.Instance.ThirdPersonCamera.RotationY;
 
             //Dibujar objeto principal
