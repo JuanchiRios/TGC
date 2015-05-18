@@ -48,11 +48,22 @@ namespace AlumnoEjemplos.MiGrupo
         //texto
         TgcText2d textPuntosDeControlAlcanzados;
         TgcText2d textPosicionDelAutoActual;
+        TgcText2d textTiempo;
+        float contadorDeFrames = 0;
+        private DateTime horaInicio;
+
+        //Tiempo 
+        public float tiempoTrans = 100f; //tiempo transcurrido desde el defasaje de rotacion de camara y rotacion del mesh
+        private bool habilitarDecremento = false;
+        Tiempo tiempo = new Tiempo();
+        private int segundosAuxiliares = 1;
+
         //Creo un listado de puntos de control
         List<TgcCylinder> trayecto = new List<TgcCylinder>();
         //List<PuntoDeControl> puntosDelTrayecto = new List<PuntoDeControl>();
         int contadorDeActivacionesDePuntosDeControl = 0;
         
+
         public override string getCategory()
         {
             return "Otros";
@@ -198,6 +209,11 @@ namespace AlumnoEjemplos.MiGrupo
             textPosicionDelAutoActual.Color = Color.White;
             textPosicionDelAutoActual.Position = new Point(100, 450);
 
+            this.horaInicio = DateTime.Now;
+            textTiempo = new TgcText2d();
+            textTiempo.Position = new Point(50, 20);
+            textTiempo.Text = "50";
+            textTiempo.Color = Color.White;
 
             textoVelocidad.inicializarTextoVelocidad(auto.velocidad);
             ///////////////MODIFIERS//////////////////
@@ -290,7 +306,7 @@ namespace AlumnoEjemplos.MiGrupo
 
 
             //La camara no rota exactamente a la par del auto, hay un pequeño retraso
-            GuiController.Instance.ThirdPersonCamera.RotationY += 5 * (auto.rotacion -90 - prevCameraRotation) * elapsedTime;
+            GuiController.Instance.ThirdPersonCamera.RotationY += 5 * (auto.rotacion - prevCameraRotation) * elapsedTime;
             while (prevCameraRotation > 360)
             {
                 prevCameraRotation -= 360;
@@ -351,6 +367,18 @@ namespace AlumnoEjemplos.MiGrupo
             textPuntosDeControlAlcanzados.render();
             textPosicionDelAutoActual.render();
 
+            //Cosas del tiempo
+            tiempo.incrementarTiempo(this, elapsedTime, habilitarDecremento);
+
+            //Actualizo y dibujo el relops
+            if ((DateTime.Now.Subtract(this.horaInicio).TotalSeconds) > segundosAuxiliares)
+            {
+                this.textTiempo.Text = (Convert.ToDouble(textTiempo.Text) - 1).ToString();
+                segundosAuxiliares++;
+            }
+
+            textTiempo.render();
+            contadorDeFrames++;
         }
          
         public override void close()
