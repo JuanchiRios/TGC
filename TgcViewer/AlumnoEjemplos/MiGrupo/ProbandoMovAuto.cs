@@ -24,7 +24,7 @@ namespace AlumnoEjemplos.MiGrupo
         
         TgcBox box;
         TgcMesh autoMesh;
-        TgcBox obstaculoDePrueba, fronteraDerecha, fronteraIzquierda;
+        TgcBox obstaculoDePrueba, fronteraDerecha, fronteraIzquierda,fronteraAdelante,fronteraAtras;
         TgcMesh ruedaDerechaDelanteraMesh;
         TgcMesh ruedaDerechaTraseraMesh;
         TgcMesh ruedaIzquierdaDelanteraMesh;
@@ -38,7 +38,7 @@ namespace AlumnoEjemplos.MiGrupo
         float prevCameraRotation=300;
         Auto auto;
         Jugador jugador;
-        TgcObb oBBAuto, oBBObstaculoPrueba, oBBfronteraDerecha;
+        TgcObb oBBAuto, oBBObstaculoPrueba, oBBfronteraDerecha, oBBfronteraIzquierda, oBBfronteraAdelante, oBBfronteraAtras;
         variablesEnPantalla textoVelocidad = new variablesEnPantalla();
         List<Vector3> posicionesPuntosDeControl;
         TgcCylinder unCilindro;
@@ -96,6 +96,7 @@ namespace AlumnoEjemplos.MiGrupo
             TgcTexture texture = TgcTexture.createTexture(GuiController.Instance.AlumnoEjemplosMediaDir + "TheC#\\Pista\\pistaCarreras.png");
             TgcTexture texturaMadera = TgcTexture.createTexture(GuiController.Instance.AlumnoEjemplosMediaDir + "TheC#\\Texturas\\Madera\\A3d-Fl3.jpg");
             TgcTexture texturaLadrillo = TgcTexture.createTexture(GuiController.Instance.AlumnoEjemplosMediaDir + "TheC#\\Texturas\\ladrillo\\ladrillo.jpg");
+            TgcTexture texturaMetal = TgcTexture.createTexture(GuiController.Instance.AlumnoEjemplosMediaDir + "TheC#\\Texturas\\metal.jpg");
 
             //Creamos una caja 3D de color rojo, ubicada en el origen y lado 10
             Vector3 center = new Vector3(0, 0, 0);
@@ -189,13 +190,19 @@ namespace AlumnoEjemplos.MiGrupo
                 trayecto.Add(unCilindro);
             }
            //Creo un obstaculo de prueba de colsiones y demás
-           fronteraDerecha = TgcBox.fromSize(new Vector3(-8000f, 60f, -00f), new Vector3(200, 150, 10000), texturaLadrillo);
-           //Le asigno su oriented bounding box que me permite rotar la caja de colisiones (no así bounding box)
-           oBBfronteraDerecha = TgcObb.computeFromAABB(fronteraDerecha.BoundingBox);
-          
+           fronteraDerecha = TgcBox.fromSize(new Vector3(-8000f, 60f, -00f), new Vector3(200, 150, 7500), texturaMetal);
+           fronteraIzquierda = TgcBox.fromSize(new Vector3(8100f, 60f, -00f), new Vector3(200, 150, 7500), texturaMetal);
+           fronteraAdelante = TgcBox.fromSize(new Vector3(-0f, 60f, -3800f), new Vector3(16000, 150, 200), texturaMetal);
+           fronteraAtras = TgcBox.fromSize(new Vector3(-0f, 60f, 3800f), new Vector3(16000, 150, 200), texturaMetal);
          
-           fronteraIzquierda = TgcBox.fromSize(new Vector3(8000f, 60f, -00f), new Vector3(200, 150, 10000), texturaLadrillo);
-          
+            //Le asigno su oriented bounding box que me permite rotar la caja de colisiones (no así bounding box)
+           oBBfronteraDerecha = TgcObb.computeFromAABB(fronteraDerecha.BoundingBox);
+           oBBfronteraIzquierda = TgcObb.computeFromAABB(fronteraIzquierda.BoundingBox);
+           oBBfronteraAdelante = TgcObb.computeFromAABB(fronteraAdelante.BoundingBox);
+           oBBfronteraAtras = TgcObb.computeFromAABB(fronteraAtras.BoundingBox);
+
+
+            
 
             /////////////TEXTOS///////////////////////
               
@@ -218,7 +225,7 @@ namespace AlumnoEjemplos.MiGrupo
             textoVelocidad.inicializarTextoVelocidad(auto.velocidad);
             ///////////////MODIFIERS//////////////////
             GuiController.Instance.Modifiers.addFloat("velocidadMaxima", 1000, 7000, 2200f);
-
+           
         }
 
 
@@ -235,7 +242,7 @@ namespace AlumnoEjemplos.MiGrupo
 
             //Varío la velocidad Máxima del vehículo con el modifier "velocidadMáxima" 
             auto.establecerVelocidadMáximaEn((float)GuiController.Instance.Modifiers["velocidadMaxima"]);
-
+               
             //El jugador envia mensajes al auto dependiendo de que tecla presiono
             jugador.jugar();
 
@@ -324,6 +331,8 @@ namespace AlumnoEjemplos.MiGrupo
 
             fronteraDerecha.render();
             fronteraIzquierda.render();
+            fronteraAdelante.render();
+            fronteraAtras.render();
             obstaculoDePrueba.render();
             //Hago visibles los obb
             oBBAuto.render();
@@ -393,6 +402,10 @@ namespace AlumnoEjemplos.MiGrupo
             obstaculoDePrueba.dispose();
             oBBObstaculoPrueba.dispose();
             oBBAuto.dispose();
+            fronteraDerecha.dispose();
+            fronteraIzquierda.dispose();
+            fronteraAdelante.dispose();
+            fronteraAtras.dispose();
 
             //borro los puntos de control del trayecto
             for (int i = 0; i < trayecto.Count; i++)
