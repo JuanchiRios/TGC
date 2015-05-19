@@ -49,6 +49,7 @@ namespace AlumnoEjemplos.MiGrupo
         TgcText2d textPuntosDeControlAlcanzados;
         TgcText2d textPosicionDelAutoActual;
         TgcText2d textTiempo;
+        TgcText2d textPerdiste;
         float contadorDeFrames = 0;
         private DateTime horaInicio;
 
@@ -216,7 +217,12 @@ namespace AlumnoEjemplos.MiGrupo
             textPuntosDeControlAlcanzados.Position = new Point(0, 50);
             textPuntosDeControlAlcanzados.Text = "Puntos De Control Alcanzados = ";
             textPuntosDeControlAlcanzados.Color = Color.White;
-            
+
+            textPerdiste = new TgcText2d();
+            textPerdiste.Position = new Point(0,200);
+            textPerdiste.Text = "Perdiste y lograste " + contadorDeActivacionesDePuntosDeControl.ToString() + " puntos de control";
+            textPerdiste.Color = Color.Red;
+
             textPosicionDelAutoActual = new TgcText2d();
             textPosicionDelAutoActual.Text = "Posicion del auto actual = ";
             textPosicionDelAutoActual.Color = Color.White;
@@ -225,7 +231,7 @@ namespace AlumnoEjemplos.MiGrupo
             this.horaInicio = DateTime.Now;
             textTiempo = new TgcText2d();
             textTiempo.Position = new Point(50, 20);
-            textTiempo.Text = "50";
+            textTiempo.Text = "10";
             textTiempo.Color = Color.White;
 
             textoVelocidad.inicializarTextoVelocidad(auto.velocidad);
@@ -392,6 +398,7 @@ namespace AlumnoEjemplos.MiGrupo
                     trayecto.Add(cilindroModificado);
                     contadorDeActivacionesDePuntosDeControl++;
                     textPuntosDeControlAlcanzados.Text = "Puntos De Control Alcanzados = " + contadorDeActivacionesDePuntosDeControl.ToString();
+                    textTiempo.Text = (Convert.ToDouble(textTiempo.Text) + 3).ToString();
                 }
             }
 
@@ -410,8 +417,15 @@ namespace AlumnoEjemplos.MiGrupo
             //Actualizo y dibujo el relops
             if ((DateTime.Now.Subtract(this.horaInicio).TotalSeconds) > segundosAuxiliares)
             {
-                this.textTiempo.Text = (Convert.ToDouble(textTiempo.Text) - 1).ToString();
-                segundosAuxiliares++;
+                if (Convert.ToDouble(textTiempo.Text) == 0)
+                {
+                    textPerdiste.render();
+                }
+                else
+                {
+                    this.textTiempo.Text = (Convert.ToDouble(textTiempo.Text) - 1).ToString();
+                    segundosAuxiliares++;
+                }
             }
 
             textTiempo.render();
