@@ -42,7 +42,7 @@ namespace AlumnoEjemplos.MiGrupo
         variablesEnPantalla textoVelocidad = new variablesEnPantalla();
         List<Vector3> posicionesPuntosDeControl;
         TgcCylinder unCilindro;
-
+        Boolean gano;
 
         TgcD3dInput input = GuiController.Instance.D3dInput;
 
@@ -51,6 +51,7 @@ namespace AlumnoEjemplos.MiGrupo
         TgcText2d textPosicionDelAutoActual;
         TgcText2d textTiempo;
         TgcText2d textPerdiste;
+        TgcText2d textGanaste;
         float contadorDeFrames = 0;
         private DateTime horaInicio;
 
@@ -69,7 +70,7 @@ namespace AlumnoEjemplos.MiGrupo
         //Creo un listado de puntos de control
         List<TgcCylinder> trayecto = new List<TgcCylinder>();
         //List<PuntoDeControl> puntosDelTrayecto = new List<PuntoDeControl>();
-        int contadorDeActivacionesDePuntosDeControl = 0;
+        int contadorDeActivacionesDePuntosDeControl;
         
 
         public override string getCategory()
@@ -219,6 +220,10 @@ namespace AlumnoEjemplos.MiGrupo
             textPuntosDeControlAlcanzados.Text = "Puntos De Control Alcanzados = ";
             textPuntosDeControlAlcanzados.Color = Color.White;
 
+            textGanaste = new TgcText2d();
+            textGanaste.Position = new Point(0, 200);
+            textGanaste.Color = Color.LightGreen;
+
             textPerdiste = new TgcText2d();
             textPerdiste.Position = new Point(0,200);
             textPerdiste.Text = "Perdiste y lograste ";
@@ -238,7 +243,11 @@ namespace AlumnoEjemplos.MiGrupo
             textoVelocidad.inicializarTextoVelocidad(auto.velocidad);
             ///////////////MODIFIERS//////////////////
             GuiController.Instance.Modifiers.addFloat("velocidadMaxima", 1000, 7000, 2200f);
-           
+
+            //contador de puntos de control
+            contadorDeActivacionesDePuntosDeControl = 0;
+            //flag de victoria
+            gano = false;
         }
 
 
@@ -393,13 +402,26 @@ namespace AlumnoEjemplos.MiGrupo
                 {
                     TgcCylinder cilindroModificado = new TgcCylinder(trayecto[i].Center, 200, 30);
 
-                    trayecto[1].UseTexture = true;
+                    
+                    if (contadorDeActivacionesDePuntosDeControl != 48)
+                    {
+                        trayecto[1].UseTexture = true;
+                        trayecto.RemoveAt(i);
+                        trayecto.Add(cilindroModificado);
+                        contadorDeActivacionesDePuntosDeControl++;
+                        textPuntosDeControlAlcanzados.Text = "Puntos De Control Alcanzados = " + contadorDeActivacionesDePuntosDeControl.ToString();
+                        textTiempo.Text = (Convert.ToDouble(textTiempo.Text) + 3).ToString();
 
-                    trayecto.RemoveAt(i);
-                    trayecto.Add(cilindroModificado);
-                    contadorDeActivacionesDePuntosDeControl++;
-                    textPuntosDeControlAlcanzados.Text = "Puntos De Control Alcanzados = " + contadorDeActivacionesDePuntosDeControl.ToString();
-                    textTiempo.Text = (Convert.ToDouble(textTiempo.Text) + 3).ToString();
+                    }
+                    else
+                    {
+                        gano = true;
+                        textGanaste.Text = "Ganaste y obtuviste un puntaje de  " + textTiempo.Text + " puntos";
+                        textGanaste.render();
+                        auto.estatico();
+                        
+                    }
+                    
                 }
             }
 
@@ -423,6 +445,10 @@ namespace AlumnoEjemplos.MiGrupo
                     textPerdiste.Text = "Perdiste y lograste " +contadorDeActivacionesDePuntosDeControl.ToString() + " puntos de control";
                     textPerdiste.render();
                     auto.estatico();
+                }
+                else if (gano == true)
+                {
+                    
                 }
                 else
                 {
