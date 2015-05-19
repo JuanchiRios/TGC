@@ -14,10 +14,13 @@ namespace AlumnoEjemplos.MiGrupo
     {
         TgcD3dInput input = GuiController.Instance.D3dInput;
         Auto auto;
+        bool giraIzquierda, giraDerecha;
 
         public Jugador(Auto unAuto)
         {
             auto = unAuto;
+            giraIzquierda = false;
+            giraDerecha = false;
         }
 
         public void jugar()
@@ -25,10 +28,12 @@ namespace AlumnoEjemplos.MiGrupo
             if (input.keyDown(Key.Left) || input.keyDown(Key.A))
             {
                 auto.rotar(-1); //-1 representa la izquierda
+                giraIzquierda = true;
             }
             if (input.keyDown(Key.Right) || input.keyDown(Key.D))
             {
                 auto.rotar(1); //1 representa la derecha
+                giraDerecha = true;
             }
             if (input.keyDown(Key.Up) || input.keyDown(Key.W))
             {
@@ -42,6 +47,23 @@ namespace AlumnoEjemplos.MiGrupo
             {
                 auto.noMover();
             }
+            if (!input.keyDown(Key.Right) && !input.keyDown(Key.D))
+            {
+                giraDerecha = false;
+            }
+            if (!input.keyDown(Key.Left) && !input.keyDown(Key.A))
+            {
+                giraIzquierda = false;
+            }
+        }
+
+        public bool estaGirandoDerecha()
+        {
+            return giraDerecha;
+        }
+        public bool estaGirandoIzquierda()
+        {
+            return giraIzquierda;
         }
     }
 }
