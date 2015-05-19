@@ -105,7 +105,7 @@ namespace AlumnoEjemplos.MiGrupo
             TgcTexture texture = TgcTexture.createTexture(GuiController.Instance.AlumnoEjemplosMediaDir + "TheC#\\Pista\\pistaCarreras.png");
             TgcTexture texturaMadera = TgcTexture.createTexture(GuiController.Instance.AlumnoEjemplosMediaDir + "TheC#\\Texturas\\Madera\\A3d-Fl3.jpg");
             TgcTexture texturaLadrillo = TgcTexture.createTexture(GuiController.Instance.AlumnoEjemplosMediaDir + "TheC#\\Texturas\\ladrillo\\ladrillo.jpg");
-            TgcTexture texturaMetal = TgcTexture.createTexture(GuiController.Instance.AlumnoEjemplosMediaDir + "TheC#\\Texturas\\metal.jpg");
+            TgcTexture texturaMetal = TgcTexture.createTexture(GuiController.Instance.AlumnoEjemplosMediaDir + "TheC#\\Texturas\\paredlarga.jpg");
 
             //Creamos una caja 3D de color rojo, ubicada en el origen y lado 10
             Vector3 center = new Vector3(0, 0, 0);
