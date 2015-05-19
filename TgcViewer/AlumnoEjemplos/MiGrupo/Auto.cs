@@ -15,7 +15,7 @@ namespace AlumnoEjemplos.MiGrupo
         float aceleracionAvanzar=600f;
         float aceleracionFrenar=800f;
         float aceleracionMarchaAtras=300f;
-        float velocidadMinima=-1000f;
+        float velocidadMinima=-2000f;
         float velocidadMaxima=5000f;
         List<TgcViewer.Utils.TgcSceneLoader.TgcMesh> ruedas;
         int direccion;
@@ -37,7 +37,7 @@ namespace AlumnoEjemplos.MiGrupo
         public void retroceder()
         {
             if (velocidad > 0) frenar();
-            if (velocidad <= 0) marchaAtras();
+            if (velocidad < 0) marchaAtras();
         }
 
         public void noMover()
@@ -104,6 +104,13 @@ namespace AlumnoEjemplos.MiGrupo
                 rotacion -= 360;
             }
         }
-        
+
+        //para que el auto se quede quieto cuando perdio el jugador
+        public void estatico()
+        {
+            velocidadMaxima = 0f;
+            velocidadMinima = 0f;
+            ajustarVelocidad();
+        }
     }
 }

@@ -43,6 +43,7 @@ namespace AlumnoEjemplos.MiGrupo
         List<Vector3> posicionesPuntosDeControl;
         TgcCylinder unCilindro;
 
+
         TgcD3dInput input = GuiController.Instance.D3dInput;
 
         //texto
@@ -220,7 +221,7 @@ namespace AlumnoEjemplos.MiGrupo
 
             textPerdiste = new TgcText2d();
             textPerdiste.Position = new Point(0,200);
-            textPerdiste.Text = "Perdiste y lograste " + contadorDeActivacionesDePuntosDeControl.ToString() + " puntos de control";
+            textPerdiste.Text = "Perdiste y lograste ";
             textPerdiste.Color = Color.Red;
 
             textPosicionDelAutoActual = new TgcText2d();
@@ -419,7 +420,9 @@ namespace AlumnoEjemplos.MiGrupo
             {
                 if (Convert.ToDouble(textTiempo.Text) == 0)
                 {
+                    textPerdiste.Text = "Perdiste y lograste " +contadorDeActivacionesDePuntosDeControl.ToString() + " puntos de control";
                     textPerdiste.render();
+                    auto.estatico();
                 }
                 else
                 {
@@ -463,6 +466,8 @@ namespace AlumnoEjemplos.MiGrupo
             textPosicionDelAutoActual.dispose();
 
         }
+
+
     }
 }
     
