@@ -25,6 +25,10 @@ namespace AlumnoEjemplos.MiGrupo
 
         public void jugar()
         {
+            if (input.keyDown(Key.LeftControl))
+            {
+                auto.ponerNitro();
+            }
             if (input.keyDown(Key.Left) || input.keyDown(Key.A))
             {
                 auto.rotar(-1); //-1 representa la izquierda
@@ -55,6 +59,7 @@ namespace AlumnoEjemplos.MiGrupo
             {
                 giraIzquierda = false;
             }
+            
         }
 
         public bool estaGirandoDerecha()

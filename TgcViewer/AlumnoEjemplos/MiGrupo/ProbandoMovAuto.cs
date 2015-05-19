@@ -112,7 +112,10 @@ namespace AlumnoEjemplos.MiGrupo
             Vector3 size = new Vector3(16000, 3, 7660);
             box = TgcBox.fromSize(center, size, texture);
 
-
+            // cosas del tiempo
+            tiempoTrans = 100f; //tiempo transcurrido desde el defasaje de rotacion de camara y rotacion del mesh
+            habilitarDecremento = false;
+            segundosAuxiliares = 1;
             //En este ejemplo primero cargamos una escena 3D entera.
             TgcSceneLoader loader = new TgcSceneLoader();
 
