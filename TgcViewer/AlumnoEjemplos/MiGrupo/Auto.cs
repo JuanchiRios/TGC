@@ -14,12 +14,12 @@ namespace AlumnoEjemplos.MiGrupo
         public float elapsedTime;
         float aceleracionAvanzar=600f;
         float aceleracionFrenar=800f;
-        float aceleracionMarchaAtras=300f;
+        float aceleracionMarchaAtras=400f;
         float velocidadMinima=-2000f;
         float velocidadMaxima=5000f;
         List<TgcViewer.Utils.TgcSceneLoader.TgcMesh> ruedas;
         int direccion;
-
+        Boolean nitro = false;
                 
         //Interfaz de usuario
 
@@ -59,14 +59,31 @@ namespace AlumnoEjemplos.MiGrupo
                 }
             return 0;
         }
-
+        public void ponerNitro(){
+            nitro = true;
+        }
         //Metodos Internos
             //DeVelocidad
 
         private void acelerar(float aumento)
         {
-                velocidad += (aumento-rozamiento())*elapsedTime;
+            if (nitro == false)
+            {
+
+                velocidad += (aumento - rozamiento()) * elapsedTime;
                 ajustarVelocidad();
+            }
+            else
+            {
+                velocidadMaxima=7000f;
+
+                velocidad += aumento * 4  * elapsedTime;
+                ajustarVelocidad();
+                velocidadMaxima=2200f;
+                nitro = false;
+
+            }
+
         }
 
         public void ajustarVelocidad()

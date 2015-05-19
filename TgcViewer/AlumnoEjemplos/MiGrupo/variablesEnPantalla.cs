@@ -22,8 +22,9 @@ namespace AlumnoEjemplos.MiGrupo
             velocidad = this.convertir(velocidad);
             text1.Text = "velocidad: "+ velocidad.ToString() ;
             text1.Color = Color.White;
-            text1.Position = new Point(60, 60);
-            text1.Size = new Size(700, 500);
+            text1.Position = new Point(550, 450);
+            text1.Size = new Size(500, 300);
+            
             return text1;
         }
 
