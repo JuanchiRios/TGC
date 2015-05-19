@@ -149,8 +149,8 @@ namespace AlumnoEjemplos.MiGrupo
             GuiController.Instance.ThirdPersonCamera.Enable = true;
     
             GuiController.Instance.ThirdPersonCamera.RotationY = 300;
-            GuiController.Instance.ThirdPersonCamera.setCamera(autoMesh.Position, 200, 500);                      
-            GuiController.Instance.BackgroundColor = Color.Black;
+            GuiController.Instance.ThirdPersonCamera.setCamera(autoMesh.Position, 200, 500);
+            GuiController.Instance.BackgroundColor = Color.LightSkyBlue;// Black;
 
             //Le asigno su oriented bounding box que me permite rotar la caja de colisiones (no así bounding box)
             oBBAuto = TgcObb.computeFromAABB(autoMesh.BoundingBox);
@@ -223,6 +223,7 @@ namespace AlumnoEjemplos.MiGrupo
             textPerdiste.Position = new Point(0,200);
             textPerdiste.Text = "Perdiste y lograste ";
             textPerdiste.Color = Color.Red;
+            textPerdiste.Size = new Size(900, 700);
 
             textPosicionDelAutoActual = new TgcText2d();
             textPosicionDelAutoActual.Text = "Posicion del auto actual = ";
@@ -329,7 +330,11 @@ namespace AlumnoEjemplos.MiGrupo
             bool collisionFound = false;
 
             //Hubo colisión con un objeto. Guardar resultado y abortar loop.
-            if (Colisiones.testObbObb2(oBBAuto, oBBObstaculoPrueba))
+            if (Colisiones.testObbObb2(oBBAuto, oBBObstaculoPrueba)
+                ||Colisiones.testObbObb2(oBBAuto,oBBfronteraAdelante)
+                || Colisiones.testObbObb2(oBBAuto, oBBfronteraAtras)
+                ||Colisiones.testObbObb2(oBBAuto,oBBfronteraIzquierda)
+                ||Colisiones.testObbObb2(oBBAuto,oBBfronteraDerecha))
             {
                 collisionFound = true;
             }
@@ -372,7 +377,8 @@ namespace AlumnoEjemplos.MiGrupo
             //Hago visibles los obb
             oBBAuto.render();
             oBBObstaculoPrueba.render();
-            oBBfronteraDerecha.render();
+           // oBBfronteraDerecha.render();
+           //oBBfronteraIzquierda.render();
 
 
             //Muestro todo el trayecto de puntos de control
