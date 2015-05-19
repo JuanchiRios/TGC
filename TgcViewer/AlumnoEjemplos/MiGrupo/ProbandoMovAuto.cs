@@ -58,6 +58,9 @@ namespace AlumnoEjemplos.MiGrupo
         Tiempo tiempo = new Tiempo();
         private int segundosAuxiliares = 1;
 
+        //Sobre el derrape y las ruedas
+        bool giroConDerrape = false;
+
         //Creo un listado de puntos de control
         List<TgcCylinder> trayecto = new List<TgcCylinder>();
         //List<PuntoDeControl> puntosDelTrayecto = new List<PuntoDeControl>();
@@ -257,6 +260,10 @@ namespace AlumnoEjemplos.MiGrupo
             //Calculo el movimiento del mesh dependiendo de la velocidad del auto
             autoMesh.moveOrientedY(-auto.velocidad * elapsedTime);
 
+            //Cosas sobre derrape
+            autoMesh.Rotation = new Vector3(0f, auto.rotacion - 0.4f, 0f);
+            oBBAuto.setRotation(new Vector3(autoMesh.Rotation.X, autoMesh.Rotation.Y - 0.1f, autoMesh.Rotation.Z));
+           
             //funcionMagica
             for (int i = 0; i < 4; i++)
             {
@@ -271,18 +278,18 @@ namespace AlumnoEjemplos.MiGrupo
                 {
                     alfa_rueda += FastMath.PI;
                 }
-                posicion_x = FastMath.Sin(alfa_rueda + auto.rotacion) * ro;
-                posicion_y = FastMath.Cos(alfa_rueda + auto.rotacion) * ro;
+                posicion_x = FastMath.Sin(alfa_rueda + auto.rotacion - 0.4f) * ro;
+                posicion_y = FastMath.Cos(alfa_rueda + auto.rotacion - 0.4f) * ro;
 
                 ruedas[i].Position = (new Vector3(posicion_x, 15.5f, posicion_y) + autoMesh.Position);
                 //Si no aprieta para los costados, dejo la rueda derecha (por ahora, esto se puede modificar)
                 if (input.keyDown(Key.Left) || input.keyDown(Key.A) || input.keyDown(Key.Right) || input.keyDown(Key.D))
                 {
 
-                    ruedas[i].Rotation = new Vector3(rotacionVertical, auto.rotacion + auto.rotarRueda(i), 0f);
+                    ruedas[i].Rotation = new Vector3(rotacionVertical, auto.rotacion + auto.rotarRueda(i) - 0.4f, 0f);
                 }
                 else
-                    ruedas[i].Rotation = new Vector3(rotacionVertical, auto.rotacion, 0f);
+                    ruedas[i].Rotation = new Vector3(rotacionVertical, auto.rotacion - 0.4f, 0f);
 
                 //ruedas[i].move(autoMesh.Position.X - autoMeshPrevX, 0, autoMesh.Position.Z-autoMeshPrevZ);
             }
