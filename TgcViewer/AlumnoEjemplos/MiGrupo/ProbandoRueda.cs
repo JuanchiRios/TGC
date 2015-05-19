@@ -83,7 +83,7 @@ namespace AlumnoEjemplos.MiGrupo
 
             //Vamos a utilizar la cámara en 3ra persona para que siga al objeto principal a medida que se mueve
             GuiController.Instance.ThirdPersonCamera.Enable = true;
-            mainMesh.position = new Vector3(0f, 44.5f, -900f);
+            //mainMesh.position = new Vector3(0f, 44.5f, -900f);
             mainMesh.rotateY(90);
             GuiController.Instance.ThirdPersonCamera.RotationY = 90;
             GuiController.Instance.ThirdPersonCamera.setCamera(mainMesh.Position, 200, 500);
@@ -95,7 +95,7 @@ namespace AlumnoEjemplos.MiGrupo
 
             //creo al auto y al jugador
             //auto = new Auto(90);
-            auto = new Auto(90);
+           // auto = new Auto(90);
             jugador = new Jugador(auto);
 
             ///////////////MODIFIERS//////////////////

@@ -21,7 +21,7 @@ namespace AlumnoEjemplos.MiGrupo
         /// </summary>
         public override string getCategory()
         {
-            return "AlumnoEjemplos";
+            return "Otros" ;//"AlumnoEjemplos";
         }
 
         /// <summary>

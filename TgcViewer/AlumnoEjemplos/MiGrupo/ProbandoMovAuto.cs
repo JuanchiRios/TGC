@@ -12,7 +12,7 @@ using TgcViewer.Utils.TgcSceneLoader;
 using TgcViewer.Utils.Input;
 using Microsoft.DirectX.DirectInput;
 using TgcViewer.Utils._2D;
-
+/*
 namespace AlumnoEjemplos.MiGrupo
 {
     /// <summary>
@@ -175,7 +175,7 @@ namespace AlumnoEjemplos.MiGrupo
             //puntosDelTrayecto[0].activarPunto();
 
             //inicializo puntos de control en prov mov auto.
-           posicionesPuntosDeControl = new List<Vector3> { new Vector3 (-1088, 20, -2503), 
+          /* posicionesPuntosDeControl = new List<Vector3> { new Vector3 (-1088, 20, -2503), 
                 new Vector3 (2377, 20, -2528), new Vector3 (5721, 20, -2547), new Vector3 (7367, 20, -1606),
                 new Vector3 (6765, 20, 528), new Vector3 (4586, 20, 458), new Vector3 (3749, 20, 2093),
                 new Vector3 (2170, 20, 2743), new Vector3 (2120, 20, 363), new Vector3 (-193, 20, -625),
@@ -196,7 +196,7 @@ namespace AlumnoEjemplos.MiGrupo
             posicionesPuntosDeControl.Add(new Vector3(-6210, 20, -2318));
             posicionesPuntosDeControl.Add( new Vector3 (-5490, 20, -248));
             posicionesPuntosDeControl.Add(new Vector3(-2903, 20, -1212)); */
-           for (int i = 0; i < 16; i++)
+        /*   for (int i = 0; i < 16; i++)
             {
                 TgcCylinder unCilindro = new TgcCylinder(posicionesPuntosDeControl[i], 100, 50);
                 trayecto.Add(unCilindro);
@@ -400,11 +400,11 @@ namespace AlumnoEjemplos.MiGrupo
                 trayecto[i].BoundingCylinder.render();
             }*/
             //Muestro el punto siguiente
-            trayecto[0].render();
+           // trayecto[0].render();
             
 
             //Colision con puntos de control
-            for (int i = 0; i < trayecto.Count; i++)
+          /*  for (int i = 0; i < trayecto.Count; i++)
             {
                 //Pregunto si colisiona con un punto de control activado
                 if ( (i == 0) && TgcCollisionUtils.testPointCylinder(oBBAuto.Position, trayecto[i].BoundingCylinder))
@@ -504,6 +504,6 @@ namespace AlumnoEjemplos.MiGrupo
 
 
     }
-}
+}*/
     
 
