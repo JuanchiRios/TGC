@@ -60,6 +60,9 @@ namespace AlumnoEjemplos.MiGrupo
 
         //Sobre el derrape y las ruedas
         int giroConDerrape = 0;
+        float anguloDerrape = 0.1f;
+        float anguloMaximoDeDerrape = 0.35f;
+        float velocidadDeDerrape = 0.4f;
 
         //Creo un listado de puntos de control
         List<TgcCylinder> trayecto = new List<TgcCylinder>();
@@ -262,6 +265,7 @@ namespace AlumnoEjemplos.MiGrupo
 
             //Cosas sobre derrape
             int direcGiroDerrape = 0;
+
             if (auto.velocidad > 1500 && (jugador.estaGirandoDerecha() || jugador.estaGirandoIzquierda()))
             {
                 if (jugador.estaGirandoIzquierda())
@@ -269,11 +273,18 @@ namespace AlumnoEjemplos.MiGrupo
                 else if (jugador.estaGirandoDerecha())
                     direcGiroDerrape = 1;
 
-                autoMesh.Rotation = new Vector3(0f, auto.rotacion + (direcGiroDerrape * 0.4f), 0f);
-                oBBAuto.setRotation(new Vector3(autoMesh.Rotation.X, autoMesh.Rotation.Y + (direcGiroDerrape * 0.1f), autoMesh.Rotation.Z));
+                autoMesh.Rotation = new Vector3(0f, auto.rotacion + (direcGiroDerrape * anguloDerrape), 0f);
+                oBBAuto.setRotation(new Vector3(autoMesh.Rotation.X, autoMesh.Rotation.Y + (direcGiroDerrape * anguloDerrape / 2), autoMesh.Rotation.Z));
+
+                if(anguloDerrape <= anguloMaximoDeDerrape)
+                anguloDerrape += velocidadDeDerrape * elapsedTime;
             }
             else
+            {
                 direcGiroDerrape = 0;
+                anguloDerrape = 0;
+            }
+
             //funcionMagica
             for (int i = 0; i < 4; i++)
             {
@@ -288,18 +299,18 @@ namespace AlumnoEjemplos.MiGrupo
                 {
                     alfa_rueda += FastMath.PI;
                 }
-                posicion_x = FastMath.Sin(alfa_rueda + auto.rotacion + (0.4f * direcGiroDerrape)) * ro;
-                posicion_y = FastMath.Cos(alfa_rueda + auto.rotacion + (0.4f * direcGiroDerrape)) * ro;
+                posicion_x = FastMath.Sin(alfa_rueda + auto.rotacion + (anguloDerrape * direcGiroDerrape)) * ro;
+                posicion_y = FastMath.Cos(alfa_rueda + auto.rotacion + (anguloDerrape * direcGiroDerrape)) * ro;
 
                 ruedas[i].Position = (new Vector3(posicion_x, 15.5f, posicion_y) + autoMesh.Position);
                 //Si no aprieta para los costados, dejo la rueda derecha (por ahora, esto se puede modificar)
                 if (input.keyDown(Key.Left) || input.keyDown(Key.A) || input.keyDown(Key.Right) || input.keyDown(Key.D))
                 {
 
-                    ruedas[i].Rotation = new Vector3(rotacionVertical, auto.rotacion + auto.rotarRueda(i) + (0.4f * direcGiroDerrape), 0f);
+                    ruedas[i].Rotation = new Vector3(rotacionVertical, auto.rotacion + auto.rotarRueda(i) + (anguloDerrape * direcGiroDerrape), 0f);
                 }
                 else
-                    ruedas[i].Rotation = new Vector3(rotacionVertical, auto.rotacion + (0.4f * direcGiroDerrape), 0f);
+                    ruedas[i].Rotation = new Vector3(rotacionVertical, auto.rotacion + (anguloDerrape * direcGiroDerrape), 0f);
 
                 //ruedas[i].move(autoMesh.Position.X - autoMeshPrevX, 0, autoMesh.Position.Z-autoMeshPrevZ);
             }
