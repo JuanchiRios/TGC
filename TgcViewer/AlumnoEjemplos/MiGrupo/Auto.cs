@@ -75,7 +75,7 @@ namespace AlumnoEjemplos.MiGrupo
             }
             else
             {
-                velocidadMaxima=7000f;
+                velocidadMaxima=4000f;
 
                 velocidad += aumento * 4  * elapsedTime;
                 ajustarVelocidad();

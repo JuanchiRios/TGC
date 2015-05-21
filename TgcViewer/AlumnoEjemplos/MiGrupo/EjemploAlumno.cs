@@ -85,7 +85,7 @@ namespace AlumnoEjemplos.MiGrupo
 
         public override string getDescription()
         {
-            return "Juego de carreras.";
+            return "Juego de carreras. El auto se mueve con las flechas o wasd, el nitro es con shift o control.";
         }
 
         public override void init()

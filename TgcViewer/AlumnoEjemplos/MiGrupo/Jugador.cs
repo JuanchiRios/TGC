@@ -25,7 +25,7 @@ namespace AlumnoEjemplos.MiGrupo
 
         public void jugar()
         {
-            if (input.keyDown(Key.LeftControl))
+            if (input.keyDown(Key.LeftControl) || input.keyDown(Key.LeftShift))
             {
                 auto.ponerNitro();
             }
