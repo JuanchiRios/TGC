@@ -141,5 +141,7 @@ namespace AlumnoEjemplos
             // Since no separating axis is found, the OBBs must be intersecting
             return true;
         }
+
+
     }
 }
