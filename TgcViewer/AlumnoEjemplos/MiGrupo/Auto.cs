@@ -16,7 +16,7 @@ namespace AlumnoEjemplos.MiGrupo
         float aceleracionFrenar=800f;
         float aceleracionMarchaAtras=400f;
         float velocidadMinima=-2000f;
-        float velocidadMaxima=5000f;
+        float velocidadMaxima=3000f;
         List<TgcViewer.Utils.TgcSceneLoader.TgcMesh> ruedas;
         int direccion;
         Boolean nitro = false;
@@ -75,11 +75,11 @@ namespace AlumnoEjemplos.MiGrupo
             }
             else
             {
-                velocidadMaxima=4000f;
+                velocidadMaxima=3000f;
 
                 velocidad += aumento * 4  * elapsedTime;
                 ajustarVelocidad();
-                velocidadMaxima=2200f;
+                velocidadMaxima=1800f;
                 nitro = false;
 
             }

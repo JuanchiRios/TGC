@@ -206,12 +206,12 @@ namespace AlumnoEjemplos.MiGrupo
             this.horaInicio = DateTime.Now;
             textTiempo = new TgcText2d();
             textTiempo.Position = new Point(50, 20);
-            textTiempo.Text = "999999";
+            textTiempo.Text = "10";
             textTiempo.Color = Color.White;
 
             textoVelocidad.inicializarTextoVelocidad(auto.velocidad);
             ///////////////MODIFIERS//////////////////
-            GuiController.Instance.Modifiers.addFloat("velocidadMaxima", 1000, 7000, 2200f);
+            GuiController.Instance.Modifiers.addFloat("velocidadMaxima", 1000, 7000, 1800f);
 
             //contador de puntos de control
             contadorDeActivacionesDePuntosDeControl = 0;
