@@ -21,7 +21,7 @@ namespace AlumnoEjemplos.MiGrupo
     public class ProbandoMovAuto : TgcExample
     {
 
-
+        
         TgcBox box;
         TgcMesh autoMesh;
         TgcBox obstaculoDePrueba, fronteraDerecha, fronteraIzquierda, fronteraAdelante, fronteraAtras;
@@ -41,7 +41,6 @@ namespace AlumnoEjemplos.MiGrupo
         TgcObb oBBAuto, oBBObstaculoPrueba, oBBfronteraDerecha, oBBfronteraIzquierda, oBBfronteraAdelante, oBBfronteraAtras;
         variablesEnPantalla textoVelocidad = new variablesEnPantalla();
         List<Vector3> posicionesPuntosDeControl;
-        TgcCylinder unCilindro;
         Boolean gano;
 
         TgcD3dInput input = GuiController.Instance.D3dInput;
@@ -62,7 +61,6 @@ namespace AlumnoEjemplos.MiGrupo
         private int segundosAuxiliares = 1;
 
         //Sobre el derrape y las ruedas
-        int giroConDerrape = 0;
         float anguloDerrape = 0.1f;
         float anguloMaximoDeDerrape = 0.35f;
         float velocidadDeDerrape = 0.4f;
@@ -71,6 +69,9 @@ namespace AlumnoEjemplos.MiGrupo
         List<TgcCylinder> trayecto = new List<TgcCylinder>();
         //List<PuntoDeControl> puntosDelTrayecto = new List<PuntoDeControl>();
         int contadorDeActivacionesDePuntosDeControl;
+
+        //Lineas de Frenado
+        LineaDeFrenado[] lineaDeFrenado = new LineaDeFrenado[4];
 
 
         public override string getCategory()
@@ -85,29 +86,19 @@ namespace AlumnoEjemplos.MiGrupo
 
         public override string getDescription()
         {
-            return "Juego de carreras.";
+            return "Juego de carreras. El auto se mueve con las flechas o wasd, el nitro es con shift o control.";
         }
 
         public override void init()
         {
             Microsoft.DirectX.Direct3D.Device d3dDevice = GuiController.Instance.D3dDevice;
-            //Cargamos una textura
-            //Una textura es una imágen 2D que puede dibujarse arriba de un polígono 3D para darle color.
-            //Es muy útil para generar efectos de relieves y superficies.
-            //Puede ser cualquier imágen 2D (jpg, png, gif, etc.) y puede ser editada con cualquier editor
-            //normal (photoshop, paint, descargada de goole images, etc).
-            //El framework viene con un montón de texturas incluidas y organizadas en categorias (texturas de
-            //madera, cemento, ladrillo, pasto, etc). Se encuentran en la carpeta del framework:
-            //  TgcViewer\Examples\Media\MeshCreator\Textures
-            //Podemos acceder al path de la carpeta "Media" utilizando la variable "GuiController.Instance.ExamplesMediaDir".
-            //Esto evita que tengamos que hardcodear el path de instalación del framework.
-
+           
             TgcTexture texture = TgcTexture.createTexture(GuiController.Instance.AlumnoEjemplosMediaDir + "TheC#\\Pista\\pistaCarreras.png");
             TgcTexture texturaMadera = TgcTexture.createTexture(GuiController.Instance.AlumnoEjemplosMediaDir + "TheC#\\Texturas\\Madera\\A3d-Fl3.jpg");
             TgcTexture texturaLadrillo = TgcTexture.createTexture(GuiController.Instance.AlumnoEjemplosMediaDir + "TheC#\\Texturas\\ladrillo\\ladrillo.jpg");
             TgcTexture texturaMetal = TgcTexture.createTexture(GuiController.Instance.AlumnoEjemplosMediaDir + "TheC#\\Texturas\\paredlarga.jpg");
 
-            //Creamos una caja 3D de color rojo, ubicada en el origen y lado 10
+           
             Vector3 center = new Vector3(0, 0, 0);
             Vector3 size = new Vector3(16000, 3, 7660);
             box = TgcBox.fromSize(center, size, texture);
@@ -142,6 +133,11 @@ namespace AlumnoEjemplos.MiGrupo
             //creo la lista de ruedas
             ruedas = new List<TgcViewer.Utils.TgcSceneLoader.TgcMesh> { ruedaDerechaDelanteraMesh, ruedaDerechaTraseraMesh, ruedaIzquierdaDelanteraMesh, ruedaIzquierdaTraseraMesh };
 
+            //creo la lineas de frenado
+            for (int i = 0; i < 4; i++)
+            {
+                lineaDeFrenado[i] = new LineaDeFrenado(5, 50, 2, 300, Color.Black);
+            }
 
             //posicion del auto
             autoMesh.Position = new Vector3(-1406f, 0f, -2523f);
@@ -164,38 +160,13 @@ namespace AlumnoEjemplos.MiGrupo
             auto = new Auto(300, ruedas);
             jugador = new Jugador(auto);
 
-            //Creo un punto de control para probarlo
-            /*for (int i = 0; i < 10;i++)
-            {
-                TgcCylinder unCilindro = new TgcCylinder(new Vector3(-300 - (i * 1000), 20, -1000 - (i * 300)), 100, 50);
-                trayecto.Add(unCilindro);
-                //puntosDelTrayecto.Add(new PuntoDeControl(false));
-            }*/
-            //Activo el primer punto de control
-            //puntosDelTrayecto[0].activarPunto();
-
-            //inicializo puntos de control en prov mov auto.
             posicionesPuntosDeControl = new List<Vector3> { new Vector3 (-1088, 20, -2503), 
                 new Vector3 (2377, 20, -2528), new Vector3 (5721, 20, -2547), new Vector3 (7367, 20, -1606),
                 new Vector3 (6765, 20, 528), new Vector3 (4586, 20, 458), new Vector3 (3749, 20, 2093),
                 new Vector3 (2170, 20, 2743), new Vector3 (2120, 20, 363), new Vector3 (-193, 20, -625),
                 new Vector3 (-2067, 20, 981), new Vector3 (-4548, 20, 2366), new Vector3 (-6951, 20, 450),
                 new Vector3 (-6210, 20, -2318), new Vector3 (-5490, 20, -248), new Vector3 (-2903, 20, -1212)};
-            /*
-             posicionesPuntosDeControl = new List<Vector3>();
-             posicionesPuntosDeControl.Add(new Vector3(-1088, 20, -2503));
-             posicionesPuntosDeControl.Add(new Vector3(2377, 20, -2528));
-             posicionesPuntosDeControl.Add(new Vector3(5721, 20, -2547));
-             posicionesPuntosDeControl.Add(new Vector3(7367, 20, -1606));
-             posicionesPuntosDeControl.Add(new Vector3(2170, 20, 2743));
-             posicionesPuntosDeControl.Add(new Vector3(2120, 20, 363));
-             posicionesPuntosDeControl.Add(new Vector3(-193, 20, -625));
-             posicionesPuntosDeControl.Add(new Vector3 (-2067, 20, 981));
-             posicionesPuntosDeControl.Add(new Vector3(-4548, 20, 2366));
-             posicionesPuntosDeControl.Add(new Vector3(-6951, 20, 450));
-             posicionesPuntosDeControl.Add(new Vector3(-6210, 20, -2318));
-             posicionesPuntosDeControl.Add( new Vector3 (-5490, 20, -248));
-             posicionesPuntosDeControl.Add(new Vector3(-2903, 20, -1212)); */
+           
             for (int i = 0; i < 16; i++)
             {
                 TgcCylinder unCilindro = new TgcCylinder(posicionesPuntosDeControl[i], 100, 50);
@@ -241,12 +212,12 @@ namespace AlumnoEjemplos.MiGrupo
             this.horaInicio = DateTime.Now;
             textTiempo = new TgcText2d();
             textTiempo.Position = new Point(50, 20);
-            textTiempo.Text = "10";
+            textTiempo.Text = "1000";
             textTiempo.Color = Color.White;
 
             textoVelocidad.inicializarTextoVelocidad(auto.velocidad);
             ///////////////MODIFIERS//////////////////
-            GuiController.Instance.Modifiers.addFloat("velocidadMaxima", 1000, 7000, 2200f);
+            GuiController.Instance.Modifiers.addFloat("velocidadMaxima", 1000, 7000, 1800f);
 
             //contador de puntos de control
             contadorDeActivacionesDePuntosDeControl = 0;
@@ -282,7 +253,18 @@ namespace AlumnoEjemplos.MiGrupo
 
             //Calculo el movimiento del mesh dependiendo de la velocidad del auto
             autoMesh.moveOrientedY(-auto.velocidad * elapsedTime);
+            //Detección de colisiones
+            //Hubo colisión con un objeto. Guardar resultado y abortar loop.
 
+
+
+            //Si hubo alguna colisión, hacer esto:
+            if (huboColision())
+            {
+                
+                autoMesh.moveOrientedY(20 * auto.velocidad * elapsedTime); //Lo hago "como que rebote un poco" para no seguir colisionando
+                auto.velocidad = -(auto.velocidad * 0.3f); //Lo hago ir atrás un tercio de velocidad de choque
+            }
             //Cosas sobre derrape
             int direcGiroDerrape = 0;
 
@@ -295,6 +277,7 @@ namespace AlumnoEjemplos.MiGrupo
 
                 autoMesh.Rotation = new Vector3(0f, auto.rotacion + (direcGiroDerrape * anguloDerrape), 0f);
                 oBBAuto.setRotation(new Vector3(autoMesh.Rotation.X, autoMesh.Rotation.Y + (direcGiroDerrape * anguloDerrape / 2), autoMesh.Rotation.Z));
+                
 
                 if (anguloDerrape <= anguloMaximoDeDerrape)
                     anguloDerrape += velocidadDeDerrape * elapsedTime;
@@ -305,7 +288,7 @@ namespace AlumnoEjemplos.MiGrupo
                 anguloDerrape = 0;
             }
 
-            //funcionMagica
+            //Posiciono las ruedas
             for (int i = 0; i < 4; i++)
             {
 
@@ -332,40 +315,39 @@ namespace AlumnoEjemplos.MiGrupo
                 else
                     ruedas[i].Rotation = new Vector3(rotacionVertical, auto.rotacion + (anguloDerrape * direcGiroDerrape), 0f);
 
-                //ruedas[i].move(autoMesh.Position.X - autoMeshPrevX, 0, autoMesh.Position.Z-autoMeshPrevZ);
+                
             }
 
             autoMeshPrevX = autoMesh.Position.X;
             autoMeshPrevZ = autoMesh.Position.Z;
 
-            //Detección de colisiones
-            bool collisionFound = false;
-
-            //Hubo colisión con un objeto. Guardar resultado y abortar loop.
-            if (Colisiones.testObbObb2(oBBAuto, oBBObstaculoPrueba)
-                || Colisiones.testObbObb2(oBBAuto, oBBfronteraAdelante)
-                || Colisiones.testObbObb2(oBBAuto, oBBfronteraAtras)
-                || Colisiones.testObbObb2(oBBAuto, oBBfronteraIzquierda)
-                || Colisiones.testObbObb2(oBBAuto, oBBfronteraDerecha))
+            
+            //Lineas de Frenado
+            if (jugador.estaFrenandoDeMano())
             {
-                collisionFound = true;
+                lineaDeFrenado[0].addTrack(ruedaDerechaDelanteraMesh.Position);
+                lineaDeFrenado[1].addTrack(ruedaDerechaTraseraMesh.Position);
+                lineaDeFrenado[2].addTrack(ruedaIzquierdaDelanteraMesh.Position);
+                lineaDeFrenado[3].addTrack(ruedaIzquierdaTraseraMesh.Position);
             }
-
-
-            //Si hubo alguna colisión, hacer esto:
-            if (collisionFound)
+            if(jugador.dejoDeFrenarDeMano())
             {
-                autoMesh.moveOrientedY(20 * auto.velocidad * elapsedTime); //Lo hago "como que rebote un poco" para no seguir colisionando
-                auto.velocidad = -(auto.velocidad * 0.3f); //Lo hago ir atrás un tercio de velocidad de choque
+                for (int i = 0; i < lineaDeFrenado.Length; i++)
+                {
+                    lineaDeFrenado[i].endTrack();
+                }
             }
-
+            for (int i = 0; i < lineaDeFrenado.Length; i++)
+            {
+                lineaDeFrenado[i].render();
+                lineaDeFrenado[i].pasoDelTiempo(elapsedTime);
+            }
+                
             GuiController.Instance.ThirdPersonCamera.Target = autoMesh.Position;
-
-            //Ajusto la camara a menos de 360 porque voy a necesitar hacer calculos entre angulos
-
 
             //La camara no rota exactamente a la par del auto, hay un pequeño retraso
             GuiController.Instance.ThirdPersonCamera.RotationY += 5 * (auto.rotacion - prevCameraRotation) * elapsedTime;
+            //Ajusto la camara a menos de 360 porque voy a necesitar hacer calculos entre angulos
             while (prevCameraRotation > 360)
             {
                 prevCameraRotation -= 360;
@@ -389,16 +371,9 @@ namespace AlumnoEjemplos.MiGrupo
             //Hago visibles los obb
             oBBAuto.render();
             oBBObstaculoPrueba.render();
-            // oBBfronteraDerecha.render();
-            //oBBfronteraIzquierda.render();
+            
 
-
-            //Muestro todo el trayecto de puntos de control
-            /*for(int i=0;i<trayecto.Count;i++)
-            {
-                trayecto[i].render();
-                trayecto[i].BoundingCylinder.render();
-            }*/
+            
             //Muestro el punto siguiente
             trayecto[0].render();
 
@@ -436,7 +411,7 @@ namespace AlumnoEjemplos.MiGrupo
 
             textPosicionDelAutoActual.Text = autoMesh.Position.ToString();
 
-            //Renderizar los tres textoss
+            //Renderizar los tres textos
 
             textoVelocidad.mostrarVelocidad(auto.velocidad / 10).render(); //renderiza la velocidad 
 
@@ -502,7 +477,16 @@ namespace AlumnoEjemplos.MiGrupo
 
         }
 
-
+                public bool huboColision(){
+        if (Colisiones.testObbObb2(oBBAuto, oBBObstaculoPrueba)
+                || Colisiones.testObbObb2(oBBAuto, oBBfronteraAdelante)
+                || Colisiones.testObbObb2(oBBAuto, oBBfronteraAtras)
+                || Colisiones.testObbObb2(oBBAuto, oBBfronteraIzquierda)
+                || Colisiones.testObbObb2(oBBAuto, oBBfronteraDerecha))
+            {
+                return true;
+            } return false;
+                }
     }
 }
 

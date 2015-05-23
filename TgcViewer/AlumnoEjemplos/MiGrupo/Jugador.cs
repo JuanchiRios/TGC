@@ -14,7 +14,7 @@ namespace AlumnoEjemplos.MiGrupo
     {
         TgcD3dInput input = GuiController.Instance.D3dInput;
         Auto auto;
-        bool giraIzquierda, giraDerecha;
+        bool giraIzquierda, giraDerecha, frenaDeMano, recienSoltoFrenoDeMano;
 
         public Jugador(Auto unAuto)
         {
@@ -25,7 +25,7 @@ namespace AlumnoEjemplos.MiGrupo
 
         public void jugar()
         {
-            if (input.keyDown(Key.LeftControl))
+            if (input.keyDown(Key.LeftControl) || input.keyDown(Key.LeftShift))
             {
                 auto.ponerNitro();
             }
@@ -59,6 +59,25 @@ namespace AlumnoEjemplos.MiGrupo
             {
                 giraIzquierda = false;
             }
+            if(input.keyDown(Key.Space))
+            {
+                recienSoltoFrenoDeMano = false;
+                if (auto.velocidad > 0)
+                {
+                    auto.frenoDeMano();
+                    frenaDeMano = true;
+                }
+                else
+                    frenaDeMano = false;
+            }
+            else
+            {
+                frenaDeMano = false;
+            }
+            if(input.keyUp(Key.Space))
+            {
+                recienSoltoFrenoDeMano = true;
+            }
             
         }
 
@@ -69,6 +88,15 @@ namespace AlumnoEjemplos.MiGrupo
         public bool estaGirandoIzquierda()
         {
             return giraIzquierda;
+        }
+        
+        public bool estaFrenandoDeMano()
+        {
+            return frenaDeMano;
+        }
+        public bool dejoDeFrenarDeMano()
+        {
+            return recienSoltoFrenoDeMano;
         }
     }
 }
