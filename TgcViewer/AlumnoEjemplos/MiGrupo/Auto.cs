@@ -107,6 +107,11 @@ namespace AlumnoEjemplos.MiGrupo
             acelerar(-aceleracionFrenar);
         }
 
+        public void frenoDeMano()
+        {
+            acelerar(-aceleracionFrenar * 2.5f);
+        }
+
         private void marchaAtras()
         {
             acelerar(-aceleracionMarchaAtras);

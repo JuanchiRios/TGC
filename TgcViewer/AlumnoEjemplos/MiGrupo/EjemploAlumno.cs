@@ -41,7 +41,6 @@ namespace AlumnoEjemplos.MiGrupo
         TgcObb oBBAuto, oBBObstaculoPrueba, oBBfronteraDerecha, oBBfronteraIzquierda, oBBfronteraAdelante, oBBfronteraAtras;
         variablesEnPantalla textoVelocidad = new variablesEnPantalla();
         List<Vector3> posicionesPuntosDeControl;
-        TgcCylinder unCilindro;
         Boolean gano;
 
         TgcD3dInput input = GuiController.Instance.D3dInput;
@@ -62,7 +61,6 @@ namespace AlumnoEjemplos.MiGrupo
         private int segundosAuxiliares = 1;
 
         //Sobre el derrape y las ruedas
-        int giroConDerrape = 0;
         float anguloDerrape = 0.1f;
         float anguloMaximoDeDerrape = 0.35f;
         float velocidadDeDerrape = 0.4f;
@@ -71,6 +69,9 @@ namespace AlumnoEjemplos.MiGrupo
         List<TgcCylinder> trayecto = new List<TgcCylinder>();
         //List<PuntoDeControl> puntosDelTrayecto = new List<PuntoDeControl>();
         int contadorDeActivacionesDePuntosDeControl;
+
+        //Lineas de Frenado
+        LineaDeFrenado[] lineaDeFrenado = new LineaDeFrenado[4];
 
 
         public override string getCategory()
@@ -132,6 +133,11 @@ namespace AlumnoEjemplos.MiGrupo
             //creo la lista de ruedas
             ruedas = new List<TgcViewer.Utils.TgcSceneLoader.TgcMesh> { ruedaDerechaDelanteraMesh, ruedaDerechaTraseraMesh, ruedaIzquierdaDelanteraMesh, ruedaIzquierdaTraseraMesh };
 
+            //creo la lineas de frenado
+            for (int i = 0; i < 4; i++)
+            {
+                lineaDeFrenado[i] = new LineaDeFrenado(5, 50, 2, 300, Color.Black);
+            }
 
             //posicion del auto
             autoMesh.Position = new Vector3(-1406f, 0f, -2523f);
@@ -206,7 +212,7 @@ namespace AlumnoEjemplos.MiGrupo
             this.horaInicio = DateTime.Now;
             textTiempo = new TgcText2d();
             textTiempo.Position = new Point(50, 20);
-            textTiempo.Text = "10";
+            textTiempo.Text = "1000";
             textTiempo.Color = Color.White;
 
             textoVelocidad.inicializarTextoVelocidad(auto.velocidad);
@@ -316,13 +322,29 @@ namespace AlumnoEjemplos.MiGrupo
             autoMeshPrevZ = autoMesh.Position.Z;
 
             
-            
-
+            //Lineas de Frenado
+            if (jugador.estaFrenandoDeMano())
+            {
+                lineaDeFrenado[0].addTrack(ruedaDerechaDelanteraMesh.Position);
+                lineaDeFrenado[1].addTrack(ruedaDerechaTraseraMesh.Position);
+                lineaDeFrenado[2].addTrack(ruedaIzquierdaDelanteraMesh.Position);
+                lineaDeFrenado[3].addTrack(ruedaIzquierdaTraseraMesh.Position);
+            }
+            if(jugador.dejoDeFrenarDeMano())
+            {
+                for (int i = 0; i < lineaDeFrenado.Length; i++)
+                {
+                    lineaDeFrenado[i].endTrack();
+                }
+            }
+            for (int i = 0; i < lineaDeFrenado.Length; i++)
+            {
+                lineaDeFrenado[i].render();
+                lineaDeFrenado[i].pasoDelTiempo(elapsedTime);
+            }
+                
             GuiController.Instance.ThirdPersonCamera.Target = autoMesh.Position;
 
-            
-
-            
             //La camara no rota exactamente a la par del auto, hay un pequeño retraso
             GuiController.Instance.ThirdPersonCamera.RotationY += 5 * (auto.rotacion - prevCameraRotation) * elapsedTime;
             //Ajusto la camara a menos de 360 porque voy a necesitar hacer calculos entre angulos
