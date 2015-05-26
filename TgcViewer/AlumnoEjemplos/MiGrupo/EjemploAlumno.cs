@@ -136,7 +136,7 @@ namespace AlumnoEjemplos.MiGrupo
             //creo la lineas de frenado
             for (int i = 0; i < 4; i++)
             {
-                lineaDeFrenado[i] = new LineaDeFrenado(5, 50, 2, 300, Color.Black);
+                lineaDeFrenado[i] = new LineaDeFrenado(10, 30, 2, 300, Color.Black);
             }
 
             //posicion del auto
@@ -325,10 +325,10 @@ namespace AlumnoEjemplos.MiGrupo
             //Lineas de Frenado
             if (jugador.estaFrenandoDeMano())
             {
-                lineaDeFrenado[0].addTrack(ruedaDerechaDelanteraMesh.Position);
-                lineaDeFrenado[1].addTrack(ruedaDerechaTraseraMesh.Position);
-                lineaDeFrenado[2].addTrack(ruedaIzquierdaDelanteraMesh.Position);
-                lineaDeFrenado[3].addTrack(ruedaIzquierdaTraseraMesh.Position);
+                lineaDeFrenado[0].addTrack(new Vector3(ruedaDerechaDelanteraMesh.Position.X, 0, ruedaDerechaDelanteraMesh.Position.Z));
+                lineaDeFrenado[1].addTrack(new Vector3(ruedaDerechaTraseraMesh.Position.X, 0, ruedaDerechaTraseraMesh.Position.Z));
+                lineaDeFrenado[2].addTrack(new Vector3(ruedaIzquierdaDelanteraMesh.Position.X, 0, ruedaIzquierdaDelanteraMesh.Position.Z));
+                lineaDeFrenado[3].addTrack(new Vector3(ruedaIzquierdaTraseraMesh.Position.X, 0, ruedaIzquierdaTraseraMesh.Position.Z));
             }
             if(jugador.dejoDeFrenarDeMano())
             {
