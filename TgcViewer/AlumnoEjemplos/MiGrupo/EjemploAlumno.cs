@@ -136,7 +136,7 @@ namespace AlumnoEjemplos.MiGrupo
             //creo la lineas de frenado
             for (int i = 0; i < 4; i++)
             {
-                lineaDeFrenado[i] = new LineaDeFrenado(10, 30, 2, 300, Color.Black);
+                lineaDeFrenado[i] = new LineaDeFrenado(12, 25, 3, 250, Color.Black);
             }
 
             //posicion del auto
