@@ -73,6 +73,8 @@ namespace AlumnoEjemplos.MiGrupo
         //Lineas de Frenado
         LineaDeFrenado[] lineaDeFrenado = new LineaDeFrenado[4];
 
+        //Reflejo de luz en el auto
+        ReflejoLuzEnAuto reflejo;
 
         public override string getCategory()
         {
@@ -219,6 +221,10 @@ namespace AlumnoEjemplos.MiGrupo
             ///////////////MODIFIERS//////////////////
             GuiController.Instance.Modifiers.addFloat("velocidadMaxima", 1000, 7000, 1800f);
 
+            //////////////Reflejo de luz en auto////////////////
+            reflejo = new ReflejoLuzEnAuto(autoMesh);
+
+
             //contador de puntos de control
             contadorDeActivacionesDePuntosDeControl = 0;
             //flag de victoria
@@ -343,6 +349,10 @@ namespace AlumnoEjemplos.MiGrupo
                 lineaDeFrenado[i].pasoDelTiempo(elapsedTime);
             }
                 
+            //Dibujo el reflejo de la luz en el auto
+            reflejo.Render();
+
+            //////Camara///////
             GuiController.Instance.ThirdPersonCamera.Target = autoMesh.Position;
 
             //La camara no rota exactamente a la par del auto, hay un pequeño retraso
