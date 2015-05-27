@@ -21,8 +21,8 @@ namespace AlumnoEjemplos.MiGrupo
     public class ProbandoMovAuto : TgcExample
     {
 
-        
-        TgcBox box;
+
+        TgcBox boxPista;
         TgcMesh autoMesh;
         TgcBox obstaculoDePrueba, fronteraDerecha, fronteraIzquierda, fronteraAdelante, fronteraAtras;
         TgcMesh ruedaDerechaDelanteraMesh;
@@ -44,6 +44,11 @@ namespace AlumnoEjemplos.MiGrupo
         Boolean gano;
 
         TgcD3dInput input = GuiController.Instance.D3dInput;
+
+        //Texturas de escenario
+        List<TgcBox> escenario = new List<TgcBox>();
+        //Obb de los tgcBox del escenario
+        List<TgcObb> oBBsEscenario = new List<TgcObb>();
 
         //texto
         TgcText2d textPuntosDeControlAlcanzados;
@@ -94,16 +99,15 @@ namespace AlumnoEjemplos.MiGrupo
         public override void init()
         {
             Microsoft.DirectX.Direct3D.Device d3dDevice = GuiController.Instance.D3dDevice;
-           
+
             TgcTexture texture = TgcTexture.createTexture(GuiController.Instance.AlumnoEjemplosMediaDir + "TheC#\\Pista\\pistaCarreras.png");
             TgcTexture texturaMadera = TgcTexture.createTexture(GuiController.Instance.AlumnoEjemplosMediaDir + "TheC#\\Texturas\\Madera\\A3d-Fl3.jpg");
             TgcTexture texturaLadrillo = TgcTexture.createTexture(GuiController.Instance.AlumnoEjemplosMediaDir + "TheC#\\Texturas\\ladrillo\\ladrillo.jpg");
             TgcTexture texturaMetal = TgcTexture.createTexture(GuiController.Instance.AlumnoEjemplosMediaDir + "TheC#\\Texturas\\paredlarga.jpg");
 
-           
             Vector3 center = new Vector3(0, 0, 0);
             Vector3 size = new Vector3(16000, 3, 7660);
-            box = TgcBox.fromSize(center, size, texture);
+            boxPista = TgcBox.fromSize(center, size, texture);
 
             // cosas del tiempo
             tiempoTrans = 100f; //tiempo transcurrido desde el defasaje de rotacion de camara y rotacion del mesh
@@ -168,7 +172,7 @@ namespace AlumnoEjemplos.MiGrupo
                 new Vector3 (2170, 20, 2743), new Vector3 (2120, 20, 363), new Vector3 (-193, 20, -625),
                 new Vector3 (-2067, 20, 981), new Vector3 (-4548, 20, 2366), new Vector3 (-6951, 20, 450),
                 new Vector3 (-6210, 20, -2318), new Vector3 (-5490, 20, -248), new Vector3 (-2903, 20, -1212)};
-           
+
             for (int i = 0; i < 16; i++)
             {
                 TgcCylinder unCilindro = new TgcCylinder(posicionesPuntosDeControl[i], 100, 50);
@@ -179,6 +183,13 @@ namespace AlumnoEjemplos.MiGrupo
             fronteraIzquierda = TgcBox.fromSize(new Vector3(8100f, 60f, -00f), new Vector3(200, 150, 7500), texturaMetal);
             fronteraAdelante = TgcBox.fromSize(new Vector3(-0f, 60f, -3800f), new Vector3(16000, 150, 200), texturaMetal);
             fronteraAtras = TgcBox.fromSize(new Vector3(-0f, 60f, 3800f), new Vector3(16000, 150, 200), texturaMetal);
+            //lo cargo a escenario los TgcBox
+            escenario.Add(boxPista);
+            escenario.Add(fronteraDerecha);
+            escenario.Add(fronteraIzquierda);
+            escenario.Add(fronteraAdelante);
+            escenario.Add(fronteraAtras);
+
 
             //Le asigno su oriented bounding box que me permite rotar la caja de colisiones (no así bounding box)
             oBBfronteraDerecha = TgcObb.computeFromAABB(fronteraDerecha.BoundingBox);
@@ -186,6 +197,12 @@ namespace AlumnoEjemplos.MiGrupo
             oBBfronteraAdelante = TgcObb.computeFromAABB(fronteraAdelante.BoundingBox);
             oBBfronteraAtras = TgcObb.computeFromAABB(fronteraAtras.BoundingBox);
 
+            //Asigno todos los obb de los Box a colisionar con el auto, pertenecientess al escenario
+            oBBsEscenario.Add(oBBObstaculoPrueba);
+            oBBsEscenario.Add(oBBfronteraDerecha);
+            oBBsEscenario.Add(oBBfronteraIzquierda);
+            oBBsEscenario.Add(oBBfronteraAdelante);
+            oBBsEscenario.Add(oBBfronteraAtras);
 
 
 
@@ -267,7 +284,7 @@ namespace AlumnoEjemplos.MiGrupo
             //Si hubo alguna colisión, hacer esto:
             if (huboColision())
             {
-                
+
                 autoMesh.moveOrientedY(20 * auto.velocidad * elapsedTime); //Lo hago "como que rebote un poco" para no seguir colisionando
                 auto.velocidad = -(auto.velocidad * 0.3f); //Lo hago ir atrás un tercio de velocidad de choque
             }
@@ -283,7 +300,7 @@ namespace AlumnoEjemplos.MiGrupo
 
                 autoMesh.Rotation = new Vector3(0f, auto.rotacion + (direcGiroDerrape * anguloDerrape), 0f);
                 oBBAuto.setRotation(new Vector3(autoMesh.Rotation.X, autoMesh.Rotation.Y + (direcGiroDerrape * anguloDerrape / 2), autoMesh.Rotation.Z));
-                
+
 
                 if (anguloDerrape <= anguloMaximoDeDerrape)
                     anguloDerrape += velocidadDeDerrape * elapsedTime;
@@ -321,13 +338,13 @@ namespace AlumnoEjemplos.MiGrupo
                 else
                     ruedas[i].Rotation = new Vector3(rotacionVertical, auto.rotacion + (anguloDerrape * direcGiroDerrape), 0f);
 
-                
+
             }
 
             autoMeshPrevX = autoMesh.Position.X;
             autoMeshPrevZ = autoMesh.Position.Z;
 
-            
+
             //Lineas de Frenado
             if (jugador.estaFrenandoDeMano())
             {
@@ -336,7 +353,7 @@ namespace AlumnoEjemplos.MiGrupo
                 lineaDeFrenado[2].addTrack(new Vector3(ruedaIzquierdaDelanteraMesh.Position.X, 0, ruedaIzquierdaDelanteraMesh.Position.Z));
                 lineaDeFrenado[3].addTrack(new Vector3(ruedaIzquierdaTraseraMesh.Position.X, 0, ruedaIzquierdaTraseraMesh.Position.Z));
             }
-            if(jugador.dejoDeFrenarDeMano())
+            if (jugador.dejoDeFrenarDeMano())
             {
                 for (int i = 0; i < lineaDeFrenado.Length; i++)
                 {
@@ -348,7 +365,7 @@ namespace AlumnoEjemplos.MiGrupo
                 lineaDeFrenado[i].render();
                 lineaDeFrenado[i].pasoDelTiempo(elapsedTime);
             }
-                
+
             //Dibujo el reflejo de la luz en el auto
             reflejo.Render();
 
@@ -371,7 +388,7 @@ namespace AlumnoEjemplos.MiGrupo
                 ruedas[i].render();
             }
             autoMesh.render();
-            box.render();
+            boxPista.render();
 
             fronteraDerecha.render();
             fronteraIzquierda.render();
@@ -381,9 +398,9 @@ namespace AlumnoEjemplos.MiGrupo
             //Hago visibles los obb
             oBBAuto.render();
             oBBObstaculoPrueba.render();
-            
 
-            
+
+
             //Muestro el punto siguiente
             trayecto[0].render();
 
@@ -457,7 +474,7 @@ namespace AlumnoEjemplos.MiGrupo
 
         public override void close()
         {
-            box.dispose();
+            boxPista.dispose();
             for (int i = 0; i < 4; i++)
             {
                 ruedas[i].dispose();
@@ -487,16 +504,26 @@ namespace AlumnoEjemplos.MiGrupo
 
         }
 
-                public bool huboColision(){
-        if (Colisiones.testObbObb2(oBBAuto, oBBObstaculoPrueba)
-                || Colisiones.testObbObb2(oBBAuto, oBBfronteraAdelante)
-                || Colisiones.testObbObb2(oBBAuto, oBBfronteraAtras)
-                || Colisiones.testObbObb2(oBBAuto, oBBfronteraIzquierda)
-                || Colisiones.testObbObb2(oBBAuto, oBBfronteraDerecha))
+        //        public bool huboColision(){
+        //if (Colisiones.testObbObb2(oBBAuto, oBBObstaculoPrueba)
+        //        || Colisiones.testObbObb2(oBBAuto, oBBfronteraAdelante)
+        //        || Colisiones.testObbObb2(oBBAuto, oBBfronteraAtras)
+        //        || Colisiones.testObbObb2(oBBAuto, oBBfronteraIzquierda)
+        //        || Colisiones.testObbObb2(oBBAuto, oBBfronteraDerecha))
+        //    {
+        //        return true;
+        //    } return false;
+        //        }
+
+        public bool huboColision()
+        {
+            for(int i=0;i<oBBsEscenario.Count;i++)
             {
-                return true;
-            } return false;
-                }
+                if (Colisiones.testObbObb2(oBBAuto, oBBsEscenario[i]))
+                    return true;
+            }
+            return false;
+        }
     }
 }
 

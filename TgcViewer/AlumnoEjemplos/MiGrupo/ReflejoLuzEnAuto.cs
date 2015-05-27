@@ -42,7 +42,7 @@ namespace AlumnoEjemplos.MiGrupo
                                                              new Vector3(4000, 1500, 4000), new Vector3(2000, 700, -4000));
                 GuiController.Instance.Modifiers.addFloat("bumpiness", 0, 1, 1f);
                 GuiController.Instance.Modifiers.addColor("lightColor", Color.White);
-                GuiController.Instance.Modifiers.addFloat("lightIntensity", 0, 700, 150);
+                GuiController.Instance.Modifiers.addFloat("lightIntensity", 0, 1500, 700);
                 GuiController.Instance.Modifiers.addFloat("lightAttenuation", 0.1f, 2, 0.3f);
                 GuiController.Instance.Modifiers.addFloat("specularEx", 0, 20, 9f);
             }
