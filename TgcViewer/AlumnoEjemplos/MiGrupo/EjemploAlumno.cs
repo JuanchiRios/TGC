@@ -20,8 +20,9 @@ namespace AlumnoEjemplos.MiGrupo
     /// </summary>
     public class ProbandoMovAuto : TgcExample
     {
-
-
+        //Vector3 posicionRelativaHumo = new Vector3(-19f, 13f, 126f);
+        //TgcMesh humo;
+        TgcBox humo;
         TgcBox boxPista;
         TgcMesh autoMesh;
         TgcBox obstaculoDePrueba, fronteraDerecha, fronteraIzquierda, fronteraAdelante, fronteraAtras;
@@ -42,6 +43,9 @@ namespace AlumnoEjemplos.MiGrupo
         variablesEnPantalla textoVelocidad = new variablesEnPantalla();
         List<Vector3> posicionesPuntosDeControl;
         Boolean gano;
+        float tiempoHumo = 0f;
+        TgcTexture texturaHumo;
+        TgcTexture texturaFuego;
 
         TgcD3dInput input = GuiController.Instance.D3dInput;
 
@@ -95,7 +99,8 @@ namespace AlumnoEjemplos.MiGrupo
         {
             return "Juego de carreras. El auto se mueve con las flechas o wasd, el nitro es con shift o control.";
         }
-
+        
+        
         public override void init()
         {
             Microsoft.DirectX.Direct3D.Device d3dDevice = GuiController.Instance.D3dDevice;
@@ -104,10 +109,17 @@ namespace AlumnoEjemplos.MiGrupo
             TgcTexture texturaMadera = TgcTexture.createTexture(GuiController.Instance.AlumnoEjemplosMediaDir + "TheC#\\Texturas\\Madera\\A3d-Fl3.jpg");
             TgcTexture texturaLadrillo = TgcTexture.createTexture(GuiController.Instance.AlumnoEjemplosMediaDir + "TheC#\\Texturas\\ladrillo\\ladrillo.jpg");
             TgcTexture texturaMetal = TgcTexture.createTexture(GuiController.Instance.AlumnoEjemplosMediaDir + "TheC#\\Texturas\\paredlarga.jpg");
-
+            texturaHumo = TgcTexture.createTexture(GuiController.Instance.AlumnoEjemplosMediaDir + "TheC#\\Particulas\\Textures\\humo.png");
+            texturaFuego = TgcTexture.createTexture(GuiController.Instance.AlumnoEjemplosMediaDir + "TheC#\\Particulas\\Textures\\fuego.png");
             Vector3 center = new Vector3(0, 0, 0);
             Vector3 size = new Vector3(16000, 3, 7660);
             boxPista = TgcBox.fromSize(center, size, texture);
+
+            Vector3 centerHumo = new Vector3(0, 0, 0);
+            Vector3 sizeHumo = new Vector3(7, 3, 10);
+            humo = TgcBox.fromSize(centerHumo, sizeHumo, texturaHumo);
+            humo.AlphaBlendEnable = true;
+
 
             // cosas del tiempo
             tiempoTrans = 100f; //tiempo transcurrido desde el defasaje de rotacion de camara y rotacion del mesh
@@ -122,7 +134,7 @@ namespace AlumnoEjemplos.MiGrupo
             TgcScene scene3 = loader.loadSceneFromFile(GuiController.Instance.AlumnoEjemplosMediaDir + "TheC#\\Auto\\\\Auto_Rueda_Derecha-TgcScene.xml");
             TgcScene scene4 = loader.loadSceneFromFile(GuiController.Instance.AlumnoEjemplosMediaDir + "TheC#\\Auto\\\\Auto_Rueda_Izquierda-TgcScene.xml");
             TgcScene scene5 = loader.loadSceneFromFile(GuiController.Instance.AlumnoEjemplosMediaDir + "TheC#\\Auto\\\\Auto_Rueda_Izquierda-TgcScene.xml");
-
+            //TgcScene scene6 = loader.loadSceneFromFile(GuiController.Instance.AlumnoEjemplosMediaDir + "TheC#\\Auto\\\\humoAuto-TgcScene.xml");
             //Creo un obstaculo de prueba de colsiones y demás
             obstaculoDePrueba = TgcBox.fromSize(new Vector3(0f, 0f, -500f), new Vector3(200, 200, 200), texturaMadera);
             //Le asigno su oriented bounding box que me permite rotar la caja de colisiones (no así bounding box)
@@ -135,6 +147,7 @@ namespace AlumnoEjemplos.MiGrupo
             ruedaDerechaTraseraMesh = scene3.Meshes[0];
             ruedaIzquierdaDelanteraMesh = scene4.Meshes[0];
             ruedaIzquierdaTraseraMesh = scene5.Meshes[0];
+            //humo = scene6.Meshes[0];
 
             //creo la lista de ruedas
             ruedas = new List<TgcViewer.Utils.TgcSceneLoader.TgcMesh> { ruedaDerechaDelanteraMesh, ruedaDerechaTraseraMesh, ruedaIzquierdaDelanteraMesh, ruedaIzquierdaTraseraMesh };
@@ -163,7 +176,7 @@ namespace AlumnoEjemplos.MiGrupo
 
 
             //creo al auto y al jugador
-            auto = new Auto(300, ruedas);
+            auto = new Auto(300, ruedas,humo,texturaFuego,texturaHumo);
             jugador = new Jugador(auto);
 
             posicionesPuntosDeControl = new List<Vector3> { new Vector3 (-1088, 20, -2503), 
@@ -190,7 +203,7 @@ namespace AlumnoEjemplos.MiGrupo
             escenario.Add(fronteraAdelante);
             escenario.Add(fronteraAtras);
 
-
+            
             //Le asigno su oriented bounding box que me permite rotar la caja de colisiones (no así bounding box)
             oBBfronteraDerecha = TgcObb.computeFromAABB(fronteraDerecha.BoundingBox);
             oBBfronteraIzquierda = TgcObb.computeFromAABB(fronteraIzquierda.BoundingBox);
@@ -340,10 +353,36 @@ namespace AlumnoEjemplos.MiGrupo
 
 
             }
+            //comienzo humo
+            float rohumo, alfa_humo;
+            float posicion_xhumo;
+            float posicion_yhumo;
+            rohumo = FastMath.Sqrt(-19f * -19f + 126f * 126f);
 
+            alfa_humo = FastMath.Asin(-19f / rohumo);
+            posicion_xhumo = FastMath.Sin(alfa_humo + auto.rotacion + (anguloDerrape * direcGiroDerrape)) * rohumo;
+            posicion_yhumo = FastMath.Cos(alfa_humo + auto.rotacion + (anguloDerrape * direcGiroDerrape)) * rohumo;
+
+            humo.Position = (new Vector3(posicion_xhumo, 15.5f, posicion_yhumo) + autoMesh.Position);
+            //Si no aprieta para los costados, dejo la rueda derecha (por ahora, esto se puede modificar)
+            if (input.keyDown(Key.Left) || input.keyDown(Key.A) || input.keyDown(Key.Right) || input.keyDown(Key.D))
+            {
+
+                humo.Rotation = new Vector3(0f, auto.rotacion + (anguloDerrape * direcGiroDerrape), 0f);
+            }
+            else
+                humo.Rotation = new Vector3(0f, auto.rotacion + (anguloDerrape * direcGiroDerrape), 0f);
+            //fin de humo
+            tiempoHumo+= elapsedTime*5f;
+            humo.UVOffset = new Vector2(0f, tiempoHumo);
+            humo.updateValues();
+
+            if (tiempoHumo > 50f)
+            {
+                tiempoHumo = 0f;
+            }
             autoMeshPrevX = autoMesh.Position.X;
             autoMeshPrevZ = autoMesh.Position.Z;
-
 
             //Lineas de Frenado
             if (jugador.estaFrenandoDeMano())
@@ -389,6 +428,7 @@ namespace AlumnoEjemplos.MiGrupo
             }
             autoMesh.render();
             boxPista.render();
+            humo.render();
 
             fronteraDerecha.render();
             fronteraIzquierda.render();
@@ -474,6 +514,7 @@ namespace AlumnoEjemplos.MiGrupo
 
         public override void close()
         {
+            humo.dispose();
             boxPista.dispose();
             for (int i = 0; i < 4; i++)
             {

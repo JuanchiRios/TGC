@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using TgcViewer;
+using TgcViewer.Utils.TgcSceneLoader;
 
 namespace AlumnoEjemplos.MiGrupo
 {
@@ -19,12 +20,20 @@ namespace AlumnoEjemplos.MiGrupo
         float velocidadMaxima=3000f;
         List<TgcViewer.Utils.TgcSceneLoader.TgcMesh> ruedas;
         int direccion;
+        TgcViewer.Utils.TgcGeometry.TgcBox humo;
+        TgcTexture texturaFuego;
+        TgcTexture texturaHumo;
+
         Boolean nitro = false;
                 
         //Interfaz de usuario
 
-        public Auto(float rot, List<TgcViewer.Utils.TgcSceneLoader.TgcMesh> unasRuedas)
+        public Auto(float rot, List<TgcViewer.Utils.TgcSceneLoader.TgcMesh> unasRuedas,TgcViewer.Utils.TgcGeometry.TgcBox unHumo,TgcTexture fuego, TgcTexture humito)
         {
+            texturaHumo = humito;
+            texturaFuego = fuego;
+            humo = unHumo;
+            humo.AlphaBlendEnable = true;
             rotacion = rot;
             ruedas = unasRuedas;
         }
@@ -69,18 +78,21 @@ namespace AlumnoEjemplos.MiGrupo
         {
             if (nitro == false)
             {
-
+              //  humo.setTexture(texturaHumo);
+             //   humo.updateValues();
                 velocidad += (aumento - rozamiento()) * elapsedTime;
                 ajustarVelocidad();
             }
             else
             {
                 velocidadMaxima=3000f;
-
+                humo.setTexture(texturaFuego);
+                humo.updateValues();
                 velocidad += aumento * 4  * elapsedTime;
                 ajustarVelocidad();
                 velocidadMaxima=1800f;
                 nitro = false;
+                
 
             }
 
