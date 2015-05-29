@@ -23,6 +23,7 @@ namespace AlumnoEjemplos.MiGrupo
         //Vector3 posicionRelativaHumo = new Vector3(-19f, 13f, 126f);
         //TgcMesh humo;
         TgcBox humo;
+        TgcBox fuego;
         TgcBox boxPista;
         TgcMesh autoMesh;
         TgcBox obstaculoDePrueba, fronteraDerecha, fronteraIzquierda, fronteraAdelante, fronteraAtras;
@@ -119,6 +120,8 @@ namespace AlumnoEjemplos.MiGrupo
             Vector3 sizeHumo = new Vector3(7, 3, 10);
             humo = TgcBox.fromSize(centerHumo, sizeHumo, texturaHumo);
             humo.AlphaBlendEnable = true;
+            fuego = TgcBox.fromSize(centerHumo, sizeHumo, texturaFuego);
+            fuego.AlphaBlendEnable = true;
 
 
             // cosas del tiempo
@@ -176,7 +179,7 @@ namespace AlumnoEjemplos.MiGrupo
 
 
             //creo al auto y al jugador
-            auto = new Auto(300, ruedas,humo,texturaFuego,texturaHumo);
+            auto = new Auto(300, ruedas);
             jugador = new Jugador(auto);
 
             posicionesPuntosDeControl = new List<Vector3> { new Vector3 (-1088, 20, -2503), 
@@ -373,8 +376,21 @@ namespace AlumnoEjemplos.MiGrupo
             else
                 humo.Rotation = new Vector3(0f, auto.rotacion + (anguloDerrape * direcGiroDerrape), 0f);
             //fin de humo
-            tiempoHumo+= elapsedTime*5f;
-            humo.UVOffset = new Vector2(0f, tiempoHumo);
+            fuego.Position = humo.Position;
+            fuego.Rotation = humo.Rotation;
+            //fin fuego
+            if (auto.nitro)
+            {
+                humo.Enabled = false;
+                fuego.Enabled = true;
+            }
+            else
+            {
+                 humo.Enabled = true;
+                 fuego.Enabled = false;
+            }
+            tiempoHumo+= elapsedTime;
+            humo.UVOffset = new Vector2(0.9f, tiempoHumo);
             humo.updateValues();
 
             if (tiempoHumo > 50f)
@@ -429,6 +445,7 @@ namespace AlumnoEjemplos.MiGrupo
             autoMesh.render();
             boxPista.render();
             humo.render();
+            fuego.render();
 
             fronteraDerecha.render();
             fronteraIzquierda.render();
@@ -515,6 +532,7 @@ namespace AlumnoEjemplos.MiGrupo
         public override void close()
         {
             humo.dispose();
+            fuego.dispose();
             boxPista.dispose();
             for (int i = 0; i < 4; i++)
             {
