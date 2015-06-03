@@ -98,5 +98,12 @@ namespace AlumnoEjemplos.MiGrupo
         {
             return recienSoltoFrenoDeMano;
         }
+
+        public int verSiAprietaSpace()
+        {
+            if (input.keyDown(Key.Space))
+                return 1;
+            return 0;
+        }
     }
 }
