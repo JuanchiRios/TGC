@@ -28,6 +28,7 @@ namespace AlumnoEjemplos.MiGrupo
         TgcBox fuego;
         TgcBox boxPista;
         TgcMesh autoMesh;
+        TgcMesh meshAutoIA;
         TgcBox obstaculoDePrueba, fronteraDerecha, fronteraIzquierda, fronteraAdelante, fronteraAtras;
         TgcMesh ruedaDerechaDelanteraMesh;
         TgcMesh ruedaDerechaTraseraMesh;
@@ -42,6 +43,8 @@ namespace AlumnoEjemplos.MiGrupo
         float prevCameraRotation = 300;
         Auto auto;
         Jugador jugador;
+        IA jugadorIA;
+        Auto autoIA;
         TgcObb oBBAuto, oBBObstaculoPrueba, oBBfronteraDerecha, oBBfronteraIzquierda, oBBfronteraAdelante, oBBfronteraAtras;
         variablesEnPantalla textoVelocidad = new variablesEnPantalla();
         List<Vector3> posicionesPuntosDeControl;
@@ -155,7 +158,9 @@ namespace AlumnoEjemplos.MiGrupo
             TgcScene scene3 = loader.loadSceneFromFile(GuiController.Instance.AlumnoEjemplosMediaDir + "TheC#\\Auto\\\\Auto_Rueda_Derecha-TgcScene.xml");
             TgcScene scene4 = loader.loadSceneFromFile(GuiController.Instance.AlumnoEjemplosMediaDir + "TheC#\\Auto\\\\Auto_Rueda_Izquierda-TgcScene.xml");
             TgcScene scene5 = loader.loadSceneFromFile(GuiController.Instance.AlumnoEjemplosMediaDir + "TheC#\\Auto\\\\Auto_Rueda_Izquierda-TgcScene.xml");
+            TgcScene sceneAutoIA = loader.loadSceneFromFile(GuiController.Instance.AlumnoEjemplosMediaDir + "TheC#\\Auto\\\\autoRojo-TgcScene.xml");            
             //TgcScene scene6 = loader.loadSceneFromFile(GuiController.Instance.AlumnoEjemplosMediaDir + "TheC#\\Auto\\\\humoAuto-TgcScene.xml");
+            
             //Creo un obstaculo de prueba de colsiones y demás
             obstaculoDePrueba = TgcBox.fromSize(new Vector3(0f, 0f, -500f), new Vector3(200, 200, 200), texturaMadera);
             //Le asigno su oriented bounding box que me permite rotar la caja de colisiones (no así bounding box)
@@ -169,6 +174,9 @@ namespace AlumnoEjemplos.MiGrupo
             ruedaIzquierdaDelanteraMesh = scene4.Meshes[0];
             ruedaIzquierdaTraseraMesh = scene5.Meshes[0];
             //humo = scene6.Meshes[0];
+
+            //creo el mesh del auto de IA
+            meshAutoIA = sceneAutoIA.Meshes[0];
 
             //creo la lista de ruedas
             ruedas = new List<TgcViewer.Utils.TgcSceneLoader.TgcMesh> { ruedaDerechaDelanteraMesh, ruedaDerechaTraseraMesh, ruedaIzquierdaDelanteraMesh, ruedaIzquierdaTraseraMesh };
@@ -185,6 +193,9 @@ namespace AlumnoEjemplos.MiGrupo
             dx = new List<float> { 45, -45, -45, 45 };
             dy = new List<float> { -61, 71, -61, 71 };
 
+            //posiciono al autoIA
+            meshAutoIA.Position = new Vector3(-2000f, 0f, -2500f);
+
             //Vamos a utilizar la cámara en 3ra persona para que siga al objeto principal a medida que se mueve
             GuiController.Instance.ThirdPersonCamera.Enable = true;
 
@@ -199,6 +210,10 @@ namespace AlumnoEjemplos.MiGrupo
             //creo al auto y al jugador
             auto = new Auto(300, ruedas);
             jugador = new Jugador(auto);
+
+            //creo al auto del IA y al IA
+            autoIA = new Auto(300, ruedas);
+            jugadorIA = new IA(autoIA, new Vector3(0,0,0));
 
             posicionesPuntosDeControl = new List<Vector3> { new Vector3 (-1088, 20, -2503), 
                 new Vector3 (2377, 20, -2528), new Vector3 (5721, 20, -2547), new Vector3 (7367, 20, -1606),
@@ -317,6 +332,17 @@ namespace AlumnoEjemplos.MiGrupo
             }
             else
             {
+                //Todo lo referente a lo que debe hacer el IA
+                autoIA.elapsedTime = elapsedTime;
+                autoIA.establecerVelocidadMáximaEn(1000);
+
+
+                jugadorIA.jugar(trayecto[0].Center, meshAutoIA.Position);
+
+                meshAutoIA.Rotation = new Vector3(0f, autoIA.rotacion, 0f);
+                jugadorIA.setRotacion(meshAutoIA.Rotation);
+
+                meshAutoIA.moveOrientedY(-autoIA.velocidad * elapsedTime);
 
                 //Le paso el elapsed time al auto porque sus metodos no deben depender de los FPS
                 auto.elapsedTime = elapsedTime;
@@ -339,7 +365,6 @@ namespace AlumnoEjemplos.MiGrupo
                 autoMesh.moveOrientedY(-auto.velocidad * elapsedTime);
                 //Detección de colisiones
                 //Hubo colisión con un objeto. Guardar resultado y abortar loop.
-
 
 
                 //Si hubo alguna colisión, hacer esto:
@@ -501,7 +526,8 @@ namespace AlumnoEjemplos.MiGrupo
                 oBBAuto.render();
                 oBBObstaculoPrueba.render();
 
-
+                //Mostrar al auto IA
+                meshAutoIA.render();
 
                 //Muestro el punto siguiente
                 trayecto[0].render();
@@ -511,10 +537,10 @@ namespace AlumnoEjemplos.MiGrupo
                 for (int i = 0; i < trayecto.Count; i++)
                 {
                     //Pregunto si colisiona con un punto de control activado
-                    if ((i == 0) && TgcCollisionUtils.testPointCylinder(oBBAuto.Position, trayecto[i].BoundingCylinder))
+                    if ((i == 0) && (TgcCollisionUtils.testPointCylinder(oBBAuto.Position, trayecto[i].BoundingCylinder) 
+                        || TgcCollisionUtils.testPointCylinder(meshAutoIA.Position, trayecto[i].BoundingCylinder)))//Acá el autoIA va a activar puntos de control también
                     {
                         TgcCylinder cilindroModificado = new TgcCylinder(trayecto[i].Center, 200, 30);
-
 
                         if (contadorDeActivacionesDePuntosDeControl != 48)
                         {
@@ -537,8 +563,10 @@ namespace AlumnoEjemplos.MiGrupo
 
                     }
                 }
+                textPosicionDelAutoActual.Text = (jugadorIA.angulo(trayecto[0].Center, meshAutoIA.Position)).ToString();
+                //textPosicionDelAutoActual.Text = jugadorIA.getRotacion().ToString();
 
-                textPosicionDelAutoActual.Text = autoMesh.Position.ToString();
+                //textPosicionDelAutoActual.Text = autoMesh.Position.ToString();
 
                 //Renderizar los tres textos
 
@@ -586,6 +614,8 @@ namespace AlumnoEjemplos.MiGrupo
                 ruedas[i].dispose();
             }
             autoMesh.dispose();
+
+            meshAutoIA.dispose();
 
             obstaculoDePrueba.dispose();
             oBBObstaculoPrueba.dispose();

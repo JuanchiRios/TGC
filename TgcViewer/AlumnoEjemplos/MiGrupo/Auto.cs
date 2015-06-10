@@ -19,7 +19,7 @@ namespace AlumnoEjemplos.MiGrupo
         float velocidadMinima=-2000f;
         float velocidadMaxima=3000f;
         List<TgcViewer.Utils.TgcSceneLoader.TgcMesh> ruedas;
-        int direccion;
+        float direccion;
 
         public Boolean nitro = false;
                 
@@ -47,7 +47,7 @@ namespace AlumnoEjemplos.MiGrupo
             acelerar(0);
         } 
     
-        public void rotar(int unaDireccion)
+        public void rotar(float unaDireccion)
         {
             direccion = unaDireccion;
             rotacion += (elapsedTime * direccion * (velocidad / 1000)); //direccion puede ser 1 o -1, 1 es derecha y -1 izquierda
@@ -113,7 +113,7 @@ namespace AlumnoEjemplos.MiGrupo
             acelerar(-aceleracionFrenar * 2.5f);
         }
 
-        private void marchaAtras()
+        public void marchaAtras()
         {
             acelerar(-aceleracionMarchaAtras);
         }
@@ -134,6 +134,11 @@ namespace AlumnoEjemplos.MiGrupo
             velocidadMaxima = 0f;
             velocidadMinima = 0f;
             ajustarVelocidad();
+        }
+
+        public float getRotacion()
+        {
+            return this.rotacion;
         }
     }
 }
