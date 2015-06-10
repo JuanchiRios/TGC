@@ -46,3 +46,11 @@ C:\Users\juanm_000\Desktop\UTN\TGC\Repo\TGC\TgcViewer\AlumnoEjemplos\AlumnoEjemp
 C:\Users\juanm_000\Desktop\UTN\TGC\Repo\TGC\TgcViewer\AlumnoEjemplos\TgcViewer.exe
 C:\Users\juanm_000\Desktop\UTN\TGC\Repo\TGC\TgcViewer\AlumnoEjemplos\Ionic.Zip.dll
 C:\Users\juanm_000\Desktop\UTN\TGC\Repo\TGC\TgcViewer\AlumnoEjemplos\TgcViewer.pdb
+C:\Users\ramiro\Desktop\TPTGC\TGC\TgcViewer\AlumnoEjemplos\obj\Debug\AlumnoEjemplos.csprojResolveAssemblyReference.cache
+C:\Users\ramiro\Desktop\TPTGC\TGC\TgcViewer\AlumnoEjemplos\obj\Debug\AlumnoEjemplos.dll
+C:\Users\ramiro\Desktop\TPTGC\TGC\TgcViewer\AlumnoEjemplos\obj\Debug\AlumnoEjemplos.pdb
+C:\Users\ramiro\Desktop\TPTGC\TGC\TgcViewer\AlumnoEjemplos\AlumnoEjemplos.dll
+C:\Users\ramiro\Desktop\TPTGC\TGC\TgcViewer\AlumnoEjemplos\AlumnoEjemplos.pdb
+C:\Users\ramiro\Desktop\TPTGC\TGC\TgcViewer\AlumnoEjemplos\TgcViewer.exe
+C:\Users\ramiro\Desktop\TPTGC\TGC\TgcViewer\AlumnoEjemplos\Ionic.Zip.dll
+C:\Users\ramiro\Desktop\TPTGC\TGC\TgcViewer\AlumnoEjemplos\TgcViewer.pdb

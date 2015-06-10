@@ -48,6 +48,7 @@ namespace AlumnoEjemplos.MiGrupo
         TgcObb oBBAuto, oBBObstaculoPrueba, oBBfronteraDerecha, oBBfronteraIzquierda, oBBfronteraAdelante, oBBfronteraAtras;
         variablesEnPantalla textoVelocidad = new variablesEnPantalla();
         List<Vector3> posicionesPuntosDeControl;
+        List<Vector3> posicionesPuntosDeControlDeIA;
         Boolean gano;
         float tiempoHumo = 0f;
         TgcTexture texturaHumo;
@@ -86,8 +87,10 @@ namespace AlumnoEjemplos.MiGrupo
 
         //Creo un listado de puntos de control
         List<TgcCylinder> trayecto = new List<TgcCylinder>();
-        //List<PuntoDeControl> puntosDelTrayecto = new List<PuntoDeControl>();
+        List<TgcCylinder> trayectoDeIA = new List<TgcCylinder>();
+
         int contadorDeActivacionesDePuntosDeControl;
+        int contadorDeActivacionesDePuntosDeControlDeIA;
 
         //Lineas de Frenado
         LineaDeFrenado[] lineaDeFrenado = new LineaDeFrenado[4];
@@ -215,7 +218,15 @@ namespace AlumnoEjemplos.MiGrupo
             autoIA = new Auto(300, ruedas);
             jugadorIA = new IA(autoIA, new Vector3(0,0,0));
 
+            //Inicializo el circuito, tanto para la persona como para la IA
             posicionesPuntosDeControl = new List<Vector3> { new Vector3 (-1088, 20, -2503), 
+                new Vector3 (2377, 20, -2528), new Vector3 (5721, 20, -2547), new Vector3 (7367, 20, -1606),
+                new Vector3 (6765, 20, 528), new Vector3 (4586, 20, 458), new Vector3 (3749, 20, 2093),
+                new Vector3 (2170, 20, 2743), new Vector3 (2120, 20, 363), new Vector3 (-193, 20, -625),
+                new Vector3 (-2067, 20, 981), new Vector3 (-4548, 20, 2366), new Vector3 (-6951, 20, 450),
+                new Vector3 (-6210, 20, -2318), new Vector3 (-5490, 20, -248), new Vector3 (-2903, 20, -1212)};
+
+            posicionesPuntosDeControlDeIA = new List<Vector3> { new Vector3 (-1088, 20, -2503), 
                 new Vector3 (2377, 20, -2528), new Vector3 (5721, 20, -2547), new Vector3 (7367, 20, -1606),
                 new Vector3 (6765, 20, 528), new Vector3 (4586, 20, 458), new Vector3 (3749, 20, 2093),
                 new Vector3 (2170, 20, 2743), new Vector3 (2120, 20, 363), new Vector3 (-193, 20, -625),
@@ -226,7 +237,12 @@ namespace AlumnoEjemplos.MiGrupo
             {
                 TgcCylinder unCilindro = new TgcCylinder(posicionesPuntosDeControl[i], 100, 50);
                 trayecto.Add(unCilindro);
+                unCilindro = new TgcCylinder(posicionesPuntosDeControlDeIA[i], 100, 50);
+                unCilindro.UseTexture = true;
+                unCilindro.setTexture(texturaHumo);
+                trayectoDeIA.Add(unCilindro);
             }
+
             //Creo un obstaculo de prueba de colsiones y demás
             fronteraDerecha = TgcBox.fromSize(new Vector3(-8000f, 60f, -00f), new Vector3(200, 150, 7500), texturaMetal);
             fronteraIzquierda = TgcBox.fromSize(new Vector3(8100f, 60f, -00f), new Vector3(200, 150, 7500), texturaMetal);
@@ -300,6 +316,7 @@ namespace AlumnoEjemplos.MiGrupo
 
             //contador de puntos de control
             contadorDeActivacionesDePuntosDeControl = 0;
+            contadorDeActivacionesDePuntosDeControlDeIA = 0;
             //flag de victoria
             gano = false;
         }
@@ -334,15 +351,15 @@ namespace AlumnoEjemplos.MiGrupo
             {
                 //Todo lo referente a lo que debe hacer el IA
                 autoIA.elapsedTime = elapsedTime;
-                autoIA.establecerVelocidadMáximaEn(1000);
+                autoIA.establecerVelocidadMáximaEn((float)GuiController.Instance.Modifiers["velocidadMaxima"]);
 
-
-                jugadorIA.jugar(trayecto[0].Center, meshAutoIA.Position);
+                jugadorIA.jugar(trayectoDeIA[0].Center, meshAutoIA.Position);
 
                 meshAutoIA.Rotation = new Vector3(0f, autoIA.rotacion, 0f);
                 jugadorIA.setRotacion(meshAutoIA.Rotation);
 
                 meshAutoIA.moveOrientedY(-autoIA.velocidad * elapsedTime);
+                //Fin movimiento de auto IA
 
                 //Le paso el elapsed time al auto porque sus metodos no deben depender de los FPS
                 auto.elapsedTime = elapsedTime;
@@ -370,10 +387,10 @@ namespace AlumnoEjemplos.MiGrupo
                 //Si hubo alguna colisión, hacer esto:
                 if (huboColision())
                 {
-
                     autoMesh.moveOrientedY(20 * auto.velocidad * elapsedTime); //Lo hago "como que rebote un poco" para no seguir colisionando
                     auto.velocidad = -(auto.velocidad * 0.3f); //Lo hago ir atrás un tercio de velocidad de choque
                 }
+
                 //Cosas sobre derrape
                 int direcGiroDerrape = 0;
 
@@ -396,6 +413,7 @@ namespace AlumnoEjemplos.MiGrupo
                     direcGiroDerrape = 0;
                     anguloDerrape = 0;
                 }
+                //Fin derrape
 
                 //Posiciono las ruedas
                 for (int i = 0; i < 4; i++)
@@ -426,6 +444,7 @@ namespace AlumnoEjemplos.MiGrupo
 
 
                 }
+
                 //comienzo humo
                 float rohumo, alfa_humo;
                 float posicion_xhumo;
@@ -449,6 +468,8 @@ namespace AlumnoEjemplos.MiGrupo
                 fuego.Position = humo.Position;
                 fuego.Rotation = humo.Rotation;
                 //fin fuego
+
+
                 if (auto.nitro)
                 {
                     humo.Enabled = false;
@@ -531,14 +552,14 @@ namespace AlumnoEjemplos.MiGrupo
 
                 //Muestro el punto siguiente
                 trayecto[0].render();
+                trayectoDeIA[0].render();
 
 
-                //Colision con puntos de control
+                //Colision con puntos de control, tanto de persona como IA
                 for (int i = 0; i < trayecto.Count; i++)
                 {
-                    //Pregunto si colisiona con un punto de control activado
-                    if ((i == 0) && (TgcCollisionUtils.testPointCylinder(oBBAuto.Position, trayecto[i].BoundingCylinder) 
-                        || TgcCollisionUtils.testPointCylinder(meshAutoIA.Position, trayecto[i].BoundingCylinder)))//Acá el autoIA va a activar puntos de control también
+                    //Pregunto si colisiona con un punto de control activado. Lo sé, feo.
+                    if ((i == 0) && TgcCollisionUtils.testPointCylinder(oBBAuto.Position, trayecto[i].BoundingCylinder))
                     {
                         TgcCylinder cilindroModificado = new TgcCylinder(trayecto[i].Center, 200, 30);
 
@@ -558,11 +579,38 @@ namespace AlumnoEjemplos.MiGrupo
                             textGanaste.Text = "Ganaste y obtuviste un puntaje de  " + textTiempo.Text + " puntos";
                             textGanaste.render();
                             auto.estatico();
-
+                            //Para el IA
+                            autoIA.estatico();
                         }
 
                     }
                 }
+                for (int i = 0; i < trayectoDeIA.Count; i++)
+                {
+                    //Pregunto si colisiona con un punto de control activado
+                    if ((i == 0) && TgcCollisionUtils.testPointCylinder(meshAutoIA.Position, trayectoDeIA[i].BoundingCylinder))
+                    {
+                        TgcCylinder cilindroModificado = new TgcCylinder(trayectoDeIA[i].Center, 200, 30);
+
+                        if (contadorDeActivacionesDePuntosDeControlDeIA != 48)
+                        {
+                            trayectoDeIA[1].UseTexture = true;
+                            trayectoDeIA.RemoveAt(i);
+                            trayectoDeIA.Add(cilindroModificado);
+                            contadorDeActivacionesDePuntosDeControlDeIA++;
+                        }
+                        else
+                        {
+                            gano = true;
+                            textGanaste.Text = "Ganaste y obtuviste un puntaje de  " + textTiempo.Text + " puntos";
+                            textGanaste.render();
+                            //Para el IA
+                            autoIA.estatico();
+                        }
+                    }
+                }
+                
+                
                 textPosicionDelAutoActual.Text = (jugadorIA.angulo(trayecto[0].Center, meshAutoIA.Position)).ToString();
                 //textPosicionDelAutoActual.Text = jugadorIA.getRotacion().ToString();
 
@@ -586,6 +634,8 @@ namespace AlumnoEjemplos.MiGrupo
                         textPerdiste.Text = "Perdiste y lograste " + contadorDeActivacionesDePuntosDeControl.ToString() + " puntos de control";
                         textPerdiste.render();
                         auto.estatico();
+                        //Para el IA
+                        autoIA.estatico();
                     }
                     else if (gano == true)
                     {
@@ -631,8 +681,11 @@ namespace AlumnoEjemplos.MiGrupo
             {
                 trayecto[i].dispose();
                 trayecto[i].BoundingCylinder.dispose();
+                trayectoDeIA[i].dispose();
+                trayectoDeIA[i].BoundingCylinder.dispose();
             }
             trayecto.Clear();
+            trayectoDeIA.Clear();
 
             //Liberar textos
 
