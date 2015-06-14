@@ -22,14 +22,10 @@ namespace AlumnoEjemplos.MiGrupo
     /// </summary>
     public class ProbandoMovAuto : TgcExample
     {
-        //Vector3 posicionRelativaHumo = new Vector3(-19f, 13f, 126f);
-        //TgcMesh humo;
         TgcBox humo;
         TgcBox fuego;
-        //TgcBox boxPista;
         TgcMesh autoMesh;
         TgcMesh meshAutoIA;
-      //  TgcBox obstaculoDePrueba;//, fronteraDerecha, fronteraIzquierda, fronteraAdelante, fronteraAtras;
         TgcMesh ruedaDerechaDelanteraMesh;
         TgcMesh ruedaDerechaTraseraMesh;
         TgcMesh ruedaIzquierdaDelanteraMesh;
@@ -45,7 +41,7 @@ namespace AlumnoEjemplos.MiGrupo
         Jugador jugador;
         IA jugadorIA;
         Auto autoIA;
-        TgcObb oBBAuto;//, oBBObstaculoPrueba, oBBfronteraDerecha, oBBfronteraIzquierda, oBBfronteraAdelante, oBBfronteraAtras;
+        TgcObb oBBAuto;
         variablesEnPantalla textoVelocidad = new variablesEnPantalla();
         List<Vector3> posicionesPuntosDeControl;
         List<Vector3> posicionesPuntosDeControlDeIA;
@@ -131,15 +127,9 @@ namespace AlumnoEjemplos.MiGrupo
                 GuiController.Instance.Modifiers.addFloat("rotation", 0, 360, 0);*/
                 sprite.Position = new Vector2(FastMath.Max(screenSize.Width / 2 - textureSize.Width / 2, 0), FastMath.Max(screenSize.Height / 2 - textureSize.Height / 2, 0));
                
-          //  TgcTexture texture = TgcTexture.createTexture(GuiController.Instance.AlumnoEjemplosMediaDir + "TheC#\\Pista\\pistaCarreras.png");
-        //    TgcTexture texturaMadera = TgcTexture.createTexture(GuiController.Instance.AlumnoEjemplosMediaDir + "TheC#\\Texturas\\Madera\\A3d-Fl3.jpg");
-        //    TgcTexture texturaLadrillo = TgcTexture.createTexture(GuiController.Instance.AlumnoEjemplosMediaDir + "TheC#\\Texturas\\ladrillo\\ladrillo.jpg");
-        //    TgcTexture texturaMetal = TgcTexture.createTexture(GuiController.Instance.AlumnoEjemplosMediaDir + "TheC#\\Texturas\\paredlarga.jpg");
+        
             texturaHumo = TgcTexture.createTexture(GuiController.Instance.AlumnoEjemplosMediaDir + "TheC#\\Particulas\\Textures\\humo.png");
             texturaFuego = TgcTexture.createTexture(GuiController.Instance.AlumnoEjemplosMediaDir + "TheC#\\Particulas\\Textures\\fuego.png");
-            Vector3 center = new Vector3(0, 0, 0);
-            Vector3 size = new Vector3(16000, 3, 7660);
-        //    boxPista = TgcBox.fromSize(center, size, texture);
 
             Vector3 centerHumo = new Vector3(0, 0, 0);
             Vector3 sizeHumo = new Vector3(7, 3, 10);
@@ -164,13 +154,7 @@ namespace AlumnoEjemplos.MiGrupo
             TgcScene scene5 = loader.loadSceneFromFile(GuiController.Instance.AlumnoEjemplosMediaDir + "TheC#\\Auto\\\\Auto_Rueda_Izquierda-TgcScene.xml");
             scenePista = loader.loadSceneFromFile(GuiController.Instance.AlumnoEjemplosMediaDir + "TheC#\\Auto\\\\pista-TgcScene.xml");
             TgcScene sceneAutoIA = loader.loadSceneFromFile(GuiController.Instance.AlumnoEjemplosMediaDir + "TheC#\\Auto\\\\autoRojo-TgcScene.xml");            
-            //TgcScene scene6 = loader.loadSceneFromFile(GuiController.Instance.AlumnoEjemplosMediaDir + "TheC#\\Auto\\\\humoAuto-TgcScene.xml");
             
-            //Creo un obstaculo de prueba de colsiones y demás
-         //   obstaculoDePrueba = TgcBox.fromSize(new Vector3(0f, 0f, -500f), new Vector3(200, 200, 200), texturaMadera);
-            //Le asigno su oriented bounding box que me permite rotar la caja de colisiones (no así bounding box)
-           // oBBObstaculoPrueba = TgcObb.computeFromAABB(obstaculoDePrueba.BoundingBox);
-
             //Solo nos interesa el primer modelo de esta escena (tiene solo uno)
 
             autoMesh = scene1.Meshes[0];
@@ -244,34 +228,6 @@ namespace AlumnoEjemplos.MiGrupo
                 unCilindro.setTexture(texturaHumo);
                 trayectoDeIA.Add(unCilindro);
             }
-            /*
-            //Creo un obstaculo de prueba de colsiones y demás
-            fronteraDerecha = TgcBox.fromSize(new Vector3(-8000f, 60f, -00f), new Vector3(200, 150, 7500), texturaMetal);
-            fronteraIzquierda = TgcBox.fromSize(new Vector3(8100f, 60f, -00f), new Vector3(200, 150, 7500), texturaMetal);
-            fronteraAdelante = TgcBox.fromSize(new Vector3(-0f, 60f, -3800f), new Vector3(16000, 150, 200), texturaMetal);
-            fronteraAtras = TgcBox.fromSize(new Vector3(-0f, 60f, 3800f), new Vector3(16000, 150, 200), texturaMetal);
-            //lo cargo a escenario los TgcBox
-         //   escenario.Add(boxPista);
-            escenario.Add(fronteraDerecha);
-            escenario.Add(fronteraIzquierda);
-            escenario.Add(fronteraAdelante);
-            escenario.Add(fronteraAtras);
-
-            
-            //Le asigno su oriented bounding box que me permite rotar la caja de colisiones (no así bounding box)
-            oBBfronteraDerecha = TgcObb.computeFromAABB(fronteraDerecha.BoundingBox);
-            oBBfronteraIzquierda = TgcObb.computeFromAABB(fronteraIzquierda.BoundingBox);
-            oBBfronteraAdelante = TgcObb.computeFromAABB(fronteraAdelante.BoundingBox);
-            oBBfronteraAtras = TgcObb.computeFromAABB(fronteraAtras.BoundingBox);
-         
-            //Asigno todos los obb de los Box a colisionar con el auto, pertenecientess al escenario
-            oBBsEscenario.Add(oBBObstaculoPrueba);
-            oBBsEscenario.Add(oBBfronteraDerecha);
-            oBBsEscenario.Add(oBBfronteraIzquierda);
-            oBBsEscenario.Add(oBBfronteraAdelante);
-            oBBsEscenario.Add(oBBfronteraAtras);*/
-
-
 
             /////////////TEXTOS///////////////////////
 
@@ -536,18 +492,10 @@ namespace AlumnoEjemplos.MiGrupo
                     ruedas[i].render();
                 }
                 autoMesh.render();
-                //boxPista.render();
                 humo.render();
                 fuego.render();
-                /*
-                fronteraDerecha.render();
-                fronteraIzquierda.render();
-                fronteraAdelante.render();
-                fronteraAtras.render();
-                obstaculoDePrueba.render();*/
                 //Hago visibles los obb
                 oBBAuto.render();
-               // oBBObstaculoPrueba.render();
 
                 //Mostrar al auto IA
                 meshAutoIA.render();
@@ -665,22 +613,13 @@ namespace AlumnoEjemplos.MiGrupo
             scenePista.disposeAll();
             humo.dispose();
             fuego.dispose();
-           // boxPista.dispose();
             for (int i = 0; i < 4; i++)
             {
                 ruedas[i].dispose();
             }
             autoMesh.dispose();
-
             meshAutoIA.dispose();
-
-       //     obstaculoDePrueba.dispose();
-           // oBBObstaculoPrueba.dispose();
-            oBBAuto.dispose();/*
-            fronteraDerecha.dispose();
-            fronteraIzquierda.dispose();
-            fronteraAdelante.dispose();
-            fronteraAtras.dispose();*/
+            oBBAuto.dispose();
             sprite.dispose();
 
             //borro los puntos de control del trayecto
@@ -701,18 +640,7 @@ namespace AlumnoEjemplos.MiGrupo
             textIngreseTecla.dispose();
 
         }
-
-        //        public bool huboColision(){
-        //if (Colisiones.testObbObb2(oBBAuto, oBBObstaculoPrueba)
-        //        || Colisiones.testObbObb2(oBBAuto, oBBfronteraAdelante)
-        //        || Colisiones.testObbObb2(oBBAuto, oBBfronteraAtras)
-        //        || Colisiones.testObbObb2(oBBAuto, oBBfronteraIzquierda)
-        //        || Colisiones.testObbObb2(oBBAuto, oBBfronteraDerecha))
-        //    {
-        //        return true;
-        //    } return false;
-        //        }
-
+//no borren el metodo HuboCollision
         public bool huboColision()
         {
             for(int i=0;i<oBBsEscenario.Count;i++)
