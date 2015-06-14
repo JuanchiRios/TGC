@@ -26,10 +26,10 @@ namespace AlumnoEjemplos.MiGrupo
         //TgcMesh humo;
         TgcBox humo;
         TgcBox fuego;
-        TgcBox boxPista;
+        //TgcBox boxPista;
         TgcMesh autoMesh;
         TgcMesh meshAutoIA;
-        TgcBox obstaculoDePrueba, fronteraDerecha, fronteraIzquierda, fronteraAdelante, fronteraAtras;
+      //  TgcBox obstaculoDePrueba;//, fronteraDerecha, fronteraIzquierda, fronteraAdelante, fronteraAtras;
         TgcMesh ruedaDerechaDelanteraMesh;
         TgcMesh ruedaDerechaTraseraMesh;
         TgcMesh ruedaIzquierdaDelanteraMesh;
@@ -45,7 +45,7 @@ namespace AlumnoEjemplos.MiGrupo
         Jugador jugador;
         IA jugadorIA;
         Auto autoIA;
-        TgcObb oBBAuto, oBBObstaculoPrueba, oBBfronteraDerecha, oBBfronteraIzquierda, oBBfronteraAdelante, oBBfronteraAtras;
+        TgcObb oBBAuto;//, oBBObstaculoPrueba, oBBfronteraDerecha, oBBfronteraIzquierda, oBBfronteraAdelante, oBBfronteraAtras;
         variablesEnPantalla textoVelocidad = new variablesEnPantalla();
         List<Vector3> posicionesPuntosDeControl;
         List<Vector3> posicionesPuntosDeControlDeIA;
@@ -54,6 +54,7 @@ namespace AlumnoEjemplos.MiGrupo
         TgcTexture texturaHumo;
         TgcTexture texturaFuego;
         int flagInicio = 0;
+        TgcScene scenePista;
 
         TgcD3dInput input = GuiController.Instance.D3dInput;
         //Para la pantalla de inicio
@@ -130,15 +131,15 @@ namespace AlumnoEjemplos.MiGrupo
                 GuiController.Instance.Modifiers.addFloat("rotation", 0, 360, 0);*/
                 sprite.Position = new Vector2(FastMath.Max(screenSize.Width / 2 - textureSize.Width / 2, 0), FastMath.Max(screenSize.Height / 2 - textureSize.Height / 2, 0));
                
-            TgcTexture texture = TgcTexture.createTexture(GuiController.Instance.AlumnoEjemplosMediaDir + "TheC#\\Pista\\pistaCarreras.png");
-            TgcTexture texturaMadera = TgcTexture.createTexture(GuiController.Instance.AlumnoEjemplosMediaDir + "TheC#\\Texturas\\Madera\\A3d-Fl3.jpg");
-            TgcTexture texturaLadrillo = TgcTexture.createTexture(GuiController.Instance.AlumnoEjemplosMediaDir + "TheC#\\Texturas\\ladrillo\\ladrillo.jpg");
-            TgcTexture texturaMetal = TgcTexture.createTexture(GuiController.Instance.AlumnoEjemplosMediaDir + "TheC#\\Texturas\\paredlarga.jpg");
+          //  TgcTexture texture = TgcTexture.createTexture(GuiController.Instance.AlumnoEjemplosMediaDir + "TheC#\\Pista\\pistaCarreras.png");
+        //    TgcTexture texturaMadera = TgcTexture.createTexture(GuiController.Instance.AlumnoEjemplosMediaDir + "TheC#\\Texturas\\Madera\\A3d-Fl3.jpg");
+        //    TgcTexture texturaLadrillo = TgcTexture.createTexture(GuiController.Instance.AlumnoEjemplosMediaDir + "TheC#\\Texturas\\ladrillo\\ladrillo.jpg");
+        //    TgcTexture texturaMetal = TgcTexture.createTexture(GuiController.Instance.AlumnoEjemplosMediaDir + "TheC#\\Texturas\\paredlarga.jpg");
             texturaHumo = TgcTexture.createTexture(GuiController.Instance.AlumnoEjemplosMediaDir + "TheC#\\Particulas\\Textures\\humo.png");
             texturaFuego = TgcTexture.createTexture(GuiController.Instance.AlumnoEjemplosMediaDir + "TheC#\\Particulas\\Textures\\fuego.png");
             Vector3 center = new Vector3(0, 0, 0);
             Vector3 size = new Vector3(16000, 3, 7660);
-            boxPista = TgcBox.fromSize(center, size, texture);
+        //    boxPista = TgcBox.fromSize(center, size, texture);
 
             Vector3 centerHumo = new Vector3(0, 0, 0);
             Vector3 sizeHumo = new Vector3(7, 3, 10);
@@ -161,13 +162,14 @@ namespace AlumnoEjemplos.MiGrupo
             TgcScene scene3 = loader.loadSceneFromFile(GuiController.Instance.AlumnoEjemplosMediaDir + "TheC#\\Auto\\\\Auto_Rueda_Derecha-TgcScene.xml");
             TgcScene scene4 = loader.loadSceneFromFile(GuiController.Instance.AlumnoEjemplosMediaDir + "TheC#\\Auto\\\\Auto_Rueda_Izquierda-TgcScene.xml");
             TgcScene scene5 = loader.loadSceneFromFile(GuiController.Instance.AlumnoEjemplosMediaDir + "TheC#\\Auto\\\\Auto_Rueda_Izquierda-TgcScene.xml");
+            scenePista = loader.loadSceneFromFile(GuiController.Instance.AlumnoEjemplosMediaDir + "TheC#\\Auto\\\\pista-TgcScene.xml");
             TgcScene sceneAutoIA = loader.loadSceneFromFile(GuiController.Instance.AlumnoEjemplosMediaDir + "TheC#\\Auto\\\\autoRojo-TgcScene.xml");            
             //TgcScene scene6 = loader.loadSceneFromFile(GuiController.Instance.AlumnoEjemplosMediaDir + "TheC#\\Auto\\\\humoAuto-TgcScene.xml");
             
             //Creo un obstaculo de prueba de colsiones y demás
-            obstaculoDePrueba = TgcBox.fromSize(new Vector3(0f, 0f, -500f), new Vector3(200, 200, 200), texturaMadera);
+         //   obstaculoDePrueba = TgcBox.fromSize(new Vector3(0f, 0f, -500f), new Vector3(200, 200, 200), texturaMadera);
             //Le asigno su oriented bounding box que me permite rotar la caja de colisiones (no así bounding box)
-            oBBObstaculoPrueba = TgcObb.computeFromAABB(obstaculoDePrueba.BoundingBox);
+           // oBBObstaculoPrueba = TgcObb.computeFromAABB(obstaculoDePrueba.BoundingBox);
 
             //Solo nos interesa el primer modelo de esta escena (tiene solo uno)
 
@@ -242,14 +244,14 @@ namespace AlumnoEjemplos.MiGrupo
                 unCilindro.setTexture(texturaHumo);
                 trayectoDeIA.Add(unCilindro);
             }
-
+            /*
             //Creo un obstaculo de prueba de colsiones y demás
             fronteraDerecha = TgcBox.fromSize(new Vector3(-8000f, 60f, -00f), new Vector3(200, 150, 7500), texturaMetal);
             fronteraIzquierda = TgcBox.fromSize(new Vector3(8100f, 60f, -00f), new Vector3(200, 150, 7500), texturaMetal);
             fronteraAdelante = TgcBox.fromSize(new Vector3(-0f, 60f, -3800f), new Vector3(16000, 150, 200), texturaMetal);
             fronteraAtras = TgcBox.fromSize(new Vector3(-0f, 60f, 3800f), new Vector3(16000, 150, 200), texturaMetal);
             //lo cargo a escenario los TgcBox
-            escenario.Add(boxPista);
+         //   escenario.Add(boxPista);
             escenario.Add(fronteraDerecha);
             escenario.Add(fronteraIzquierda);
             escenario.Add(fronteraAdelante);
@@ -261,13 +263,13 @@ namespace AlumnoEjemplos.MiGrupo
             oBBfronteraIzquierda = TgcObb.computeFromAABB(fronteraIzquierda.BoundingBox);
             oBBfronteraAdelante = TgcObb.computeFromAABB(fronteraAdelante.BoundingBox);
             oBBfronteraAtras = TgcObb.computeFromAABB(fronteraAtras.BoundingBox);
-
+         
             //Asigno todos los obb de los Box a colisionar con el auto, pertenecientess al escenario
             oBBsEscenario.Add(oBBObstaculoPrueba);
             oBBsEscenario.Add(oBBfronteraDerecha);
             oBBsEscenario.Add(oBBfronteraIzquierda);
             oBBsEscenario.Add(oBBfronteraAdelante);
-            oBBsEscenario.Add(oBBfronteraAtras);
+            oBBsEscenario.Add(oBBfronteraAtras);*/
 
 
 
@@ -534,18 +536,18 @@ namespace AlumnoEjemplos.MiGrupo
                     ruedas[i].render();
                 }
                 autoMesh.render();
-                boxPista.render();
+                //boxPista.render();
                 humo.render();
                 fuego.render();
-
+                /*
                 fronteraDerecha.render();
                 fronteraIzquierda.render();
                 fronteraAdelante.render();
                 fronteraAtras.render();
-                obstaculoDePrueba.render();
+                obstaculoDePrueba.render();*/
                 //Hago visibles los obb
                 oBBAuto.render();
-                oBBObstaculoPrueba.render();
+               // oBBObstaculoPrueba.render();
 
                 //Mostrar al auto IA
                 meshAutoIA.render();
@@ -647,18 +649,23 @@ namespace AlumnoEjemplos.MiGrupo
                         segundosAuxiliares++;
                     }
                 }
-
+                
                 textTiempo.render();
                 contadorDeFrames++;
+                foreach (TgcMesh mesh in scenePista.Meshes)
+                {
+                    mesh.render();
+                }
             }//cierra el if de que no esta en pantalla inicio
             
         }
 
         public override void close()
         {
+            scenePista.disposeAll();
             humo.dispose();
             fuego.dispose();
-            boxPista.dispose();
+           // boxPista.dispose();
             for (int i = 0; i < 4; i++)
             {
                 ruedas[i].dispose();
@@ -667,13 +674,13 @@ namespace AlumnoEjemplos.MiGrupo
 
             meshAutoIA.dispose();
 
-            obstaculoDePrueba.dispose();
-            oBBObstaculoPrueba.dispose();
-            oBBAuto.dispose();
+       //     obstaculoDePrueba.dispose();
+           // oBBObstaculoPrueba.dispose();
+            oBBAuto.dispose();/*
             fronteraDerecha.dispose();
             fronteraIzquierda.dispose();
             fronteraAdelante.dispose();
-            fronteraAtras.dispose();
+            fronteraAtras.dispose();*/
             sprite.dispose();
 
             //borro los puntos de control del trayecto
