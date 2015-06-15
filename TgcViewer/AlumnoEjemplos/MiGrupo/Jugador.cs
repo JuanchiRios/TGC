@@ -14,7 +14,7 @@ namespace AlumnoEjemplos.MiGrupo
     {
         TgcD3dInput input = GuiController.Instance.D3dInput;
         Auto auto;
-        bool giraIzquierda, giraDerecha, frenaDeMano, recienSoltoFrenoDeMano;
+        bool giraIzquierda, giraDerecha, frenaDeMano, recienSoltoFrenoDeMano, estaRetrocediendo;
 
         public Jugador(Auto unAuto)
         {
@@ -42,14 +42,17 @@ namespace AlumnoEjemplos.MiGrupo
             if (input.keyDown(Key.Up) || input.keyDown(Key.W))
             {
                 auto.avanzar();
+                estaRetrocediendo = false;
             }
             if (input.keyDown(Key.Down) || input.keyDown(Key.S))
             {
                 auto.retroceder();
+                estaRetrocediendo = true;
             }
             if (!input.keyDown(Key.Down) && !input.keyDown(Key.S) && !input.keyDown(Key.Up) && !input.keyDown(Key.W))
             {
                 auto.noMover();
+                estaRetrocediendo = false;
             }
             if (!input.keyDown(Key.Right) && !input.keyDown(Key.D))
             {
@@ -59,7 +62,7 @@ namespace AlumnoEjemplos.MiGrupo
             {
                 giraIzquierda = false;
             }
-            if(input.keyDown(Key.Space))
+            if (input.keyDown(Key.Space))
             {
                 recienSoltoFrenoDeMano = false;
                 if (auto.velocidad > 0)
@@ -74,11 +77,11 @@ namespace AlumnoEjemplos.MiGrupo
             {
                 frenaDeMano = false;
             }
-            if(input.keyUp(Key.Space))
+            if (input.keyUp(Key.Space))
             {
                 recienSoltoFrenoDeMano = true;
             }
-            
+
         }
 
         public bool estaGirandoDerecha()
@@ -89,7 +92,7 @@ namespace AlumnoEjemplos.MiGrupo
         {
             return giraIzquierda;
         }
-        
+
         public bool estaFrenandoDeMano()
         {
             return frenaDeMano;
@@ -104,6 +107,11 @@ namespace AlumnoEjemplos.MiGrupo
             if (input.keyDown(Key.Space))
                 return 1;
             return 0;
+        }
+
+        public bool estaMarchaAtras()
+        {
+            return estaRetrocediendo;
         }
     }
 }

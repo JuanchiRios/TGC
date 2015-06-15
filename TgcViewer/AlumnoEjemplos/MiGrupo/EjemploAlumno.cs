@@ -35,6 +35,9 @@ namespace AlumnoEjemplos.MiGrupo
         List<TgcViewer.Utils.TgcSceneLoader.TgcMesh> ruedas;
         List<float> dx;
         List<float> dy;
+        List<float> dxAColision;
+        List<float> dyAColision;
+
         float rotacionVertical;
         float prevCameraRotation = 300;
         Auto auto;
@@ -70,6 +73,11 @@ namespace AlumnoEjemplos.MiGrupo
         TgcText2d textGanaste;
         float contadorDeFrames = 0;
         private DateTime horaInicio;
+
+        //colisiones entre los autos
+        Colisiones colision = new Colisiones();
+        List<TgcBox> obbsAuto = new List<TgcBox>();
+        List<TgcBox> obbsOtroAuto = new List<TgcBox>();
 
         //Tiempo 
         public float tiempoTrans = 100f; //tiempo transcurrido desde el defasaje de rotacion de camara y rotacion del mesh
@@ -182,6 +190,10 @@ namespace AlumnoEjemplos.MiGrupo
             dx = new List<float> { 45, -45, -45, 45 };
             dy = new List<float> { -61, 71, -61, 71 };
 
+            //posiciones relativas al auto para los box de colision entre autos
+            dxAColision = new List<float> { 20, -20, -20, 20 };
+            dyAColision = new List<float> { -35, 45, -35, 45 };
+
             //posiciono al autoIA
             meshAutoIA.Position = new Vector3(-2000f, 0f, -2500f);
 
@@ -228,6 +240,18 @@ namespace AlumnoEjemplos.MiGrupo
                 unCilindro.setTexture(texturaHumo);
                 trayectoDeIA.Add(unCilindro);
             }
+
+
+            //Asigno los obb que me permiten detectar las colisiones entre los autos
+            obbsAuto.Add(TgcBox.fromSize(new Vector3(autoMesh.Position.X - 100, 15, autoMesh.Position.Z + 100), new Vector3(65, 65, 65), texturaFuego));
+            obbsAuto.Add(TgcBox.fromSize(new Vector3(autoMesh.Position.X - 100, 15, autoMesh.Position.Z - 100), new Vector3(65, 65, 65), texturaHumo));
+            obbsAuto.Add(TgcBox.fromSize(new Vector3(autoMesh.Position.X + 100, 15, autoMesh.Position.Z + 100), new Vector3(65, 65, 65), texturaFuego));
+            obbsAuto.Add(TgcBox.fromSize(new Vector3(autoMesh.Position.X + 100, 15, autoMesh.Position.Z - 100), new Vector3(65, 65, 65), texturaFuego));
+
+            obbsOtroAuto.Add(TgcBox.fromSize(new Vector3(meshAutoIA.Position.X - 100, 15, meshAutoIA.Position.Z + 100), new Vector3(65, 65, 65), texturaFuego));
+            obbsOtroAuto.Add(TgcBox.fromSize(new Vector3(meshAutoIA.Position.X - 100, 15, meshAutoIA.Position.Z - 100), new Vector3(65, 65, 65), texturaHumo));
+            obbsOtroAuto.Add(TgcBox.fromSize(new Vector3(meshAutoIA.Position.X + 100, 15, meshAutoIA.Position.Z + 100), new Vector3(65, 65, 65), texturaFuego));
+            obbsOtroAuto.Add(TgcBox.fromSize(new Vector3(meshAutoIA.Position.X + 100, 15, meshAutoIA.Position.Z - 100), new Vector3(65, 65, 65), texturaFuego));
 
             /////////////TEXTOS///////////////////////
 
@@ -311,7 +335,8 @@ namespace AlumnoEjemplos.MiGrupo
                 autoIA.elapsedTime = elapsedTime;
                 autoIA.establecerVelocidadMáximaEn((float)GuiController.Instance.Modifiers["velocidadMaxima"]);
 
-                jugadorIA.jugar(trayectoDeIA[0].Center, meshAutoIA.Position);
+                if (colision.getTiempoQueChoco() == 0)
+                    jugadorIA.jugar(trayectoDeIA[0].Center, meshAutoIA.Position);
 
                 meshAutoIA.Rotation = new Vector3(0f, autoIA.rotacion, 0f);
                 jugadorIA.setRotacion(meshAutoIA.Rotation);
@@ -326,7 +351,14 @@ namespace AlumnoEjemplos.MiGrupo
                 auto.establecerVelocidadMáximaEn((float)GuiController.Instance.Modifiers["velocidadMaxima"]);
 
                 //El jugador envia mensajes al auto dependiendo de que tecla presiono
-                jugador.jugar();
+                if (colision.getTiempoQueChoco() == 0)
+                    jugador.jugar();
+                else
+                {
+                    colision.setTiempoQueChoco(colision.getTiempoQueChoco() - (8 * elapsedTime));
+                    if (colision.getTiempoQueChoco() < 0)
+                        colision.setTiempoQueChoco(0);
+                }
 
                 //Transfiero la rotacion del auto abstracto al mesh, y su obb
                 autoMesh.Rotation = new Vector3(0f, auto.rotacion, 0f);
@@ -348,6 +380,43 @@ namespace AlumnoEjemplos.MiGrupo
                     autoMesh.moveOrientedY(20 * auto.velocidad * elapsedTime); //Lo hago "como que rebote un poco" para no seguir colisionando
                     auto.velocidad = -(auto.velocidad * 0.3f); //Lo hago ir atrás un tercio de velocidad de choque
                 }
+
+                //Colisión entre los autos
+                for (int i = 0; i < 4; i++)
+                {
+                    float ro, alfa_rueda;
+                    float posicion_xA1;
+                    float posicion_yA1;
+                    float posicion_xA2;
+                    float posicion_yA2;
+
+                    ro = FastMath.Sqrt(dx[i] * dxAColision[i] + dyAColision[i] * dyAColision[i]);
+
+                    alfa_rueda = FastMath.Asin(dxAColision[i] / ro);
+                    if (i == 0 || i == 2)
+                    {
+                        alfa_rueda += FastMath.PI;
+                    }
+                    posicion_xA1 = FastMath.Sin(alfa_rueda + auto.rotacion) * ro;
+                    posicion_yA1 = FastMath.Cos(alfa_rueda + auto.rotacion) * ro;
+
+                    posicion_xA2 = FastMath.Sin(alfa_rueda + autoIA.rotacion) * ro;
+                    posicion_yA2 = FastMath.Cos(alfa_rueda + autoIA.rotacion) * ro;
+
+                    obbsAuto[i].Position = (new Vector3(posicion_xA1, 15.5f, posicion_yA1) + autoMesh.Position);
+
+                    obbsOtroAuto[i].Position = (new Vector3(posicion_xA2, 15.5f, posicion_yA2) + meshAutoIA.Position);
+                }
+
+                colision.colisionEntreAutos(obbsAuto, obbsOtroAuto, jugador, auto, autoIA, autoMesh, meshAutoIA, elapsedTime);
+                /*//Aca muestro las cajas de colision entre los autos
+                for (int i = 0; i < 4; i++)
+                {
+                    obbsAuto[i].render();
+                    obbsOtroAuto[i].render();
+                }*/
+
+                //Fin colisión entre  los autos
 
                 //Cosas sobre derrape
                 int direcGiroDerrape = 0;

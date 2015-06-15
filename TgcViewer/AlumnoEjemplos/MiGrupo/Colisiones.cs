@@ -5,11 +5,103 @@ using System.Text;
 using TgcViewer.Utils.TgcGeometry;
 using TgcViewer;
 using Microsoft.DirectX;
+using TgcViewer.Utils.TgcSceneLoader;
 
-namespace AlumnoEjemplos
+namespace AlumnoEjemplos.MiGrupo
 {
     class Colisiones
     {
+        float tiempoDeChoque;
+
+        public void colisionEntreAutos(List<TgcBox> obbsAuto, List<TgcBox> obbsOtroAuto, Jugador jugadorAuto, Auto auto, Auto otroAuto, TgcMesh meshAuto, TgcMesh meshOtroAuto, float elapsedTime)
+        {
+            TgcBoundingBox dDAuto = obbsAuto[0].BoundingBox;
+            TgcBoundingBox dIAuto = obbsAuto[2].BoundingBox;
+            TgcBoundingBox tDAuto = obbsAuto[1].BoundingBox;
+            TgcBoundingBox tIAuto = obbsAuto[3].BoundingBox;
+
+            TgcBoundingBox dDOtroAuto = obbsOtroAuto[0].BoundingBox;
+            TgcBoundingBox dIOtroAuto = obbsOtroAuto[2].BoundingBox;
+            TgcBoundingBox tDOtroAuto = obbsOtroAuto[1].BoundingBox;
+            TgcBoundingBox tIOtroAuto = obbsOtroAuto[3].BoundingBox;
+
+            if (!jugadorAuto.estaMarchaAtras())
+            {
+                if (TgcCollisionUtils.testAABBAABB(tIAuto, dIOtroAuto) || TgcCollisionUtils.testAABBAABB(tIAuto, dDOtroAuto)
+                    || TgcCollisionUtils.testAABBAABB(tDAuto, dIOtroAuto) || TgcCollisionUtils.testAABBAABB(tDAuto, dDOtroAuto))
+                {
+                    //auto gira cierto angulo hacia izquierda y sube velocidad
+                    if (Math.Truncate(auto.velocidad) == 0)
+                        auto.velocidad = 300;
+                    else
+                        auto.velocidad = Math.Abs(auto.velocidad * 0.5f);
+                    //otroAuto reduce bastante velocidad y se lo traslada un poco hacia atrás para no seguir chocando
+                    meshOtroAuto.moveOrientedY(10 * otroAuto.velocidad * elapsedTime); //Lo hago "como que rebote un poco" para no seguir colisionando
+                    otroAuto.velocidad = -(otroAuto.velocidad * 0.3f);
+                    if (tiempoDeChoque == 0)
+                        tiempoDeChoque = 5;
+                }
+                else if (TgcCollisionUtils.testAABBAABB(tIOtroAuto, dIAuto) || TgcCollisionUtils.testAABBAABB(tIOtroAuto, dDAuto)
+                    || TgcCollisionUtils.testAABBAABB(tDOtroAuto, dIAuto) || TgcCollisionUtils.testAABBAABB(tDOtroAuto, dDAuto))
+                {
+                    //auto gira cierto angulo hacia derecha y sube velocidad
+                    if (Math.Truncate(otroAuto.velocidad) == 0)
+                        otroAuto.velocidad = 300;
+                    else
+                        otroAuto.velocidad = Math.Abs(otroAuto.velocidad * 0.5f);
+                    //otroAuto reduce bastante velocidad y se lo traslada un poco hacia atrás para no seguir chocando
+                    meshAuto.moveOrientedY(10 * auto.velocidad * elapsedTime); //Lo hago "como que rebote un poco" para no seguir colisionando
+                    auto.velocidad = -(auto.velocidad * 0.3f);
+                    if (tiempoDeChoque == 0)
+                        tiempoDeChoque = 5;
+                }
+                else if (TgcCollisionUtils.testAABBAABB(dIAuto, dIOtroAuto) || TgcCollisionUtils.testAABBAABB(dDAuto, dIOtroAuto) || TgcCollisionUtils.testAABBAABB(dIAuto, dDOtroAuto) || TgcCollisionUtils.testAABBAABB(dDAuto, dDOtroAuto))
+                {
+                    //auto se mueve hacia atrás y cambia de sentido 180° (rebota)
+                    meshAuto.moveOrientedY(10 * auto.velocidad * elapsedTime); //Lo hago "como que rebote un poco" para no seguir colisionando
+                    auto.velocidad = -(auto.velocidad * 0.3f); //Lo hago ir atrás un tercio de velocidad de choque
+                    //otroAuto hace lo mismo que el auto
+                    meshOtroAuto.moveOrientedY(10 * otroAuto.velocidad * elapsedTime); //Lo hago "como que rebote un poco" para no seguir colisionando
+                    otroAuto.velocidad = -(otroAuto.velocidad * 0.3f); //Lo hago ir atrás un tercio de velocidad de choque
+                    if (tiempoDeChoque == 0)
+                        tiempoDeChoque = 5;
+                }
+            }
+            else
+            {
+                if (TgcCollisionUtils.testAABBAABB(tIAuto, dIOtroAuto) || TgcCollisionUtils.testAABBAABB(tIAuto, dDOtroAuto) || TgcCollisionUtils.testAABBAABB(tDAuto, dIOtroAuto) || TgcCollisionUtils.testAABBAABB(tDAuto, dDOtroAuto))
+                {
+                    //ambos autos rebotan (cambia sentido 180°)
+                    if (Math.Truncate(auto.velocidad) == 0)
+                        auto.velocidad = 300;
+                    else
+                        auto.velocidad = Math.Abs(auto.velocidad * 0.5f);
+
+                    meshOtroAuto.moveOrientedY(10 * otroAuto.velocidad * elapsedTime); //Lo hago "como que rebote un poco" para no seguir colisionando
+                    otroAuto.velocidad = -(otroAuto.velocidad * 0.3f); //Lo hago ir atrás un tercio de velocidad de choque
+                    if (tiempoDeChoque == 0)
+                        tiempoDeChoque = 5;
+                }
+                else if (TgcCollisionUtils.testAABBAABB(tIAuto, tIOtroAuto) || TgcCollisionUtils.testAABBAABB(tIAuto, tDOtroAuto) || TgcCollisionUtils.testAABBAABB(tDAuto, tIOtroAuto) || TgcCollisionUtils.testAABBAABB(tDAuto, tDOtroAuto))
+                {
+                    //rebota auto
+                    meshAuto.moveOrientedY(10 * auto.velocidad * elapsedTime); //Lo hago "como que rebote un poco" para no seguir colisionando
+                    auto.velocidad = -(auto.velocidad * 0.3f); //Lo hago ir atrás un tercio de velocidad de choque
+                    if (tiempoDeChoque == 0)
+                        tiempoDeChoque = 5;
+                }
+
+            }
+        }
+
+        public void setTiempoQueChoco(float t)
+        {
+            tiempoDeChoque = t;
+        }
+        public float getTiempoQueChoco()
+        {
+            return tiempoDeChoque;
+        }
 
         /// <summary>
         /// Crea un array de floats con X,Y,Z
@@ -21,7 +113,7 @@ namespace AlumnoEjemplos
 
 
         /// <summary>
-        /// Testear si hay olision entre dos OBB
+        /// Testear si hay colision entre dos OBB
         /// </summary>
         /// <param name="a">Primer OBB</param>
         /// <param name="b">Segundo OBB</param>
@@ -32,7 +124,7 @@ namespace AlumnoEjemplos
         }
 
         /// <summary>
-        /// Testear si hay olision entre dos OBB
+        /// Testear si hay colision entre dos OBB
         /// </summary>
         /// <param name="a">Primer OBB</param>
         /// <param name="b">Segundo OBB</param>
@@ -145,3 +237,4 @@ namespace AlumnoEjemplos
 
     }
 }
+
