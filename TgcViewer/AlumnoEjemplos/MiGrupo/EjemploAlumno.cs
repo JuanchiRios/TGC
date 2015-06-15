@@ -135,8 +135,11 @@ namespace AlumnoEjemplos.MiGrupo
                 /*GuiController.Instance.Modifiers.addVertex2f("position", new Vector2(0, 0), new Vector2(screenSize.Width, screenSize.Height), sprite.Position);
                 GuiController.Instance.Modifiers.addVertex2f("scaling", new Vector2(0, 0), new Vector2(4, 4),new Vector2(1.4f,1.6f));// sprite.Scaling);
                 GuiController.Instance.Modifiers.addFloat("rotation", 0, 360, 0);*/
-                sprite.Position = new Vector2(FastMath.Max(screenSize.Width / 2 - textureSize.Width / 2, 0), FastMath.Max(screenSize.Height / 2 - textureSize.Height / 2, 0));
-               
+                //sprite.Position = new Vector2(FastMath.Max(screenSize.Width / 2 - textureSize.Width / 2, 0), FastMath.Max(screenSize.Height / 2 - textureSize.Height / 2, 0));
+                sprite.Position = new Vector2(0,0 );
+                sprite.Scaling = new Vector2((float)screenSize.Width/textureSize.Width ,(float)screenSize.Height / textureSize.Height + 0.01f);
+                //sprite.Scaling = new Vector2(1.3f,1.5f);
+            
         
             texturaHumo = TgcTexture.createTexture(GuiController.Instance.AlumnoEjemplosMediaDir + "TheC#\\Particulas\\Textures\\humo.png");
             texturaFuego = TgcTexture.createTexture(GuiController.Instance.AlumnoEjemplosMediaDir + "TheC#\\Particulas\\Textures\\fuego.png");

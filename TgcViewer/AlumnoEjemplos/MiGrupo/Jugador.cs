@@ -16,7 +16,7 @@ namespace AlumnoEjemplos.MiGrupo
         Auto auto;
         bool giraIzquierda, giraDerecha, frenaDeMano, recienSoltoFrenoDeMano, estaRetrocediendo;
         private bool camaraCamibada;
-        private int valorDeCamara = 0;
+        private int valorDeCamara = 100;
 
         public Jugador(Auto unAuto)
         {
@@ -119,12 +119,12 @@ namespace AlumnoEjemplos.MiGrupo
                 if (camaraCamibada)
                 {
                     camaraCamibada = (camaraCamibada == false);
-                    valorDeCamara = 0;
-                    return 0;
+                    valorDeCamara = 100;
+                    return 100;
                 }
                 camaraCamibada = (camaraCamibada == false);
-                valorDeCamara = 100;
-                return 100;
+                valorDeCamara = 0;
+                return 0;
             }
             return valorDeCamara;
         }
