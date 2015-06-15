@@ -54,6 +54,7 @@ namespace AlumnoEjemplos.MiGrupo
         TgcTexture texturaFuego;
         int flagInicio = 0;
         TgcScene scenePista;
+        int coheficienteCamara;
 
         TgcD3dInput input = GuiController.Instance.D3dInput;
         //Para la pantalla de inicio
@@ -102,6 +103,7 @@ namespace AlumnoEjemplos.MiGrupo
 
         //Reflejo de luz en el auto
         ReflejoLuzEnAuto reflejo;
+ 
 
         public override string getCategory()
         {
@@ -199,11 +201,12 @@ namespace AlumnoEjemplos.MiGrupo
 
             //Vamos a utilizar la cámara en 3ra persona para que siga al objeto principal a medida que se mueve
             GuiController.Instance.ThirdPersonCamera.Enable = true;
-
+            
             GuiController.Instance.ThirdPersonCamera.RotationY = 300;
             GuiController.Instance.ThirdPersonCamera.setCamera(autoMesh.Position, 200, 500);
             GuiController.Instance.BackgroundColor = Color.LightSkyBlue;// Black;
 
+            
             //Le asigno su oriented bounding box que me permite rotar la caja de colisiones (no así bounding box)
             oBBAuto = TgcObb.computeFromAABB(autoMesh.BoundingBox);
 
@@ -543,8 +546,11 @@ namespace AlumnoEjemplos.MiGrupo
                 reflejo.Render();
 
                 //////Camara///////
+                coheficienteCamara = jugador.verSiCambiaCamara();
+                GuiController.Instance.ThirdPersonCamera.setCamera(autoMesh.Position, 100 + coheficienteCamara, 900 - (coheficienteCamara) * 4);
+                
                 GuiController.Instance.ThirdPersonCamera.Target = autoMesh.Position;
-
+               
                 //La camara no rota exactamente a la par del auto, hay un pequeño retraso
                 GuiController.Instance.ThirdPersonCamera.RotationY += 5 * (auto.rotacion - prevCameraRotation) * elapsedTime;
                 //Ajusto la camara a menos de 360 porque voy a necesitar hacer calculos entre angulos
