@@ -12,8 +12,8 @@ using TgcViewer.Utils.TgcSceneLoader;
 using TgcViewer.Utils.Input;
 using Microsoft.DirectX.DirectInput;
 using TgcViewer.Utils._2D;
-using TgcViewer.Utils.Input;
-using Microsoft.DirectX.DirectInput;
+using TgcViewer.Utils;
+
 
 namespace AlumnoEjemplos.MiGrupo
 {
@@ -22,6 +22,8 @@ namespace AlumnoEjemplos.MiGrupo
     /// </summary>
     public class ProbandoMovAuto : TgcExample
     {
+        MotionBlur motionBlur;
+        MotionBlur motionBlur2;
         TgcBox humo;
         TgcBox fuego;
         TgcMesh autoMesh;
@@ -30,6 +32,7 @@ namespace AlumnoEjemplos.MiGrupo
         TgcMesh ruedaDerechaTraseraMesh;
         TgcMesh ruedaIzquierdaDelanteraMesh;
         TgcMesh ruedaIzquierdaTraseraMesh;
+        List<TgcMesh> meshesTotales;
         float autoMeshPrevZ;
         float autoMeshPrevX;
         List<TgcViewer.Utils.TgcSceneLoader.TgcMesh> ruedas;
@@ -53,7 +56,7 @@ namespace AlumnoEjemplos.MiGrupo
         TgcTexture texturaHumo;
         TgcTexture texturaFuego;
         int flagInicio = 0;
-        TgcScene scenePista;
+        public TgcScene scenePista;
 
         TgcD3dInput input = GuiController.Instance.D3dInput;
         //Para la pantalla de inicio
@@ -202,7 +205,7 @@ namespace AlumnoEjemplos.MiGrupo
 
             GuiController.Instance.ThirdPersonCamera.RotationY = 300;
             GuiController.Instance.ThirdPersonCamera.setCamera(autoMesh.Position, 200, 500);
-            GuiController.Instance.BackgroundColor = Color.LightSkyBlue;// Black;
+            GuiController.Instance.BackgroundColor = Color.Black;// Black;
 
             //Le asigno su oriented bounding box que me permite rotar la caja de colisiones (no así bounding box)
             oBBAuto = TgcObb.computeFromAABB(autoMesh.BoundingBox);
@@ -301,6 +304,14 @@ namespace AlumnoEjemplos.MiGrupo
             contadorDeActivacionesDePuntosDeControlDeIA = 0;
             //flag de victoria
             gano = false;
+
+            List<TgcMesh> autoIAList = new List<TgcMesh>();
+            autoIAList.Add(meshAutoIA);
+            motionBlur2 = new MotionBlur(autoIAList);
+            motionBlur2.motionBlurInit(2);
+
+            motionBlur = new MotionBlur(scenePista.Meshes);
+            motionBlur.motionBlurInit(5);
         }
 
 
@@ -308,6 +319,7 @@ namespace AlumnoEjemplos.MiGrupo
 
         public override void render(float elapsedTime)
         {
+            
             TgcTexture texture = TgcTexture.createTexture(GuiController.Instance.AlumnoEjemplosMediaDir + "TheC#\\Pista\\pistaCarreras.png");
 
             Microsoft.DirectX.Direct3D.Device d3dDevice = GuiController.Instance.D3dDevice;
@@ -372,8 +384,10 @@ namespace AlumnoEjemplos.MiGrupo
                 autoMesh.moveOrientedY(-auto.velocidad * elapsedTime);
                 //Detección de colisiones
                 //Hubo colisión con un objeto. Guardar resultado y abortar loop.
-
-
+                motionBlur2.update(elapsedTime);
+                motionBlur.update(elapsedTime);
+                
+  
                 //Si hubo alguna colisión, hacer esto:
                 if (huboColision())
                 {
@@ -533,6 +547,7 @@ namespace AlumnoEjemplos.MiGrupo
                         lineaDeFrenado[i].endTrack();
                     }
                 }
+
                 for (int i = 0; i < lineaDeFrenado.Length; i++)
                 {
                     lineaDeFrenado[i].render();
@@ -544,9 +559,9 @@ namespace AlumnoEjemplos.MiGrupo
 
                 //////Camara///////
                 GuiController.Instance.ThirdPersonCamera.Target = autoMesh.Position;
-
+                GuiController.Instance.ThirdPersonCamera.RotationY = auto.rotacion;
                 //La camara no rota exactamente a la par del auto, hay un pequeño retraso
-                GuiController.Instance.ThirdPersonCamera.RotationY += 5 * (auto.rotacion - prevCameraRotation) * elapsedTime;
+                //GuiController.Instance.ThirdPersonCamera.RotationY += 5 * (auto.rotacion - prevCameraRotation) * elapsedTime;
                 //Ajusto la camara a menos de 360 porque voy a necesitar hacer calculos entre angulos
                 while (prevCameraRotation > 360)
                 {
@@ -556,13 +571,12 @@ namespace AlumnoEjemplos.MiGrupo
 
                 //Dibujar objeto principal
                 //Siempre primero hacer todos los cálculos de lógica e input y luego al final dibujar todo (ciclo update-render)
-                for (int i = 0; i < 4; i++)
-                {
-                    ruedas[i].render();
-                }
-                autoMesh.render();
-                humo.render();
-                fuego.render();
+
+
+                motionBlur2.motionBlurRender(elapsedTime, HighResolutionTimer.Instance.FramesPerSecond, auto.velocidad, 1);
+                motionBlur.motionBlurRender(elapsedTime, HighResolutionTimer.Instance.FramesPerSecond, auto.velocidad, 0);
+                
+                
                 //Hago visibles los obb
                 oBBAuto.render();
 
@@ -572,6 +586,26 @@ namespace AlumnoEjemplos.MiGrupo
                 //Muestro el punto siguiente
                 trayecto[0].render();
                 trayectoDeIA[0].render();
+                
+
+                
+                
+                
+                
+                
+
+                
+
+                autoMesh.render();
+                
+                for (int i = 0; i < 4; i++)
+                {
+                    ruedas[i].render();
+                }
+                
+                humo.render();
+                fuego.render();
+
 
 
                 //Colision con puntos de control, tanto de persona como IA
@@ -603,6 +637,7 @@ namespace AlumnoEjemplos.MiGrupo
                         }
 
                     }
+                    
                 }
                 for (int i = 0; i < trayectoDeIA.Count; i++)
                 {
@@ -666,13 +701,13 @@ namespace AlumnoEjemplos.MiGrupo
                         segundosAuxiliares++;
                     }
                 }
-                
-                textTiempo.render();
-                contadorDeFrames++;
-                foreach (TgcMesh mesh in scenePista.Meshes)
+                /*foreach (TgcMesh mesh in scenePista.Meshes)
                 {
                     mesh.render();
-                }
+                }*/
+                textTiempo.render();
+                contadorDeFrames++;
+
             }//cierra el if de que no esta en pantalla inicio
             
         }
