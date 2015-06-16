@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.IO;
+using System.Xml;
 using TgcViewer.Example;
 using TgcViewer;
 using Microsoft.DirectX.Direct3D;
@@ -39,6 +41,8 @@ namespace AlumnoEjemplos.MiGrupo
         List<float> dy;
         List<float> dxAColision;
         List<float> dyAColision;
+        List<TgcObb> objetosColisionables;
+     
 
         float rotacionVertical;
         float prevCameraRotation = 300;
@@ -47,6 +51,7 @@ namespace AlumnoEjemplos.MiGrupo
         IA jugadorIA;
         Auto autoIA;
         TgcObb oBBAuto;
+        TgcObb oBBAutoIa;
         variablesEnPantalla textoVelocidad = new variablesEnPantalla();
         List<Vector3> posicionesPuntosDeControl;
         List<Vector3> posicionesPuntosDeControlDeIA;
@@ -128,23 +133,25 @@ namespace AlumnoEjemplos.MiGrupo
         public override void init()
         {
             Microsoft.DirectX.Direct3D.Device d3dDevice = GuiController.Instance.D3dDevice;
-                //Crear Sprite
-                sprite = new TgcSprite();
-                sprite.Texture = TgcTexture.createTexture(GuiController.Instance.AlumnoEjemplosMediaDir + "TheC#\\Inicio\\imagenInicio.jpg");
+            //Crear Sprite
+            sprite = new TgcSprite();
+            sprite.Texture = TgcTexture.createTexture(GuiController.Instance.AlumnoEjemplosMediaDir + "TheC#\\Inicio\\imagenInicio.jpg");
 
-                //Ubicarlo centrado en la pantalla
-                Size screenSize = GuiController.Instance.Panel3d.Size;
-                Size textureSize = sprite.Texture.Size;
-                //Modifiers para variar parametros del sprite
-                /*GuiController.Instance.Modifiers.addVertex2f("position", new Vector2(0, 0), new Vector2(screenSize.Width, screenSize.Height), sprite.Position);
-                GuiController.Instance.Modifiers.addVertex2f("scaling", new Vector2(0, 0), new Vector2(4, 4),new Vector2(1.4f,1.6f));// sprite.Scaling);
-                GuiController.Instance.Modifiers.addFloat("rotation", 0, 360, 0);*/
-                //sprite.Position = new Vector2(FastMath.Max(screenSize.Width / 2 - textureSize.Width / 2, 0), FastMath.Max(screenSize.Height / 2 - textureSize.Height / 2, 0));
-                sprite.Position = new Vector2(0,0 );
-                sprite.Scaling = new Vector2((float)screenSize.Width/textureSize.Width ,(float)screenSize.Height / textureSize.Height + 0.01f);
-                //sprite.Scaling = new Vector2(1.3f,1.5f);
-            
-        
+            //Ubicarlo centrado en la pantalla
+            Size screenSize = GuiController.Instance.Panel3d.Size;
+            Size textureSize = sprite.Texture.Size;
+            //Modifiers para variar parametros del sprite
+            /*GuiController.Instance.Modifiers.addVertex2f("position", new Vector2(0, 0), new Vector2(screenSize.Width, screenSize.Height), sprite.Position);
+            GuiController.Instance.Modifiers.addVertex2f("scaling", new Vector2(0, 0), new Vector2(4, 4),new Vector2(1.4f,1.6f));// sprite.Scaling);
+            GuiController.Instance.Modifiers.addFloat("rotation", 0, 360, 0);*/
+            //sprite.Position = new Vector2(FastMath.Max(screenSize.Width / 2 - textureSize.Width / 2, 0), FastMath.Max(screenSize.Height / 2 - textureSize.Height / 2, 0));
+            sprite.Position = new Vector2(0,0 );
+            sprite.Scaling = new Vector2((float)screenSize.Width/textureSize.Width ,(float)screenSize.Height / textureSize.Height + 0.01f);
+            //sprite.Scaling = new Vector2(1.3f,1.5f);
+
+            objetosColisionables = new List<TgcObb>();
+            objetosColisionables = cargarObbObjetos();
+
             texturaHumo = TgcTexture.createTexture(GuiController.Instance.AlumnoEjemplosMediaDir + "TheC#\\Particulas\\Textures\\humo.png");
             texturaFuego = TgcTexture.createTexture(GuiController.Instance.AlumnoEjemplosMediaDir + "TheC#\\Particulas\\Textures\\fuego.png");
 
@@ -192,6 +199,7 @@ namespace AlumnoEjemplos.MiGrupo
             {
                 lineaDeFrenado[i] = new LineaDeFrenado(12, 25, 3, 250, Color.Black);
             }
+        
 
             //posicion del auto
             autoMesh.Position = new Vector3(-1406f, 0f, -2523f);
@@ -216,7 +224,7 @@ namespace AlumnoEjemplos.MiGrupo
             
             //Le asigno su oriented bounding box que me permite rotar la caja de colisiones (no así bounding box)
             oBBAuto = TgcObb.computeFromAABB(autoMesh.BoundingBox);
-
+            oBBAutoIa = TgcObb.computeFromAABB(meshAutoIA.BoundingBox);
 
             //creo al auto y al jugador
             auto = new Auto(300, ruedas);
@@ -319,7 +327,43 @@ namespace AlumnoEjemplos.MiGrupo
             motionBlur.motionBlurInit(0);
         }
 
+        //OBB
+        private List<TgcObb> cargarObbObjetos()
+        {
+            string filePath = GuiController.Instance.AlumnoEjemplosMediaDir + "TheC#\\Auto\\\\pistaObbs-TgcScene.xml";
+            string mediaPath = filePath.Substring(0, filePath.LastIndexOf('\\') + 1);
+            string xmlString = File.ReadAllText(filePath);
+            List<TgcObb> objetos = new List<TgcObb>();
 
+            XmlDocument dom = new XmlDocument();
+            dom.LoadXml(xmlString);
+            XmlElement root = dom.DocumentElement;
+           
+            //Parsear obbs
+            XmlNodeList obbNodes = root.GetElementsByTagName("obbs")[0].ChildNodes;
+            foreach (XmlElement obbNode in obbNodes)
+            {
+                Vector3 center = TgcParserUtils.float3ArrayToVector3(TgcParserUtils.parseFloat3Array(obbNode.Attributes["center"].InnerText));
+                Vector3 extents = TgcParserUtils.float3ArrayToVector3(TgcParserUtils.parseFloat3Array(obbNode.Attributes["extents"].InnerText));
+                Vector3 orientation0 = TgcParserUtils.float3ArrayToVector3(TgcParserUtils.parseFloat3Array(obbNode.Attributes["orientation0"].InnerText));
+                Vector3 orientation1 = TgcParserUtils.float3ArrayToVector3(TgcParserUtils.parseFloat3Array(obbNode.Attributes["orientation1"].InnerText));
+                Vector3 orientation2 = TgcParserUtils.float3ArrayToVector3(TgcParserUtils.parseFloat3Array(obbNode.Attributes["orientation2"].InnerText));
+
+                Vector3[] orientation = new Vector3[] { orientation0, orientation1, orientation2 };
+                TgcObb minObb = new TgcObb();
+
+                minObb.Center = center;
+                minObb.Extents = extents;
+                minObb.Orientation = orientation;
+
+                objetos.Add(minObb);
+            }
+
+            return objetos;
+        }
+
+        
+        //FIN OBB
 
 
         public override void render(float elapsedTime)
@@ -381,6 +425,10 @@ namespace AlumnoEjemplos.MiGrupo
                 autoMesh.Rotation = new Vector3(0f, auto.rotacion, 0f);
                 oBBAuto.Center = autoMesh.Position;
                 oBBAuto.setRotation(autoMesh.Rotation);
+                meshAutoIA.Rotation = new Vector3(0f, autoIA.rotacion, 0f);
+                oBBAutoIa.Center = meshAutoIA.Position;
+                oBBAutoIa.setRotation(meshAutoIA.Rotation);
+                
 
                 //Calculo de giro de la rueda
                 rotacionVertical -= auto.velocidad * elapsedTime / 60;
@@ -394,10 +442,15 @@ namespace AlumnoEjemplos.MiGrupo
                 
   
                 //Si hubo alguna colisión, hacer esto:
-                if (huboColision())
+                if (huboColision(oBBAuto))
                 {
                     autoMesh.moveOrientedY(20 * auto.velocidad * elapsedTime); //Lo hago "como que rebote un poco" para no seguir colisionando
                     auto.velocidad = -(auto.velocidad * 0.3f); //Lo hago ir atrás un tercio de velocidad de choque
+                }
+                if (huboColision(oBBAutoIa))
+                {
+                    meshAutoIA.moveOrientedY(20 * autoIA.velocidad * elapsedTime); //Lo hago "como que rebote un poco" para no seguir colisionando
+                    autoIA.velocidad = -(autoIA.velocidad * 0.3f); //Lo hago ir atrás un tercio de velocidad de choque
                 }
 
                 //Colisión entre los autos
@@ -586,6 +639,11 @@ namespace AlumnoEjemplos.MiGrupo
                 //Hago visibles los obb
                 oBBAuto.render();
 
+                foreach (TgcObb obbColisionable in objetosColisionables)
+               {
+                   obbColisionable.render();
+               }
+
                 //Mostrar al auto IA
                 meshAutoIA.render();
 
@@ -730,6 +788,7 @@ namespace AlumnoEjemplos.MiGrupo
             autoMesh.dispose();
             meshAutoIA.dispose();
             oBBAuto.dispose();
+            oBBAutoIa.dispose();
             sprite.dispose();
 
             //borro los puntos de control del trayecto
@@ -743,6 +802,11 @@ namespace AlumnoEjemplos.MiGrupo
             trayecto.Clear();
             trayectoDeIA.Clear();
 
+            foreach (TgcObb obbColisionable in objetosColisionables)
+            {
+                obbColisionable.dispose();
+            }
+
             //Liberar textos
 
             textPuntosDeControlAlcanzados.dispose();
@@ -751,11 +815,11 @@ namespace AlumnoEjemplos.MiGrupo
 
         }
 //no borren el metodo HuboCollision
-        public bool huboColision()
+        public bool huboColision(TgcObb obbDeUnAuto)
         {
-            for(int i=0;i<oBBsEscenario.Count;i++)
+            for (int i = 0; i < objetosColisionables.Count; i++)
             {
-                if (Colisiones.testObbObb2(oBBAuto, oBBsEscenario[i]))
+                if (Colisiones.testObbObb2(obbDeUnAuto, objetosColisionables[i]))
                     return true;
             }
             return false;
