@@ -109,7 +109,7 @@ VS_OUTPUT vs_main( VS_INPUT Input )
 	// posicion anterior
 	float4 vPosAnterior = mul( Input.Position,matWorldViewProjAnt);
 	float2 velocity;
-	if(vPosActual.y > -400.0f){
+	if(vPosActual.y > 0.0f){
 	vPosActual /= vPosActual.w;
 	vPosAnterior /= vPosAnterior.w;
 	velocity = (vPosActual - vPosAnterior)*(abs(vPosActual.x))*carSpeed/1000;    
