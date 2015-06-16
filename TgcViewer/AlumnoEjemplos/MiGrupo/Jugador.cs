@@ -15,12 +15,15 @@ namespace AlumnoEjemplos.MiGrupo
         TgcD3dInput input = GuiController.Instance.D3dInput;
         Auto auto;
         bool giraIzquierda, giraDerecha, frenaDeMano, recienSoltoFrenoDeMano, estaRetrocediendo;
+        private bool camaraCamibada;
+        private int valorDeCamara = 100;
 
         public Jugador(Auto unAuto)
         {
             auto = unAuto;
             giraIzquierda = false;
             giraDerecha = false;
+            camaraCamibada = false;
         }
 
         public void jugar()
@@ -62,6 +65,7 @@ namespace AlumnoEjemplos.MiGrupo
             {
                 giraIzquierda = false;
             }
+                                
             if (input.keyDown(Key.Space))
             {
                 recienSoltoFrenoDeMano = false;
@@ -108,10 +112,30 @@ namespace AlumnoEjemplos.MiGrupo
                 return 1;
             return 0;
         }
+        public int verSiCambiaCamara()
+        {
+            if (input.keyDown(Key.M))
+            {
+                if (camaraCamibada)
+                {
+                    camaraCamibada = (camaraCamibada == false);
+                    valorDeCamara = 100;
+                    return 100;
+                }
+                camaraCamibada = (camaraCamibada == false);
+                valorDeCamara = 0;
+                return 0;
+            }
+            return valorDeCamara;
+        }
 
         public bool estaMarchaAtras()
         {
             return estaRetrocediendo;
         }
+
+
+
+
     }
 }

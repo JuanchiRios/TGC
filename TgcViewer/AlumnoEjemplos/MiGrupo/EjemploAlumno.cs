@@ -23,7 +23,6 @@ namespace AlumnoEjemplos.MiGrupo
     public class ProbandoMovAuto : TgcExample
     {
         MotionBlur motionBlur;
-        MotionBlur motionBlur2;
         TgcBox humo;
         TgcBox fuego;
         TgcMesh autoMesh;
@@ -56,7 +55,10 @@ namespace AlumnoEjemplos.MiGrupo
         TgcTexture texturaHumo;
         TgcTexture texturaFuego;
         int flagInicio = 0;
-        public TgcScene scenePista;
+
+        TgcScene scenePista;
+        int coheficienteCamara;
+
 
         TgcD3dInput input = GuiController.Instance.D3dInput;
         //Para la pantalla de inicio
@@ -105,6 +107,7 @@ namespace AlumnoEjemplos.MiGrupo
 
         //Reflejo de luz en el auto
         ReflejoLuzEnAuto reflejo;
+ 
 
         public override string getCategory()
         {
@@ -136,8 +139,11 @@ namespace AlumnoEjemplos.MiGrupo
                 /*GuiController.Instance.Modifiers.addVertex2f("position", new Vector2(0, 0), new Vector2(screenSize.Width, screenSize.Height), sprite.Position);
                 GuiController.Instance.Modifiers.addVertex2f("scaling", new Vector2(0, 0), new Vector2(4, 4),new Vector2(1.4f,1.6f));// sprite.Scaling);
                 GuiController.Instance.Modifiers.addFloat("rotation", 0, 360, 0);*/
-                sprite.Position = new Vector2(FastMath.Max(screenSize.Width / 2 - textureSize.Width / 2, 0), FastMath.Max(screenSize.Height / 2 - textureSize.Height / 2, 0));
-               
+                //sprite.Position = new Vector2(FastMath.Max(screenSize.Width / 2 - textureSize.Width / 2, 0), FastMath.Max(screenSize.Height / 2 - textureSize.Height / 2, 0));
+                sprite.Position = new Vector2(0,0 );
+                sprite.Scaling = new Vector2((float)screenSize.Width/textureSize.Width ,(float)screenSize.Height / textureSize.Height + 0.01f);
+                //sprite.Scaling = new Vector2(1.3f,1.5f);
+            
         
             texturaHumo = TgcTexture.createTexture(GuiController.Instance.AlumnoEjemplosMediaDir + "TheC#\\Particulas\\Textures\\humo.png");
             texturaFuego = TgcTexture.createTexture(GuiController.Instance.AlumnoEjemplosMediaDir + "TheC#\\Particulas\\Textures\\fuego.png");
@@ -202,11 +208,12 @@ namespace AlumnoEjemplos.MiGrupo
 
             //Vamos a utilizar la cámara en 3ra persona para que siga al objeto principal a medida que se mueve
             GuiController.Instance.ThirdPersonCamera.Enable = true;
-
+            
             GuiController.Instance.ThirdPersonCamera.RotationY = 300;
             GuiController.Instance.ThirdPersonCamera.setCamera(autoMesh.Position, 200, 500);
             GuiController.Instance.BackgroundColor = Color.Black;// Black;
 
+            
             //Le asigno su oriented bounding box que me permite rotar la caja de colisiones (no así bounding box)
             oBBAuto = TgcObb.computeFromAABB(autoMesh.BoundingBox);
 
@@ -307,11 +314,9 @@ namespace AlumnoEjemplos.MiGrupo
 
             List<TgcMesh> autoIAList = new List<TgcMesh>();
             autoIAList.Add(meshAutoIA);
-            motionBlur2 = new MotionBlur(autoIAList);
-            motionBlur2.motionBlurInit(2);
 
             motionBlur = new MotionBlur(scenePista.Meshes);
-            motionBlur.motionBlurInit(5);
+            motionBlur.motionBlurInit(0);
         }
 
 
@@ -384,7 +389,7 @@ namespace AlumnoEjemplos.MiGrupo
                 autoMesh.moveOrientedY(-auto.velocidad * elapsedTime);
                 //Detección de colisiones
                 //Hubo colisión con un objeto. Guardar resultado y abortar loop.
-                motionBlur2.update(elapsedTime);
+
                 motionBlur.update(elapsedTime);
                 
   
@@ -558,6 +563,8 @@ namespace AlumnoEjemplos.MiGrupo
                 reflejo.Render();
 
                 //////Camara///////
+                coheficienteCamara = jugador.verSiCambiaCamara();
+                GuiController.Instance.ThirdPersonCamera.setCamera(autoMesh.Position, 100 + coheficienteCamara, 900 - (coheficienteCamara) * 4);               
                 GuiController.Instance.ThirdPersonCamera.Target = autoMesh.Position;
                 GuiController.Instance.ThirdPersonCamera.RotationY = auto.rotacion;
                 //La camara no rota exactamente a la par del auto, hay un pequeño retraso
@@ -573,7 +580,6 @@ namespace AlumnoEjemplos.MiGrupo
                 //Siempre primero hacer todos los cálculos de lógica e input y luego al final dibujar todo (ciclo update-render)
 
 
-                motionBlur2.motionBlurRender(elapsedTime, HighResolutionTimer.Instance.FramesPerSecond, auto.velocidad, 1);
                 motionBlur.motionBlurRender(elapsedTime, HighResolutionTimer.Instance.FramesPerSecond, auto.velocidad, 0);
                 
                 
