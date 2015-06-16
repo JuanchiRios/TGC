@@ -176,7 +176,7 @@ namespace AlumnoEjemplos.MiGrupo
             TgcScene scene3 = loader.loadSceneFromFile(GuiController.Instance.AlumnoEjemplosMediaDir + "TheC#\\Auto\\\\Auto_Rueda_Derecha-TgcScene.xml");
             TgcScene scene4 = loader.loadSceneFromFile(GuiController.Instance.AlumnoEjemplosMediaDir + "TheC#\\Auto\\\\Auto_Rueda_Izquierda-TgcScene.xml");
             TgcScene scene5 = loader.loadSceneFromFile(GuiController.Instance.AlumnoEjemplosMediaDir + "TheC#\\Auto\\\\Auto_Rueda_Izquierda-TgcScene.xml");
-            scenePista = loader.loadSceneFromFile(GuiController.Instance.AlumnoEjemplosMediaDir + "TheC#\\Auto\\\\pista-TgcScene.xml");
+            scenePista = loader.loadSceneFromFile(GuiController.Instance.AlumnoEjemplosMediaDir + "TheC#\\Auto\\\\pistaentera-TgcScene.xml");
             TgcScene sceneAutoIA = loader.loadSceneFromFile(GuiController.Instance.AlumnoEjemplosMediaDir + "TheC#\\Auto\\\\autoRojo-TgcScene.xml");
 
             //Solo nos interesa el primer modelo de esta escena (tiene solo uno)
@@ -584,6 +584,8 @@ namespace AlumnoEjemplos.MiGrupo
                 tiempoHumo += elapsedTime;
                 humo.UVOffset = new Vector2(0.9f, tiempoHumo);
                 humo.updateValues();
+                fuego.UVOffset = new Vector2(0.9f, tiempoHumo);
+                fuego.updateValues();
 
                 if (tiempoHumo > 50f)
                 {

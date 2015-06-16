@@ -64,6 +64,10 @@ namespace AlumnoEjemplos.MiGrupo
         public void ponerNitro(){
             nitro = true;
         }
+        public void sacarNitro()
+        {
+            nitro = false;
+        }
         //Metodos Internos
             //DeVelocidad
 
@@ -80,7 +84,7 @@ namespace AlumnoEjemplos.MiGrupo
                 velocidad += aumento * 4  * elapsedTime;
                 ajustarVelocidad();
                 velocidadMaxima=1800f;
-                nitro = false;
+                
                 
 
             }

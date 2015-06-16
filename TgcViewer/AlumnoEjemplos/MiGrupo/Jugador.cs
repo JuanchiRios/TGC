@@ -32,6 +32,10 @@ namespace AlumnoEjemplos.MiGrupo
             {
                 auto.ponerNitro();
             }
+            else
+            {
+                auto.sacarNitro();
+            }
             if (input.keyDown(Key.Left) || input.keyDown(Key.A))
             {
                 auto.rotar(-1); //-1 representa la izquierda
