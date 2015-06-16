@@ -42,7 +42,7 @@ namespace AlumnoEjemplos.MiGrupo
         List<float> dxAColision;
         List<float> dyAColision;
         List<TgcObb> objetosColisionables;
-     
+
 
         float rotacionVertical;
         float prevCameraRotation = 300;
@@ -112,7 +112,7 @@ namespace AlumnoEjemplos.MiGrupo
 
         //Reflejo de luz en el auto
         ReflejoLuzEnAuto reflejo;
- 
+
 
         public override string getCategory()
         {
@@ -128,8 +128,8 @@ namespace AlumnoEjemplos.MiGrupo
         {
             return "Juego de carreras. El auto se mueve con las flechas o wasd, el nitro es con shift o control.";
         }
-        
-        
+
+
         public override void init()
         {
             Microsoft.DirectX.Direct3D.Device d3dDevice = GuiController.Instance.D3dDevice;
@@ -145,8 +145,8 @@ namespace AlumnoEjemplos.MiGrupo
             GuiController.Instance.Modifiers.addVertex2f("scaling", new Vector2(0, 0), new Vector2(4, 4),new Vector2(1.4f,1.6f));// sprite.Scaling);
             GuiController.Instance.Modifiers.addFloat("rotation", 0, 360, 0);*/
             //sprite.Position = new Vector2(FastMath.Max(screenSize.Width / 2 - textureSize.Width / 2, 0), FastMath.Max(screenSize.Height / 2 - textureSize.Height / 2, 0));
-            sprite.Position = new Vector2(0,0 );
-            sprite.Scaling = new Vector2((float)screenSize.Width/textureSize.Width ,(float)screenSize.Height / textureSize.Height + 0.01f);
+            sprite.Position = new Vector2(0, 0);
+            sprite.Scaling = new Vector2((float)screenSize.Width / textureSize.Width, (float)screenSize.Height / textureSize.Height + 0.01f);
             //sprite.Scaling = new Vector2(1.3f,1.5f);
 
             objetosColisionables = new List<TgcObb>();
@@ -177,8 +177,8 @@ namespace AlumnoEjemplos.MiGrupo
             TgcScene scene4 = loader.loadSceneFromFile(GuiController.Instance.AlumnoEjemplosMediaDir + "TheC#\\Auto\\\\Auto_Rueda_Izquierda-TgcScene.xml");
             TgcScene scene5 = loader.loadSceneFromFile(GuiController.Instance.AlumnoEjemplosMediaDir + "TheC#\\Auto\\\\Auto_Rueda_Izquierda-TgcScene.xml");
             scenePista = loader.loadSceneFromFile(GuiController.Instance.AlumnoEjemplosMediaDir + "TheC#\\Auto\\\\pista-TgcScene.xml");
-            TgcScene sceneAutoIA = loader.loadSceneFromFile(GuiController.Instance.AlumnoEjemplosMediaDir + "TheC#\\Auto\\\\autoRojo-TgcScene.xml");            
-            
+            TgcScene sceneAutoIA = loader.loadSceneFromFile(GuiController.Instance.AlumnoEjemplosMediaDir + "TheC#\\Auto\\\\autoRojo-TgcScene.xml");
+
             //Solo nos interesa el primer modelo de esta escena (tiene solo uno)
 
             autoMesh = scene1.Meshes[0];
@@ -199,11 +199,11 @@ namespace AlumnoEjemplos.MiGrupo
             {
                 lineaDeFrenado[i] = new LineaDeFrenado(12, 25, 3, 250, Color.Black);
             }
-        
+
 
             //posicion del auto
             autoMesh.Position = new Vector3(-278f, 0f, 281f);
-            
+
             //posiciones relativas al auto
             dx = new List<float> { 45, -45, -45, 45 };
             dy = new List<float> { -61, 71, -61, 71 };
@@ -217,12 +217,12 @@ namespace AlumnoEjemplos.MiGrupo
 
             //Vamos a utilizar la cámara en 3ra persona para que siga al objeto principal a medida que se mueve
             GuiController.Instance.ThirdPersonCamera.Enable = true;
-            
+
             GuiController.Instance.ThirdPersonCamera.RotationY = 300;
             GuiController.Instance.ThirdPersonCamera.setCamera(autoMesh.Position, 200, 500);
             GuiController.Instance.BackgroundColor = Color.Black;// Black;
 
-            
+
             //Le asigno su oriented bounding box que me permite rotar la caja de colisiones (no así bounding box)
             oBBAuto = TgcObb.computeFromAABB(autoMesh.BoundingBox);
             oBBAutoIa = TgcObb.computeFromAABB(meshAutoIA.BoundingBox);
@@ -233,22 +233,23 @@ namespace AlumnoEjemplos.MiGrupo
 
             //creo al auto del IA y al IA
             autoIA = new Auto(110, ruedas);
-            jugadorIA = new IA(autoIA, new Vector3(0,0,0));
+            jugadorIA = new IA(autoIA, new Vector3(0, 0, 0));
 
             //Inicializo el circuito, tanto para la persona como para la IA
-            posicionesPuntosDeControl = new List<Vector3> { new Vector3 (1764, 20, 9848), 
-                new Vector3 (-5159, 20, 16011), new Vector3 (-11525, 20, 17351), new Vector3 (7367, 20, -1606),
-                new Vector3 (6765, 20, 528), new Vector3 (4586, 20, 458), new Vector3 (3749, 20, 2093),
-                new Vector3 (2170, 20, 2743), new Vector3 (2120, 20, 363), new Vector3 (-193, 20, -625),
-                new Vector3 (-2067, 20, 981), new Vector3 (-4548, 20, 2366), new Vector3 (-6951, 20, 450),
-                new Vector3 (-6210, 20, -2318), new Vector3 (-5490, 20, -248), new Vector3 (-2903, 20, -1212)};
+            posicionesPuntosDeControl = new List<Vector3> { new Vector3 (-103, 20, 4227), 
+                new Vector3 (-2003, 20, 10387), new Vector3 (-5159, 20, 16011), new Vector3 (-8709, 20, 17705),
+                new Vector3 (-11525, 20, 17351), new Vector3 (-15320, 20, 13380), new Vector3 (-15523, 20, 6979),
+                new Vector3 (-15532, 20, -2161), new Vector3 (-15627, 20, -7474), new Vector3 (-15356, 20, -11178) ,
+                new Vector3 (-14005, 20, -13913), new Vector3 (-9560, 20, -16058), new Vector3 (-5342, 20, -14428),
+                 new Vector3 (-2296, 20, -9261), new Vector3 (-637, 20, -3632), new Vector3 (-192, 20, -13) };
 
-            posicionesPuntosDeControlDeIA = new List<Vector3> { new Vector3 (-1088, 20, -2503), 
-                new Vector3 (2377, 20, -2528), new Vector3 (5721, 20, -2547), new Vector3 (7367, 20, -1606),
-                new Vector3 (6765, 20, 528), new Vector3 (4586, 20, 458), new Vector3 (3749, 20, 2093),
-                new Vector3 (2170, 20, 2743), new Vector3 (2120, 20, 363), new Vector3 (-193, 20, -625),
-                new Vector3 (-2067, 20, 981), new Vector3 (-4548, 20, 2366), new Vector3 (-6951, 20, 450),
-                new Vector3 (-6210, 20, -2318), new Vector3 (-5490, 20, -248), new Vector3 (-2903, 20, -1212)};
+
+            posicionesPuntosDeControlDeIA = new List<Vector3> { new Vector3 (-103, 20, 4227), 
+                new Vector3 (-2003, 20, 10387), new Vector3 (-5159, 20, 16011), new Vector3 (-8709, 20, 17705),
+                new Vector3 (-11525, 20, 17351), new Vector3 (-15320, 20, 13380), new Vector3 (-15523, 20, 6979),
+                new Vector3 (-15532, 20, -2161), new Vector3 (-15627, 20, -7474), new Vector3 (-15356, 20, -11178) ,
+                new Vector3 (-14005, 20, -13913), new Vector3 (-9560, 20, -16058), new Vector3 (-5342, 20, -14428),
+                 new Vector3 (-2296, 20, -9261), new Vector3 (-637, 20, -3632), new Vector3 (-192, 20, -13) };
 
             for (int i = 0; i < 16; i++)
             {
@@ -339,7 +340,7 @@ namespace AlumnoEjemplos.MiGrupo
             XmlDocument dom = new XmlDocument();
             dom.LoadXml(xmlString);
             XmlElement root = dom.DocumentElement;
-           
+
             //Parsear obbs
             XmlNodeList obbNodes = root.GetElementsByTagName("obbs")[0].ChildNodes;
             foreach (XmlElement obbNode in obbNodes)
@@ -363,17 +364,17 @@ namespace AlumnoEjemplos.MiGrupo
             return objetos;
         }
 
-        
+
         //FIN OBB
 
 
         public override void render(float elapsedTime)
         {
-            
+
             TgcTexture texture = TgcTexture.createTexture(GuiController.Instance.AlumnoEjemplosMediaDir + "TheC#\\Pista\\pistaCarreras.png");
 
             Microsoft.DirectX.Direct3D.Device d3dDevice = GuiController.Instance.D3dDevice;
-            
+
             //pantalla De Inicio
             if (flagInicio == 0)
             {
@@ -429,7 +430,7 @@ namespace AlumnoEjemplos.MiGrupo
                 meshAutoIA.Rotation = new Vector3(0f, autoIA.rotacion, 0f);
                 oBBAutoIa.Center = meshAutoIA.Position;
                 oBBAutoIa.setRotation(meshAutoIA.Rotation);
-                
+
 
                 //Calculo de giro de la rueda
                 rotacionVertical -= auto.velocidad * elapsedTime / 60;
@@ -440,8 +441,8 @@ namespace AlumnoEjemplos.MiGrupo
                 //Hubo colisión con un objeto. Guardar resultado y abortar loop.
 
                 motionBlur.update(elapsedTime);
-                
-  
+
+
                 //Si hubo alguna colisión, hacer esto:
                 if (huboColision(oBBAuto))
                 {
@@ -618,7 +619,7 @@ namespace AlumnoEjemplos.MiGrupo
 
                 //////Camara///////
                 coheficienteCamara = jugador.verSiCambiaCamara();
-                GuiController.Instance.ThirdPersonCamera.setCamera(autoMesh.Position, 100 + coheficienteCamara, 900 - (coheficienteCamara) * 4);               
+                GuiController.Instance.ThirdPersonCamera.setCamera(autoMesh.Position, 100 + coheficienteCamara, 900 - (coheficienteCamara) * 4);
                 GuiController.Instance.ThirdPersonCamera.Target = autoMesh.Position;
                 GuiController.Instance.ThirdPersonCamera.RotationY = auto.rotacion;
                 //La camara no rota exactamente a la par del auto, hay un pequeño retraso
@@ -635,15 +636,15 @@ namespace AlumnoEjemplos.MiGrupo
 
 
                 motionBlur.motionBlurRender(elapsedTime, HighResolutionTimer.Instance.FramesPerSecond, auto.velocidad, 0);
-                
-                
+
+
                 //Hago visibles los obb
                 oBBAuto.render();
 
                 foreach (TgcObb obbColisionable in objetosColisionables)
-               {
-                   obbColisionable.render();
-               }
+                {
+                    obbColisionable.render();
+                }
 
                 //Mostrar al auto IA
                 meshAutoIA.render();
@@ -651,23 +652,23 @@ namespace AlumnoEjemplos.MiGrupo
                 //Muestro el punto siguiente
                 trayecto[0].render();
                 trayectoDeIA[0].render();
-                
 
-                
-                
-                
-                
-                
 
-                
+
+
+
+
+
+
+
 
                 autoMesh.render();
-                
+
                 for (int i = 0; i < 4; i++)
                 {
                     ruedas[i].render();
                 }
-                
+
                 humo.render();
                 fuego.render();
 
@@ -702,7 +703,7 @@ namespace AlumnoEjemplos.MiGrupo
                         }
 
                     }
-                    
+
                 }
                 for (int i = 0; i < trayectoDeIA.Count; i++)
                 {
@@ -728,9 +729,9 @@ namespace AlumnoEjemplos.MiGrupo
                         }
                     }
                 }
-                
-                
-               // textPosicionDelAutoActual.Text = (jugadorIA.angulo(trayecto[0].Center, meshAutoIA.Position)).ToString();
+
+
+                // textPosicionDelAutoActual.Text = (jugadorIA.angulo(trayecto[0].Center, meshAutoIA.Position)).ToString();
                 //textPosicionDelAutoActual.Text = jugadorIA.getRotacion().ToString();
 
                 textPosicionDelAutoActual.Text = autoMesh.Position.ToString();
@@ -774,7 +775,7 @@ namespace AlumnoEjemplos.MiGrupo
                 contadorDeFrames++;
 
             }//cierra el if de que no esta en pantalla inicio
-            
+
         }
 
         public override void close()
@@ -815,7 +816,7 @@ namespace AlumnoEjemplos.MiGrupo
             textIngreseTecla.dispose();
 
         }
-//no borren el metodo HuboCollision
+        //no borren el metodo HuboCollision
         public bool huboColision(TgcObb obbDeUnAuto)
         {
             for (int i = 0; i < objetosColisionables.Count; i++)
@@ -826,7 +827,7 @@ namespace AlumnoEjemplos.MiGrupo
             return false;
         }
 
-      
+
     }
 }
 
