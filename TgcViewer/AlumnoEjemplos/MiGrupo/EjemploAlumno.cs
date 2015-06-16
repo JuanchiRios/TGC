@@ -236,22 +236,26 @@ namespace AlumnoEjemplos.MiGrupo
             jugadorIA = new IA(autoIA, new Vector3(0, 0, 0));
 
             //Inicializo el circuito, tanto para la persona como para la IA
-            posicionesPuntosDeControl = new List<Vector3> { new Vector3 (-103, 20, 4227), 
-                new Vector3 (-2003, 20, 10387), new Vector3 (-5159, 20, 16011), new Vector3 (-8709, 20, 17705),
-                new Vector3 (-11525, 20, 17351), new Vector3 (-15320, 20, 13380), new Vector3 (-15523, 20, 6979),
-                new Vector3 (-15532, 20, -2161), new Vector3 (-15627, 20, -7474), new Vector3 (-15356, 20, -11178) ,
-                new Vector3 (-14005, 20, -13913), new Vector3 (-9560, 20, -16058), new Vector3 (-5342, 20, -14428),
-                 new Vector3 (-2296, 20, -9261), new Vector3 (-637, 20, -3632), new Vector3 (-192, 20, -13) };
+            posicionesPuntosDeControl = new List<Vector3> { new Vector3 (360, 20, 2634), 
+                new Vector3 (-1040, 20, 5524), new Vector3 (-1749, 20, 11113),
+                new Vector3 (-4484, 20, 14460), new Vector3 (-7377, 20, 16890), new Vector3 (-12790, 20, 17407),
+                new Vector3 (-15308, 20, 12649), new Vector3 (-15153, 20, 8531), new Vector3 (-16068, 20, 7030) ,
+                new Vector3 (-16342, 20, 4149), new Vector3 (-16222, 20, -1083), new Vector3 (-14986, 20, -3020),
+                new Vector3 (-15734, 20, -8568), new Vector3 (-15281, 20, -12097), new Vector3 (-12022, 20, -15335),
+                new Vector3 (-6142, 20, -14446), new Vector3 (-4411, 20, -11766), new Vector3 (-2016, 20, -8940), 
+                new Vector3 (-1287, 20, -4142), new Vector3 (20, 20, -2566)};
 
 
-            posicionesPuntosDeControlDeIA = new List<Vector3> { new Vector3 (-103, 20, 4227), 
-                new Vector3 (-2003, 20, 10387), new Vector3 (-5159, 20, 16011), new Vector3 (-8709, 20, 17705),
-                new Vector3 (-11525, 20, 17351), new Vector3 (-15320, 20, 13380), new Vector3 (-15523, 20, 6979),
-                new Vector3 (-15532, 20, -2161), new Vector3 (-15627, 20, -7474), new Vector3 (-15356, 20, -11178) ,
-                new Vector3 (-14005, 20, -13913), new Vector3 (-9560, 20, -16058), new Vector3 (-5342, 20, -14428),
-                 new Vector3 (-2296, 20, -9261), new Vector3 (-637, 20, -3632), new Vector3 (-192, 20, -13) };
+            posicionesPuntosDeControlDeIA = new List<Vector3> { new Vector3 (360, 20, 2634), 
+                new Vector3 (-1040, 20, 5524), new Vector3 (-1749, 20, 11113),
+                new Vector3 (-4484, 20, 14460), new Vector3 (-7377, 20, 16890), new Vector3 (-12790, 20, 17407),
+                new Vector3 (-15308, 20, 12649), new Vector3 (-15153, 20, 8531), new Vector3 (-16068, 20, 7030) ,
+                new Vector3 (-16342, 20, 4149), new Vector3 (-16222, 20, -1083), new Vector3 (-14986, 20, -3020),
+                new Vector3 (-15734, 20, -8568), new Vector3 (-15281, 20, -12097), new Vector3 (-12022, 20, -15335),
+                new Vector3 (-6142, 20, -14446), new Vector3 (-4411, 20, -11766), new Vector3 (-2016, 20, -8940), 
+                new Vector3 (-1287, 20, -4142), new Vector3 (20, 20, -2566)};
 
-            for (int i = 0; i < 16; i++)
+            for (int i = 0; i < posicionesPuntosDeControl.Count; i++)
             {
                 TgcCylinder unCilindro = new TgcCylinder(posicionesPuntosDeControl[i], 100, 50);
                 trayecto.Add(unCilindro);
@@ -636,7 +640,7 @@ namespace AlumnoEjemplos.MiGrupo
 
 
                 motionBlur.motionBlurRender(elapsedTime, HighResolutionTimer.Instance.FramesPerSecond, auto.velocidad, 0);
-
+                //scenePista.renderAll();
 
                 //Hago visibles los obb
                 oBBAuto.render();
