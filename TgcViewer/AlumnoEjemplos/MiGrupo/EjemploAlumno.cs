@@ -202,7 +202,8 @@ namespace AlumnoEjemplos.MiGrupo
         
 
             //posicion del auto
-            autoMesh.Position = new Vector3(-1406f, 0f, -2523f);
+            autoMesh.Position = new Vector3(-278f, 0f, 281f);
+            
             //posiciones relativas al auto
             dx = new List<float> { 45, -45, -45, 45 };
             dy = new List<float> { -61, 71, -61, 71 };
@@ -212,7 +213,7 @@ namespace AlumnoEjemplos.MiGrupo
             dyAColision = new List<float> { -35, 45, -35, 45 };
 
             //posiciono al autoIA
-            meshAutoIA.Position = new Vector3(-2000f, 0f, -2500f);
+            meshAutoIA.Position = new Vector3(211f, 0f, 216f);
 
             //Vamos a utilizar la cámara en 3ra persona para que siga al objeto principal a medida que se mueve
             GuiController.Instance.ThirdPersonCamera.Enable = true;
@@ -227,16 +228,16 @@ namespace AlumnoEjemplos.MiGrupo
             oBBAutoIa = TgcObb.computeFromAABB(meshAutoIA.BoundingBox);
 
             //creo al auto y al jugador
-            auto = new Auto(300, ruedas);
+            auto = new Auto(110, ruedas);
             jugador = new Jugador(auto);
 
             //creo al auto del IA y al IA
-            autoIA = new Auto(300, ruedas);
+            autoIA = new Auto(110, ruedas);
             jugadorIA = new IA(autoIA, new Vector3(0,0,0));
 
             //Inicializo el circuito, tanto para la persona como para la IA
-            posicionesPuntosDeControl = new List<Vector3> { new Vector3 (-1088, 20, -2503), 
-                new Vector3 (2377, 20, -2528), new Vector3 (5721, 20, -2547), new Vector3 (7367, 20, -1606),
+            posicionesPuntosDeControl = new List<Vector3> { new Vector3 (1764, 20, 9848), 
+                new Vector3 (-5159, 20, 16011), new Vector3 (-11525, 20, 17351), new Vector3 (7367, 20, -1606),
                 new Vector3 (6765, 20, 528), new Vector3 (4586, 20, 458), new Vector3 (3749, 20, 2093),
                 new Vector3 (2170, 20, 2743), new Vector3 (2120, 20, 363), new Vector3 (-193, 20, -625),
                 new Vector3 (-2067, 20, 981), new Vector3 (-4548, 20, 2366), new Vector3 (-6951, 20, 450),
@@ -729,10 +730,10 @@ namespace AlumnoEjemplos.MiGrupo
                 }
                 
                 
-                textPosicionDelAutoActual.Text = (jugadorIA.angulo(trayecto[0].Center, meshAutoIA.Position)).ToString();
+               // textPosicionDelAutoActual.Text = (jugadorIA.angulo(trayecto[0].Center, meshAutoIA.Position)).ToString();
                 //textPosicionDelAutoActual.Text = jugadorIA.getRotacion().ToString();
 
-                //textPosicionDelAutoActual.Text = autoMesh.Position.ToString();
+                textPosicionDelAutoActual.Text = autoMesh.Position.ToString();
 
                 //Renderizar los tres textos
 
