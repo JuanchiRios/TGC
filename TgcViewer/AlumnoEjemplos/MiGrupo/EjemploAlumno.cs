@@ -34,7 +34,6 @@ namespace AlumnoEjemplos.MiGrupo
         TgcMesh ruedaDerechaTraseraMesh;
         TgcMesh ruedaIzquierdaDelanteraMesh;
         TgcMesh ruedaIzquierdaTraseraMesh;
-        List<TgcMesh> meshesTotales;
         float autoMeshPrevZ;
         float autoMeshPrevX;
         List<TgcViewer.Utils.TgcSceneLoader.TgcMesh> ruedas;
@@ -92,9 +91,9 @@ namespace AlumnoEjemplos.MiGrupo
 
         //Tiempo 
         public float tiempoTrans = 100f; //tiempo transcurrido desde el defasaje de rotacion de camara y rotacion del mesh
-        private bool habilitarDecremento = false;
         Tiempo tiempo = new Tiempo();
         private int segundosAuxiliares = 1;
+        bool primerRenderDelJuegoAndando = true;
 
         //Sobre el derrape y las ruedas
         float anguloDerrape = 0.1f;
@@ -166,7 +165,6 @@ namespace AlumnoEjemplos.MiGrupo
 
             // cosas del tiempo
             tiempoTrans = 100f; //tiempo transcurrido desde el defasaje de rotacion de camara y rotacion del mesh
-            habilitarDecremento = false;
             segundosAuxiliares = 1;
             //En este ejemplo primero cargamos una escena 3D entera.
             TgcSceneLoader loader = new TgcSceneLoader();
@@ -258,11 +256,9 @@ namespace AlumnoEjemplos.MiGrupo
 
             for (int i = 0; i < posicionesPuntosDeControl.Count; i++)
             {
-                TgcCylinder unCilindro = new TgcCylinder(posicionesPuntosDeControl[i], 100, 50);
+                TgcCylinder unCilindro = new TgcCylinder(posicionesPuntosDeControl[i], 130, 30);
                 trayecto.Add(unCilindro);
-                unCilindro = new TgcCylinder(posicionesPuntosDeControlDeIA[i], 100, 50);
-                unCilindro.UseTexture = true;
-                unCilindro.setTexture(texturaHumo);
+                unCilindro = new TgcCylinder(posicionesPuntosDeControlDeIA[i], 130, 30);
                 trayectoDeIA.Add(unCilindro);
             }
 
@@ -303,7 +299,7 @@ namespace AlumnoEjemplos.MiGrupo
             this.horaInicio = DateTime.Now;
             textTiempo = new TgcText2d();
             textTiempo.Position = new Point(50, 20);
-            textTiempo.Text = "1000";
+            textTiempo.Text = "10";
             textTiempo.Color = Color.White;
 
             textIngreseTecla = new TgcText2d();
@@ -311,11 +307,12 @@ namespace AlumnoEjemplos.MiGrupo
             textIngreseTecla.Position = new Point(150, 310);
             textIngreseTecla.Align = TgcText2d.TextAlign.LEFT;
             textIngreseTecla.changeFont(new System.Drawing.Font("TimesNewRoman", 23, FontStyle.Bold | FontStyle.Italic));
-            textIngreseTecla.Color = Color.GreenYellow;
+            textIngreseTecla.Color = Color.White;
 
             textoVelocidad.inicializarTextoVelocidad(auto.velocidad);
             ///////////////MODIFIERS//////////////////
             GuiController.Instance.Modifiers.addFloat("velocidadMaxima", 1000, 7000, 1800f);
+            GuiController.Instance.Modifiers.addBoolean("jugarConTiempo", "jugar con tiempo:", true);
 
             //////////////Reflejo de luz en auto////////////////
             reflejo = new ReflejoLuzEnAuto(autoMesh);
@@ -330,11 +327,13 @@ namespace AlumnoEjemplos.MiGrupo
             List<TgcMesh> autoIAList = new List<TgcMesh>();
             autoIAList.Add(meshAutoIA);
 
+
             motionBlur = new MotionBlur(scenePista.Meshes);
             motionBlur.motionBlurInit(0);
 
             emisorDeHumo = new EmisorHumo();
             emisorDeHumo.crearQuads(10);
+
         }
 
         //OBB
@@ -402,9 +401,15 @@ namespace AlumnoEjemplos.MiGrupo
             }
             else
             {
+                //Para contar el tiempo desde que preciona la barra espaciadora y comienza el juego
+                if (primerRenderDelJuegoAndando == true)
+                {
+                    this.horaInicio = DateTime.Now;
+                    primerRenderDelJuegoAndando = false;
+                }
                 //Todo lo referente a lo que debe hacer el IA
                 autoIA.elapsedTime = elapsedTime;
-                autoIA.establecerVelocidadMáximaEn((float)GuiController.Instance.Modifiers["velocidadMaxima"]);
+                autoIA.establecerVelocidadMáximaEn((float)GuiController.Instance.Modifiers["velocidadMaxima"] * 1.02f);
 
                 if (colision.getTiempoQueChoco() == 0)
                     jugadorIA.jugar(trayectoDeIA[0].Center, meshAutoIA.Position);
@@ -422,6 +427,7 @@ namespace AlumnoEjemplos.MiGrupo
                 auto.establecerVelocidadMáximaEn((float)GuiController.Instance.Modifiers["velocidadMaxima"]);
 
                 //El jugador envia mensajes al auto dependiendo de que tecla presiono
+                //Se pone un tiempo para que luego de chocar 2 autos, estos no puedan ingresar movimiento (sólo se mueve por inercia)
                 if (colision.getTiempoQueChoco() == 0)
                     jugador.jugar();
                 else
@@ -448,7 +454,7 @@ namespace AlumnoEjemplos.MiGrupo
                 //Detección de colisiones
                 //Hubo colisión con un objeto. Guardar resultado y abortar loop.
 
-                motionBlur.update(elapsedTime);
+                //motionBlur.update(elapsedTime);
 
 
                 //Si hubo alguna colisión, hacer esto:
@@ -631,10 +637,21 @@ namespace AlumnoEjemplos.MiGrupo
                 reflejo.Render();
 
                 //////Camara///////
-                coheficienteCamara = jugador.verSiCambiaCamara();
-                GuiController.Instance.ThirdPersonCamera.setCamera(autoMesh.Position, 100 + coheficienteCamara, 900 - (coheficienteCamara) * 4);
-                GuiController.Instance.ThirdPersonCamera.Target = autoMesh.Position;
-                GuiController.Instance.ThirdPersonCamera.RotationY = auto.rotacion;
+                
+                if (jugador.estaMirandoHaciaAtras())
+                {
+                    GuiController.Instance.ThirdPersonCamera.setCamera(autoMesh.Position, 200, -500);
+                    GuiController.Instance.ThirdPersonCamera.Target = autoMesh.Position;
+                    GuiController.Instance.ThirdPersonCamera.RotationY = auto.rotacion;
+                }
+                else
+                {
+                    coheficienteCamara = jugador.verSiCambiaCamara();
+                    GuiController.Instance.ThirdPersonCamera.setCamera(autoMesh.Position, 100 + (coheficienteCamara), 900 - (coheficienteCamara) * 4);
+                    GuiController.Instance.ThirdPersonCamera.Target = autoMesh.Position;
+                    GuiController.Instance.ThirdPersonCamera.RotationY = auto.rotacion;
+                }
+
                 //La camara no rota exactamente a la par del auto, hay un pequeño retraso
                 //GuiController.Instance.ThirdPersonCamera.RotationY += 5 * (auto.rotacion - prevCameraRotation) * elapsedTime;
                 //Ajusto la camara a menos de 360 porque voy a necesitar hacer calculos entre angulos
@@ -647,11 +664,11 @@ namespace AlumnoEjemplos.MiGrupo
                 emisorDeHumo.update(elapsedTime, GuiController.Instance.ThirdPersonCamera.getLookAt(), auto.rotacion, autoMesh.Position, anguloDerrape, direcGiroDerrape);
                 //Dibujar objeto principal
                 //Siempre primero hacer todos los cálculos de lógica e input y luego al final dibujar todo (ciclo update-render)
-
-
                 
                 //scenePista.renderAll();
 
+                //motionBlur.motionBlurRender(elapsedTime, HighResolutionTimer.Instance.FramesPerSecond, auto.velocidad, 0);
+ 
                 //Hago visibles los obb
                 //oBBAuto.render();
                 /*
@@ -696,11 +713,10 @@ namespace AlumnoEjemplos.MiGrupo
                     //Pregunto si colisiona con un punto de control activado. Lo sé, feo.
                     if ((i == 0) && TgcCollisionUtils.testPointCylinder(oBBAuto.Position, trayecto[i].BoundingCylinder))
                     {
-                        TgcCylinder cilindroModificado = new TgcCylinder(trayecto[i].Center, 200, 30);
+                        TgcCylinder cilindroModificado = new TgcCylinder(trayecto[i].Center, 130, 30);
 
-                        if (contadorDeActivacionesDePuntosDeControl != 48)
+                        if (contadorDeActivacionesDePuntosDeControl != (posicionesPuntosDeControl.Count * 3))
                         {
-                            trayecto[1].UseTexture = true;
                             trayecto.RemoveAt(i);
                             trayecto.Add(cilindroModificado);
                             contadorDeActivacionesDePuntosDeControl++;
@@ -726,11 +742,10 @@ namespace AlumnoEjemplos.MiGrupo
                     //Pregunto si colisiona con un punto de control activado
                     if ((i == 0) && TgcCollisionUtils.testPointCylinder(meshAutoIA.Position, trayectoDeIA[i].BoundingCylinder))
                     {
-                        TgcCylinder cilindroModificado = new TgcCylinder(trayectoDeIA[i].Center, 200, 30);
+                        TgcCylinder cilindroModificado = new TgcCylinder(trayectoDeIA[i].Center, 130, 30);
 
-                        if (contadorDeActivacionesDePuntosDeControlDeIA != 48)
+                        if (contadorDeActivacionesDePuntosDeControlDeIA != (posicionesPuntosDeControlDeIA.Count * 3))
                         {
-                            trayectoDeIA[1].UseTexture = true;
                             trayectoDeIA.RemoveAt(i);
                             trayectoDeIA.Add(cilindroModificado);
                             contadorDeActivacionesDePuntosDeControlDeIA++;
@@ -738,10 +753,11 @@ namespace AlumnoEjemplos.MiGrupo
                         else
                         {
                             gano = true;
-                            textGanaste.Text = "Ganaste y obtuviste un puntaje de  " + textTiempo.Text + " puntos";
+                            textGanaste.Text = "Ganó la máquina :P  ";
                             textGanaste.render();
                             //Para el IA
                             autoIA.estatico();
+                            auto.estatico();
                         }
                     }
                 }
@@ -760,27 +776,30 @@ namespace AlumnoEjemplos.MiGrupo
                 textPosicionDelAutoActual.render();
 
                 //Cosas del tiempo
-                tiempo.incrementarTiempo(this, elapsedTime, habilitarDecremento);
+                tiempo.incrementarTiempo(this, elapsedTime, (bool)GuiController.Instance.Modifiers["jugarConTiempo"]);
 
                 //Actualizo y dibujo el relops
-                if ((DateTime.Now.Subtract(this.horaInicio).TotalSeconds) > segundosAuxiliares)
+                if ((bool)GuiController.Instance.Modifiers["jugarConTiempo"])
                 {
-                    if (Convert.ToDouble(textTiempo.Text) == 0)
+                    if ((DateTime.Now.Subtract(this.horaInicio).TotalSeconds) > segundosAuxiliares)
                     {
-                        textPerdiste.Text = "Perdiste y lograste " + contadorDeActivacionesDePuntosDeControl.ToString() + " puntos de control";
-                        textPerdiste.render();
-                        auto.estatico();
-                        //Para el IA
-                        autoIA.estatico();
-                    }
-                    else if (gano == true)
-                    {
+                        if (Convert.ToDouble(textTiempo.Text) == 0)
+                        {
+                            textPerdiste.Text = "Perdiste y lograste " + contadorDeActivacionesDePuntosDeControl.ToString() + " puntos de control";
+                            textPerdiste.render();
+                            auto.estatico();
+                            //Para el IA
+                            autoIA.estatico();
+                        }
+                        else if (gano == true)
+                        {
 
-                    }
-                    else
-                    {
-                        this.textTiempo.Text = (Convert.ToDouble(textTiempo.Text) - 1).ToString();
-                        segundosAuxiliares++;
+                        }
+                        else
+                        {
+                            this.textTiempo.Text = (Convert.ToDouble(textTiempo.Text) - 1).ToString();
+                            segundosAuxiliares++;
+                        }
                     }
                 }
                 /*foreach (TgcMesh mesh in scenePista.Meshes)
@@ -830,6 +849,10 @@ namespace AlumnoEjemplos.MiGrupo
             textPuntosDeControlAlcanzados.dispose();
             textPosicionDelAutoActual.dispose();
             textIngreseTecla.dispose();
+
+            //para que una vez cerrado el juego y vuelto a abrir, comience nuevamente en la pantalla de inicio
+            flagInicio = 0;
+            primerRenderDelJuegoAndando = true;
 
         }
         //no borren el metodo HuboCollision

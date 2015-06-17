@@ -58,8 +58,13 @@ namespace AlumnoEjemplos.MiGrupo
                 else if (TgcCollisionUtils.testAABBAABB(dIAuto, dIOtroAuto) || TgcCollisionUtils.testAABBAABB(dDAuto, dIOtroAuto) || TgcCollisionUtils.testAABBAABB(dIAuto, dDOtroAuto) || TgcCollisionUtils.testAABBAABB(dDAuto, dDOtroAuto))
                 {
                     //auto se mueve hacia atrás y cambia de sentido 180° (rebota)
-                    meshAuto.moveOrientedY(10 * auto.velocidad * elapsedTime); //Lo hago "como que rebote un poco" para no seguir colisionando
-                    auto.velocidad = -(auto.velocidad * 0.3f); //Lo hago ir atrás un tercio de velocidad de choque
+                    if (Math.Truncate(auto.velocidad) == 0)
+                        auto.velocidad = -300;
+                    else
+                    {
+                        meshAuto.moveOrientedY(10 * auto.velocidad * elapsedTime); //Lo hago "como que rebote un poco" para no seguir colisionando
+                        auto.velocidad = -(auto.velocidad * 0.3f); //Lo hago ir atrás un tercio de velocidad de choque
+                    }
                     //otroAuto hace lo mismo que el auto
                     meshOtroAuto.moveOrientedY(10 * otroAuto.velocidad * elapsedTime); //Lo hago "como que rebote un poco" para no seguir colisionando
                     otroAuto.velocidad = -(otroAuto.velocidad * 0.3f); //Lo hago ir atrás un tercio de velocidad de choque

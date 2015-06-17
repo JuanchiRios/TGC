@@ -30,11 +30,11 @@ namespace AlumnoEjemplos.MiGrupo
         {
             if (estaALaIzquierda(puntoADondeIR, posicionActual))
             {
-                auto.rotar(-1.3f); //Le damos un giro extra, mayor al de la persona ;)
+                auto.rotar(-1.1f); //Le damos un giro extra, mayor al de la persona ;)
             }
             if (estaALaDerecha(puntoADondeIR, posicionActual))
             {
-                auto.rotar(1.3f);
+                auto.rotar(1.1f);
             }
             auto.avanzar(); //me muevo hacia adelante
         }

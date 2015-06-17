@@ -16,14 +16,15 @@ namespace AlumnoEjemplos.MiGrupo
         Auto auto;
         bool giraIzquierda, giraDerecha, frenaDeMano, recienSoltoFrenoDeMano, estaRetrocediendo;
         private bool camaraCamibada;
-        private int valorDeCamara = 100;
+        private int valorDeCamara = 60;
+        private bool mirandoHaciaAtras = false;
 
         public Jugador(Auto unAuto)
         {
             auto = unAuto;
             giraIzquierda = false;
             giraDerecha = false;
-            camaraCamibada = false;
+            camaraCamibada = true;
         }
 
         public void jugar()
@@ -70,6 +71,7 @@ namespace AlumnoEjemplos.MiGrupo
                 giraIzquierda = false;
             }
                                 
+            //Para el freno de mano que deja marcas en el suelo
             if (input.keyDown(Key.Space))
             {
                 recienSoltoFrenoDeMano = false;
@@ -89,7 +91,12 @@ namespace AlumnoEjemplos.MiGrupo
             {
                 recienSoltoFrenoDeMano = true;
             }
-
+            
+            //Para mirar hacia atrás
+            if (input.keyDown(Key.Tab))
+                mirandoHaciaAtras = true;
+            else
+                mirandoHaciaAtras = false;
         }
 
         public bool estaGirandoDerecha()
@@ -118,7 +125,7 @@ namespace AlumnoEjemplos.MiGrupo
         }
         public int verSiCambiaCamara()
         {
-            if (input.keyDown(Key.M))
+            if (input.keyPressed(Key.M))
             {
                 if (camaraCamibada)
                 {
@@ -127,8 +134,8 @@ namespace AlumnoEjemplos.MiGrupo
                     return 100;
                 }
                 camaraCamibada = (camaraCamibada == false);
-                valorDeCamara = 0;
-                return 0;
+                valorDeCamara = 60;
+                return 60;
             }
             return valorDeCamara;
         }
@@ -138,7 +145,10 @@ namespace AlumnoEjemplos.MiGrupo
             return estaRetrocediendo;
         }
 
-
+        public Boolean estaMirandoHaciaAtras()
+        {
+            return mirandoHaciaAtras;
+        }
 
 
     }
