@@ -78,10 +78,10 @@ namespace AlumnoEjemplos.MiGrupo
                 meshDeAuto.Effect.SetValue("materialSpecularColor", ColorValue.FromColor(Color.White));
                 */
                 meshDeAuto.Effect.SetValue("lightColor", ColorValue.FromColor(Color.White));
-                meshDeAuto.Effect.SetValue("lightPosition", TgcParserUtils.vector3ToFloat4Array(new Vector3(2000, 700, -4000)));
+                meshDeAuto.Effect.SetValue("lightPosition", TgcParserUtils.vector3ToFloat4Array(new Vector3(-10000, 700, 11880)));
                 meshDeAuto.Effect.SetValue("eyePosition", TgcParserUtils.vector3ToFloat4Array(eyePosition));
-                meshDeAuto.Effect.SetValue("lightIntensity", (float)700);
-                meshDeAuto.Effect.SetValue("lightAttenuation", (float)0.3f);
+                meshDeAuto.Effect.SetValue("lightIntensity", (float)4500);
+                meshDeAuto.Effect.SetValue("lightAttenuation", (float)0.9f);
                 meshDeAuto.Effect.SetValue("bumpiness", (float)1f);
                 
                 meshDeAuto.Effect.SetValue("materialSpecularExp", 9f);
