@@ -42,7 +42,10 @@ namespace AlumnoEjemplos.MiGrupo
         List<float> dyAColision;
         List<TgcObb> objetosColisionables;
         TgcObb posteDeSemaforo;
-
+        TgcObb patrullero1;
+        TgcObb patrullero2;
+        TgcObb patrullero3;
+        TgcObb patrullero4;
         float rotacionVertical;
         float prevCameraRotation = 300;
         Auto auto;
@@ -147,13 +150,14 @@ namespace AlumnoEjemplos.MiGrupo
             sprite.Position = new Vector2(0, 0);
             sprite.Scaling = new Vector2((float)screenSize.Width / textureSize.Width, (float)screenSize.Height / textureSize.Height + 0.01f);
             //sprite.Scaling = new Vector2(1.3f,1.5f);
-
+            //cargo obbs
             objetosColisionables = new List<TgcObb>();
             objetosColisionables = cargarObbObjetos();
-            TgcBoundingBox posteDeSemaforoAABB = new TgcBoundingBox(new Vector3(-1193.647f, -649.2448f, 948.8185f), new Vector3(-1147f, 596.6053f, 1051.182f));
-                //<boundingBox min="[-1193.647,-649.2448,948.8185]" max="[640.8928,596.6053,1051.182]"
-            posteDeSemaforo = TgcObb.computeFromAABB(posteDeSemaforoAABB);
-            objetosColisionables.Add(posteDeSemaforo);
+            cargarobbParticular(new Vector3(-1193.647f, -649.2448f, 948.8185f), new Vector3(-1147f, 596.6053f, 1051.182f), posteDeSemaforo);
+            cargarobbParticular(new Vector3(-6121.377f, 0.2397f, -11148.72f), new Vector3(-5478.623f,234.6558f,-10851.28f), patrullero1);
+            cargarobbParticular(new Vector3(-5171.377f,0.2397f,-11148.72f), new Vector3(-4528.623f,234.6558f,-10851.28f), patrullero2);
+            cargarobbParticular(new Vector3(-6121.377f,0.2397f,10101.28f), new Vector3(-5478.623f,234.6558f,10398.72f), patrullero3);
+            cargarobbParticular(new Vector3(-5171.377f,0.2397f,10101.28f), new Vector3(-4528.623f,234.6558f,10398.72f), patrullero4);
 
             texturaHumo = TgcTexture.createTexture(GuiController.Instance.AlumnoEjemplosMediaDir + "TheC#\\Particulas\\Textures\\humo.png");
             texturaFuego = TgcTexture.createTexture(GuiController.Instance.AlumnoEjemplosMediaDir + "TheC#\\Particulas\\Textures\\fuego.png");
@@ -333,7 +337,12 @@ namespace AlumnoEjemplos.MiGrupo
             //motionBlur = new MotionBlur(scenePista.Meshes);
             //motionBlur.motionBlurInit(0);
         }
-
+        //metodo auxiliar
+        private void cargarobbParticular(Vector3 min, Vector3 max, TgcObb objetoOBB){
+            TgcBoundingBox objetoAABB = new TgcBoundingBox(min, max);
+            objetoOBB = TgcObb.computeFromAABB(objetoAABB);
+            objetosColisionables.Add(objetoOBB);
+        }
         //OBB
         private List<TgcObb> cargarObbObjetos()
         {
