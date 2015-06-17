@@ -425,6 +425,7 @@ namespace AlumnoEjemplos.MiGrupo
                 auto.establecerVelocidadMáximaEn((float)GuiController.Instance.Modifiers["velocidadMaxima"]);
 
                 //El jugador envia mensajes al auto dependiendo de que tecla presiono
+                //Se pone un tiempo para que luego de chocar 2 autos, estos no puedan ingresar movimiento (sólo se mueve por inercia)
                 if (colision.getTiempoQueChoco() == 0)
                     jugador.jugar();
                 else
@@ -631,10 +632,21 @@ namespace AlumnoEjemplos.MiGrupo
                 reflejo.Render();
 
                 //////Camara///////
-                coheficienteCamara = jugador.verSiCambiaCamara();
-                GuiController.Instance.ThirdPersonCamera.setCamera(autoMesh.Position, 100 + (coheficienteCamara), 900 - (coheficienteCamara) * 4);
-                GuiController.Instance.ThirdPersonCamera.Target = autoMesh.Position;
-                GuiController.Instance.ThirdPersonCamera.RotationY = auto.rotacion;
+                
+                if (jugador.estaMirandoHaciaAtras())
+                {
+                    GuiController.Instance.ThirdPersonCamera.setCamera(autoMesh.Position, 200, -500);
+                    GuiController.Instance.ThirdPersonCamera.Target = autoMesh.Position;
+                    GuiController.Instance.ThirdPersonCamera.RotationY = auto.rotacion;
+                }
+                else
+                {
+                    coheficienteCamara = jugador.verSiCambiaCamara();
+                    GuiController.Instance.ThirdPersonCamera.setCamera(autoMesh.Position, 100 + (coheficienteCamara), 900 - (coheficienteCamara) * 4);
+                    GuiController.Instance.ThirdPersonCamera.Target = autoMesh.Position;
+                    GuiController.Instance.ThirdPersonCamera.RotationY = auto.rotacion;
+                }
+
                 //La camara no rota exactamente a la par del auto, hay un pequeño retraso
                 //GuiController.Instance.ThirdPersonCamera.RotationY += 5 * (auto.rotacion - prevCameraRotation) * elapsedTime;
                 //Ajusto la camara a menos de 360 porque voy a necesitar hacer calculos entre angulos
