@@ -24,6 +24,7 @@ namespace AlumnoEjemplos.MiGrupo
     /// </summary>
     public class ProbandoMovAuto : TgcExample
     {
+        EmisorHumo emisorDeHumo;
         MotionBlur motionBlur;
         TgcBox humo;
         TgcBox fuego;
@@ -330,8 +331,13 @@ namespace AlumnoEjemplos.MiGrupo
             List<TgcMesh> autoIAList = new List<TgcMesh>();
             autoIAList.Add(meshAutoIA);
 
-            //motionBlur = new MotionBlur(scenePista.Meshes);
-            //motionBlur.motionBlurInit(0);
+
+            motionBlur = new MotionBlur(scenePista.Meshes);
+            motionBlur.motionBlurInit(0);
+
+            emisorDeHumo = new EmisorHumo();
+            emisorDeHumo.crearQuads(10);
+
         }
 
         //OBB
@@ -559,7 +565,7 @@ namespace AlumnoEjemplos.MiGrupo
                 }
 
                 //comienzo humo
-                float rohumo, alfa_humo;
+                /*float rohumo, alfa_humo;
                 float posicion_xhumo;
                 float posicion_yhumo;
                 rohumo = FastMath.Sqrt(-19f * -19f + 126f * 126f);
@@ -568,7 +574,10 @@ namespace AlumnoEjemplos.MiGrupo
                 posicion_xhumo = FastMath.Sin(alfa_humo + auto.rotacion + (anguloDerrape * direcGiroDerrape)) * rohumo;
                 posicion_yhumo = FastMath.Cos(alfa_humo + auto.rotacion + (anguloDerrape * direcGiroDerrape)) * rohumo;
 
-                humo.Position = (new Vector3(posicion_xhumo, 15.5f, posicion_yhumo) + autoMesh.Position);
+                humo.Position = (new Vector3(posicion_xhumo, 15.5f, posicion_yhumo) + autoMesh.Position);*/
+
+                
+
                 //Si no aprieta para los costados, dejo la rueda derecha (por ahora, esto se puede modificar)
                 if (input.keyDown(Key.Left) || input.keyDown(Key.A) || input.keyDown(Key.Right) || input.keyDown(Key.D))
                 {
@@ -621,7 +630,7 @@ namespace AlumnoEjemplos.MiGrupo
                         lineaDeFrenado[i].endTrack();
                     }
                 }
-
+                motionBlur.motionBlurRender(elapsedTime, HighResolutionTimer.Instance.FramesPerSecond, auto.velocidad, 0);
                 for (int i = 0; i < lineaDeFrenado.Length; i++)
                 {
                     lineaDeFrenado[i].render();
@@ -656,21 +665,22 @@ namespace AlumnoEjemplos.MiGrupo
                 }
                 prevCameraRotation = GuiController.Instance.ThirdPersonCamera.RotationY;
 
+                emisorDeHumo.update(elapsedTime, GuiController.Instance.ThirdPersonCamera.getLookAt(), auto.rotacion, autoMesh.Position, anguloDerrape, direcGiroDerrape);
                 //Dibujar objeto principal
                 //Siempre primero hacer todos los cálculos de lógica e input y luego al final dibujar todo (ciclo update-render)
-
+                
+                //scenePista.renderAll();
 
                 //motionBlur.motionBlurRender(elapsedTime, HighResolutionTimer.Instance.FramesPerSecond, auto.velocidad, 0);
-                scenePista.renderAll();
-
+ 
                 //Hago visibles los obb
-                oBBAuto.render();
-
+                //oBBAuto.render();
+                /*
                 foreach (TgcObb obbColisionable in objetosColisionables)
                 {
                     obbColisionable.render();
                 }
-
+                */
                 //Mostrar al auto IA
                 meshAutoIA.render();
 
@@ -689,12 +699,14 @@ namespace AlumnoEjemplos.MiGrupo
 
                 autoMesh.render();
 
+                emisorDeHumo.render();
+
                 for (int i = 0; i < 4; i++)
                 {
                     ruedas[i].render();
                 }
 
-                humo.render();
+                //humo.render();
                 fuego.render();
 
 
