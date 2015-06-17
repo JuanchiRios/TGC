@@ -41,7 +41,7 @@ namespace AlumnoEjemplos.MiGrupo
         List<float> dxAColision;
         List<float> dyAColision;
         List<TgcObb> objetosColisionables;
-
+        TgcObb posteDeSemaforo;
 
         float rotacionVertical;
         float prevCameraRotation = 300;
@@ -150,6 +150,10 @@ namespace AlumnoEjemplos.MiGrupo
 
             objetosColisionables = new List<TgcObb>();
             objetosColisionables = cargarObbObjetos();
+            TgcBoundingBox posteDeSemaforoAABB = new TgcBoundingBox(new Vector3(-1193.647f, -649.2448f, 948.8185f), new Vector3(-1147f, 596.6053f, 1051.182f));
+                //<boundingBox min="[-1193.647,-649.2448,948.8185]" max="[640.8928,596.6053,1051.182]"
+            posteDeSemaforo = TgcObb.computeFromAABB(posteDeSemaforoAABB);
+            objetosColisionables.Add(posteDeSemaforo);
 
             texturaHumo = TgcTexture.createTexture(GuiController.Instance.AlumnoEjemplosMediaDir + "TheC#\\Particulas\\Textures\\humo.png");
             texturaFuego = TgcTexture.createTexture(GuiController.Instance.AlumnoEjemplosMediaDir + "TheC#\\Particulas\\Textures\\fuego.png");
