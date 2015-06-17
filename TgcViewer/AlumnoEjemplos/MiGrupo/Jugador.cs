@@ -118,7 +118,7 @@ namespace AlumnoEjemplos.MiGrupo
         }
         public int verSiCambiaCamara()
         {
-            if (input.keyDown(Key.M))
+            if (input.keyPressed(Key.M))
             {
                 if (camaraCamibada)
                 {
@@ -127,8 +127,8 @@ namespace AlumnoEjemplos.MiGrupo
                     return 100;
                 }
                 camaraCamibada = (camaraCamibada == false);
-                valorDeCamara = 0;
-                return 0;
+                valorDeCamara = 60;
+                return 60;
             }
             return valorDeCamara;
         }
