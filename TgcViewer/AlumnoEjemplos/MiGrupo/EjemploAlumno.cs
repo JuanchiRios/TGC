@@ -24,6 +24,7 @@ namespace AlumnoEjemplos.MiGrupo
     /// </summary>
     public class ProbandoMovAuto : TgcExample
     {
+        bool motionBlurFlag;
         EmisorHumo emisorDeHumo;
         MotionBlur motionBlur;
         TgcBox humo;
@@ -112,6 +113,7 @@ namespace AlumnoEjemplos.MiGrupo
 
         //Reflejo de luz en el auto
         ReflejoLuzEnAuto reflejo;
+        
 
 
         public override string getCategory()
@@ -316,8 +318,8 @@ namespace AlumnoEjemplos.MiGrupo
             textoVelocidad.inicializarTextoVelocidad(auto.velocidad);
             ///////////////MODIFIERS//////////////////
             GuiController.Instance.Modifiers.addFloat("velocidadMaxima", 1000, 7000, 1800f);
-            GuiController.Instance.Modifiers.addBoolean("jugarConTiempo", "jugar con tiempo:", true);
-
+            GuiController.Instance.Modifiers.addBoolean("jugarConTiempo", "Jugar con tiempo:", true);
+            GuiController.Instance.Modifiers.addBoolean("motionBlurFlag", "Motion Blur", false);
             //////////////Reflejo de luz en auto////////////////
             reflejo = new ReflejoLuzEnAuto(autoMesh);
 
@@ -381,7 +383,7 @@ namespace AlumnoEjemplos.MiGrupo
 
         public override void render(float elapsedTime)
         {
-
+            motionBlurFlag = (bool)GuiController.Instance.Modifiers["motionBlurFlag"];
             TgcTexture texture = TgcTexture.createTexture(GuiController.Instance.AlumnoEjemplosMediaDir + "TheC#\\Pista\\pistaCarreras.png");
 
             Microsoft.DirectX.Direct3D.Device d3dDevice = GuiController.Instance.D3dDevice;
@@ -458,7 +460,7 @@ namespace AlumnoEjemplos.MiGrupo
                 //Detección de colisiones
                 //Hubo colisión con un objeto. Guardar resultado y abortar loop.
 
-                //motionBlur.update(elapsedTime);
+                
 
 
                 //Si hubo alguna colisión, hacer esto:
@@ -630,7 +632,20 @@ namespace AlumnoEjemplos.MiGrupo
                         lineaDeFrenado[i].endTrack();
                     }
                 }
+
+                if (motionBlurFlag)
+                {             
+                motionBlur.update(elapsedTime);
                 motionBlur.motionBlurRender(elapsedTime, HighResolutionTimer.Instance.FramesPerSecond, auto.velocidad, 0);
+                }
+                else
+                {
+                  foreach (TgcMesh mesh in scenePista.Meshes)
+                    {
+                        mesh.Technique = "DefaultTechnique";
+                        mesh.render();
+                    }
+                }
                 for (int i = 0; i < lineaDeFrenado.Length; i++)
                 {
                     lineaDeFrenado[i].render();
@@ -779,8 +794,14 @@ namespace AlumnoEjemplos.MiGrupo
                 textPuntosDeControlAlcanzados.render();
                 textPosicionDelAutoActual.render();
 
+
+
+
+
                 //Cosas del tiempo
                 tiempo.incrementarTiempo(this, elapsedTime, (bool)GuiController.Instance.Modifiers["jugarConTiempo"]);
+                               
+
 
                 //Actualizo y dibujo el relops
                 if ((bool)GuiController.Instance.Modifiers["jugarConTiempo"])
@@ -806,10 +827,7 @@ namespace AlumnoEjemplos.MiGrupo
                         }
                     }
                 }
-                /*foreach (TgcMesh mesh in scenePista.Meshes)
-                {
-                    mesh.render();
-                }*/
+               
                 textTiempo.render();
                 contadorDeFrames++;
 
