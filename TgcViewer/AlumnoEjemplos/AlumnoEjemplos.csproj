@@ -88,13 +88,19 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="MiGrupo\Auto.cs" />
+    <Compile Include="MiGrupo\AutoMejorado.cs" />
+    <Compile Include="MiGrupo\Musica.cs" />
     <Compile Include="MiGrupo\Colisiones.cs" />
     <Compile Include="MiGrupo\EjemploAlumno.cs" />
+    <Compile Include="MiGrupo\Humo.cs" />
     <Compile Include="MiGrupo\IA.cs" />
     <Compile Include="MiGrupo\Jugador.cs" />
     <Compile Include="MiGrupo\LineaDeFrenado.cs" />
+    <Compile Include="MiGrupo\Matemagicas.cs" />
+    <Compile Include="MiGrupo\MotionBlur.cs" />
     <Compile Include="MiGrupo\PuntoDeControl.cs" />
     <Compile Include="MiGrupo\ReflejoLuzEnAuto.cs" />
+    <Compile Include="MiGrupo\TestAutoMejorado.cs" />
     <Compile Include="MiGrupo\Tiempo.cs" />
     <Compile Include="MiGrupo\variablesEnPantalla.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -82,6 +82,7 @@ namespace AlumnoEjemplos.MiGrupo
         TgcText2d textGanaste;
         float contadorDeFrames = 0;
         private DateTime horaInicio;
+        Musica musica = new Musica();
 
         //colisiones entre los autos
         Colisiones colision = new Colisiones();
@@ -302,10 +303,10 @@ namespace AlumnoEjemplos.MiGrupo
             textTiempo.Color = Color.White;
 
             textIngreseTecla = new TgcText2d();
-            textIngreseTecla.Text = "  Ingrese barra espaciadora para comenzar ";
-            textIngreseTecla.Position = new Point(150, 310);
+            textIngreseTecla.Text = " Utilize las flechas o W,A,S,D para moverse. \n Shift izquierdo para activar el nitro \n M para cambiar la camara \n Ingrese barra espaciadora para comenzar ";
+            textIngreseTecla.Position = new Point(150, 290);
             textIngreseTecla.Align = TgcText2d.TextAlign.LEFT;
-            textIngreseTecla.changeFont(new System.Drawing.Font("TimesNewRoman", 23, FontStyle.Bold | FontStyle.Italic));
+            textIngreseTecla.changeFont(new System.Drawing.Font("TimesNewRoman", 23, FontStyle.Bold | FontStyle.Bold));
             textIngreseTecla.Color = Color.White;
 
             textoVelocidad.inicializarTextoVelocidad(auto.velocidad);
@@ -328,6 +329,7 @@ namespace AlumnoEjemplos.MiGrupo
 
             //motionBlur = new MotionBlur(scenePista.Meshes);
             //motionBlur.motionBlurInit(0);
+            musica.inicializar();
         }
 
         //OBB
@@ -392,6 +394,7 @@ namespace AlumnoEjemplos.MiGrupo
                 GuiController.Instance.Drawer2D.endDrawSprite();
                 flagInicio = jugador.verSiAprietaSpace();
                 textIngreseTecla.render();
+                musica.verSiCambioMP3();
             }
             else
             {
