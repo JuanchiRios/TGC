@@ -92,6 +92,7 @@ namespace AlumnoEjemplos.MiGrupo
         public float tiempoTrans = 100f; //tiempo transcurrido desde el defasaje de rotacion de camara y rotacion del mesh
         Tiempo tiempo = new Tiempo();
         private int segundosAuxiliares = 1;
+        bool primerRenderDelJuegoAndando = true;
 
         //Sobre el derrape y las ruedas
         float anguloDerrape = 0.1f;
@@ -305,7 +306,7 @@ namespace AlumnoEjemplos.MiGrupo
             textIngreseTecla.Position = new Point(150, 310);
             textIngreseTecla.Align = TgcText2d.TextAlign.LEFT;
             textIngreseTecla.changeFont(new System.Drawing.Font("TimesNewRoman", 23, FontStyle.Bold | FontStyle.Italic));
-            textIngreseTecla.Color = Color.GreenYellow;
+            textIngreseTecla.Color = Color.White;
 
             textoVelocidad.inicializarTextoVelocidad(auto.velocidad);
             ///////////////MODIFIERS//////////////////
@@ -394,6 +395,12 @@ namespace AlumnoEjemplos.MiGrupo
             }
             else
             {
+                //Para contar el tiempo desde que preciona la barra espaciadora y comienza el juego
+                if (primerRenderDelJuegoAndando == true)
+                {
+                    this.horaInicio = DateTime.Now;
+                    primerRenderDelJuegoAndando = false;
+                }
                 //Todo lo referente a lo que debe hacer el IA
                 autoIA.elapsedTime = elapsedTime;
                 autoIA.establecerVelocidadMáximaEn((float)GuiController.Instance.Modifiers["velocidadMaxima"] * 1.02f);
@@ -818,6 +825,10 @@ namespace AlumnoEjemplos.MiGrupo
             textPuntosDeControlAlcanzados.dispose();
             textPosicionDelAutoActual.dispose();
             textIngreseTecla.dispose();
+
+            //para que una vez cerrado el juego y vuelto a abrir, comience nuevamente en la pantalla de inicio
+            flagInicio = 0;
+            primerRenderDelJuegoAndando = true;
 
         }
         //no borren el metodo HuboCollision
