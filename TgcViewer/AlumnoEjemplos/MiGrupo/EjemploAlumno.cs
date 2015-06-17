@@ -33,7 +33,6 @@ namespace AlumnoEjemplos.MiGrupo
         TgcMesh ruedaDerechaTraseraMesh;
         TgcMesh ruedaIzquierdaDelanteraMesh;
         TgcMesh ruedaIzquierdaTraseraMesh;
-        List<TgcMesh> meshesTotales;
         float autoMeshPrevZ;
         float autoMeshPrevX;
         List<TgcViewer.Utils.TgcSceneLoader.TgcMesh> ruedas;
@@ -91,7 +90,6 @@ namespace AlumnoEjemplos.MiGrupo
 
         //Tiempo 
         public float tiempoTrans = 100f; //tiempo transcurrido desde el defasaje de rotacion de camara y rotacion del mesh
-        private bool habilitarDecremento = false;
         Tiempo tiempo = new Tiempo();
         private int segundosAuxiliares = 1;
 
@@ -165,7 +163,6 @@ namespace AlumnoEjemplos.MiGrupo
 
             // cosas del tiempo
             tiempoTrans = 100f; //tiempo transcurrido desde el defasaje de rotacion de camara y rotacion del mesh
-            habilitarDecremento = false;
             segundosAuxiliares = 1;
             //En este ejemplo primero cargamos una escena 3D entera.
             TgcSceneLoader loader = new TgcSceneLoader();
