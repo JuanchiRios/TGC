@@ -1,13 +1,12 @@
 <tgcScene>
   <name>pistaObbs</name>
-  <carObb center="[-0.2906,61.9184,0.6685]" extents="[53.2376,127.1284,45.4659]" orientation0="[-1,0,0.003]" orientation1="[-0.003,0,-1]" orientation2="[0,-1,0]" />
-  <obbs count="53">
+  <obbs count="63">
     <obb center="[-2958.414,17.4512,6661.528]" extents="[997.7998,1003.295,12.0327]" orientation0="[0,0,1]" orientation1="[-1,0,0]" orientation2="[0,-1,0]" />
     <obb center="[-8325.839,234.7319,-2527.317]" extents="[8667.157,1975.665,233.4871]" orientation0="[0.0002,0,1]" orientation1="[1,0,-0.0002]" orientation2="[0,1,0]" />
-    <obb center="[-10541.05,1722.259,11791.99]" extents="[107.75,107.6997,1724.498]" orientation0="[1,0,0]" orientation1="[0,0,1]" orientation2="[0,-1,0]" />
+    <obb center="[-10541.05,1722.26,11791.99]" extents="[107.75,107.7002,1724.498]" orientation0="[1,0,0]" orientation1="[0,0,-1]" orientation2="[0,1,0]" />
     <obb center="[-8127.063,792.5526,14233.07]" extents="[449.5503,503.2087,796.5308]" orientation0="[0.6428,0,-0.766]" orientation1="[-0.766,0,-0.6428]" orientation2="[0,1,0]" />
     <obb center="[-8467.124,792.4971,-12794.08]" extents="[504.0044,436.832,796.5341]" orientation0="[-0.3564,0,-0.9343]" orientation1="[0.9343,0,-0.3564]" orientation2="[0,-1,0]" />
-    <obb center="[-10540.35,1722.259,-10103.26]" extents="[107.75,107.7295,1724.498]" orientation0="[1,0,0]" orientation1="[0,0,1]" orientation2="[0,-1,0]" />
+    <obb center="[-10540.35,1722.26,-10103.26]" extents="[107.75,107.73,1724.498]" orientation0="[1,0,0]" orientation1="[0,0,-1]" orientation2="[0,1,0]" />
     <obb center="[-16554.35,140.5596,-10785.57]" extents="[880.6345,64.4815,259.0192]" orientation0="[-0.1146,0,0.9934]" orientation1="[-0.9783,-0.1736,-0.1128]" orientation2="[0.1725,-0.9848,0.0199]" />
     <obb center="[-16645.7,141.8051,715.4]" extents="[74.8994,10796.39,248.2373]" orientation0="[1,0,0]" orientation1="[0,0,1]" orientation2="[0,-1,0]" />
     <obb center="[-16551.33,150.554,12231.03]" extents="[264.2813,119.6748,900.0078]" orientation0="[-0.171,0.9848,0.0302]" orientation1="[-0.9698,-0.1736,0.171]" orientation2="[0.1736,0,0.9848]" />
@@ -53,7 +52,17 @@
     <obb center="[106.7915,184.1694,-5766.971]" extents="[209.6667,402.6494,51.9552]" orientation0="[-0.0807,-0.9965,0.0216]" orientation1="[0.2592,0,0.9658]" orientation2="[-0.9625,0.0835,0.2583]" />
     <obb center="[285.7813,184.7106,-5057.735]" extents="[209.224,398.3093,51.6613]" orientation0="[-0.0848,-0.9962,0.0201]" orientation1="[0.2302,0,0.9731]" orientation2="[-0.9694,0.0872,0.2293]" />
     <obb center="[696.0388,186.1552,-2905.056]" extents="[208.2757,385.8898,60.6503]" orientation0="[-0.0966,-0.9952,0.0142]" orientation1="[-0.1734,0.0028,-0.9849]" orientation2="[0.9801,-0.0976,-0.1728]" />
-    <obb center="[-6407.775,119.6309,7994.675]" extents="[113.6956,1928.22,56.0901]" orientation0="[0,1,0]" orientation1="[0,0,1]" orientation2="[1,0,0]" />
+    <obb center="[-6407.775,119.6308,7994.675]" extents="[113.6956,1928.22,56.0901]" orientation0="[0,1,0]" orientation1="[0,0,1]" orientation2="[1,0,0]" />
     <obb center="[-10262.45,52.023,448.7743]" extents="[5280.859,219.0376,302.9917]" orientation0="[0.0087,0.006,0.9999]" orientation1="[-0.5,0.866,-0.0009]" orientation2="[-0.866,-0.5,0.0106]" />
+    <obb center="[-6141.001,47,-11000]" extents="[59.4902,46.8832,128.5505]" orientation0="[0,0,1]" orientation1="[0,-1,0]" orientation2="[1,0,0]" />
+    <obb center="[-4904.995,47.0059,-10999.99]" extents="[128.5505,59.4902,46.8832]" orientation0="[-1,0,0]" orientation1="[0,0,-1]" orientation2="[0,-1,0]" />
+    <obb center="[-4500.001,47,-11000]" extents="[59.4902,46.8832,128.5508]" orientation0="[0,0,1]" orientation1="[0,-1,0]" orientation2="[1,0,0]" />
+    <obb center="[-5799.994,47.0059,-10999.99]" extents="[128.5505,59.4902,46.8832]" orientation0="[-1,0,0]" orientation1="[0,0,-1]" orientation2="[0,-1,0]" />
+    <obb center="[-5275.001,47,-11000]" extents="[59.4902,46.8832,128.5508]" orientation0="[0,0,1]" orientation1="[0,-1,0]" orientation2="[1,0,0]" />
+    <obb center="[-6140.997,47,9999.998]" extents="[59.4893,46.8832,128.5505]" orientation0="[0,0,1]" orientation1="[0,-1,0]" orientation2="[1,0,0]" />
+    <obb center="[-5074.996,46.999,9999.996]" extents="[59.4893,128.5505,46.8832]" orientation0="[0,0,1]" orientation1="[-1,0,0]" orientation2="[0,-1,0]" />
+    <obb center="[-4500,47,9999.995]" extents="[128.5508,59.4893,46.8832]" orientation0="[1,0,0]" orientation1="[0,0,1]" orientation2="[0,-1,0]" />
+    <obb center="[-5799.994,46.9946,9999.995]" extents="[128.5505,59.4893,46.8832]" orientation0="[-1,0,0]" orientation1="[0,0,-1]" orientation2="[0,-1,0]" />
+    <obb center="[-5444.997,47,9999.998]" extents="[59.4893,46.8832,128.5508]" orientation0="[0,0,1]" orientation1="[0,-1,0]" orientation2="[1,0,0]" />
   </obbs>
 </tgcScene>

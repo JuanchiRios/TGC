@@ -48,6 +48,12 @@ namespace AlumnoEjemplos.MiGrupo
         TgcObb patrullero2;
         TgcObb patrullero3;
         TgcObb patrullero4;
+        TgcObb patrullero5;
+        TgcObb patrullero6;
+        TgcObb patrullero7;
+        TgcObb patrullero8;
+        TgcObb patrullero9;
+        TgcObb patrullero10;
         float rotacionVertical;
         float prevCameraRotation = 300;
         Auto auto;
@@ -153,14 +159,7 @@ namespace AlumnoEjemplos.MiGrupo
             sprite.Position = new Vector2(0, 0);
             sprite.Scaling = new Vector2((float)screenSize.Width / textureSize.Width, (float)screenSize.Height / textureSize.Height + 0.01f);
             //sprite.Scaling = new Vector2(1.3f,1.5f);
-            //cargo obbs
-            objetosColisionables = new List<TgcObb>();
-            objetosColisionables = cargarObbObjetos();
-            cargarobbParticular(new Vector3(-1193.647f, -649.2448f, 948.8185f), new Vector3(-1147f, 596.6053f, 1051.182f), posteDeSemaforo);
-            cargarobbParticular(new Vector3(-6121.377f, 0.2397f, -11148.72f), new Vector3(-5478.623f,234.6558f,-10851.28f), patrullero1);
-            cargarobbParticular(new Vector3(-5171.377f,0.2397f,-11148.72f), new Vector3(-4528.623f,234.6558f,-10851.28f), patrullero2);
-            cargarobbParticular(new Vector3(-6121.377f,0.2397f,10101.28f), new Vector3(-5478.623f,234.6558f,10398.72f), patrullero3);
-            cargarobbParticular(new Vector3(-5171.377f,0.2397f,10101.28f), new Vector3(-4528.623f,234.6558f,10398.72f), patrullero4);
+            
 
             texturaHumo = TgcTexture.createTexture(GuiController.Instance.AlumnoEjemplosMediaDir + "TheC#\\Particulas\\Textures\\humo.png");
             texturaFuego = TgcTexture.createTexture(GuiController.Instance.AlumnoEjemplosMediaDir + "TheC#\\Particulas\\Textures\\fuego.png");
@@ -187,6 +186,20 @@ namespace AlumnoEjemplos.MiGrupo
             TgcScene scene5 = loader.loadSceneFromFile(GuiController.Instance.AlumnoEjemplosMediaDir + "TheC#\\Auto\\\\Auto_Rueda_Izquierda-TgcScene.xml");
             scenePista = loader.loadSceneFromFile(GuiController.Instance.AlumnoEjemplosMediaDir + "TheC#\\Auto\\\\pistaentera-TgcScene.xml");
             TgcScene sceneAutoIA = loader.loadSceneFromFile(GuiController.Instance.AlumnoEjemplosMediaDir + "TheC#\\Auto\\\\autoRojo-TgcScene.xml");
+            //cargo obbs
+            objetosColisionables = new List<TgcObb>();
+          /*  foreach (TgcMesh mesh in scenePista.Meshes)
+            {
+                if (mesh.Name.Contains("borde") || mesh.Name.Contains("col") || mesh.Name.Contains("Patrullero"))
+                {
+                    Vector3[] vertices = mesh.getVertexPositions();
+                    objetosColisionables.Add(TgcObb.computeFromPoints(vertices));
+                }
+            }
+           NO BORREN ESTO!!!!!!!!!!!!!!!!!
+             guardarObbs(objetosColisionables);NO ME BORREN*/
+            objetosColisionables = cargarObbObjetos();
+            cargarobbParticular(new Vector3(-1193.647f, -649.2448f, 948.8185f), new Vector3(-1147f, 596.6053f, 1051.182f), posteDeSemaforo);
 
             //Solo nos interesa el primer modelo de esta escena (tiene solo uno)
 
@@ -388,6 +401,53 @@ namespace AlumnoEjemplos.MiGrupo
 
 
         //FIN OBB
+        //guardar
+        private void guardarObbs( List<TgcObb> obbs)
+        {
+            try
+            {
+
+                //Crear XML
+                XmlDocument doc = new XmlDocument();
+                XmlNode root = doc.CreateElement("tgcScene");
+
+                //name
+                XmlElement nameNode = doc.CreateElement("name");
+                nameNode.InnerText = "pistaObbs";
+                root.AppendChild(nameNode);
+
+                //obbs
+                XmlElement obbsNode = doc.CreateElement("obbs");
+                obbsNode.SetAttribute("count", obbs.Count.ToString());
+                foreach (TgcObb unObb in obbs)
+                {
+                    XmlElement obbNode = doc.CreateElement("obb");
+                    obbNode.SetAttribute("center", TgcParserUtils.printFloat3Array(TgcParserUtils.vector3ToFloat3Array(unObb.Center)));
+                    obbNode.SetAttribute("extents", TgcParserUtils.printFloat3Array(TgcParserUtils.vector3ToFloat3Array(unObb.Extents)));
+                    obbNode.SetAttribute("orientation0", TgcParserUtils.printFloat3Array(TgcParserUtils.vector3ToFloat3Array(unObb.Orientation[0])));
+                    obbNode.SetAttribute("orientation1", TgcParserUtils.printFloat3Array(TgcParserUtils.vector3ToFloat3Array(unObb.Orientation[1])));
+                    obbNode.SetAttribute("orientation2", TgcParserUtils.printFloat3Array(TgcParserUtils.vector3ToFloat3Array(unObb.Orientation[2])));
+                    obbsNode.AppendChild(obbNode);
+                }
+                root.AppendChild(obbsNode);
+
+
+                //Guardar XML, borrar si ya existe
+                doc.AppendChild(root);
+                string sceneFileName = "pistaObbs-TgcScene.xml";
+                string sceneFilePath = GuiController.Instance.AlumnoEjemplosMediaDir + "TheC#\\Auto\\" + sceneFileName;
+                if (File.Exists(sceneFileName))
+                {
+                    File.Delete(sceneFileName);
+                }
+                doc.Save(sceneFilePath);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception("Error al crear XML de escena: pistaObbs", ex); ;
+            }
+        }
+        //fin guardar
 
 
         public override void render(float elapsedTime)
