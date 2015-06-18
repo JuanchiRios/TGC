@@ -70,12 +70,14 @@ namespace AlumnoEjemplos.MiGrupo
 
 
 
-        internal void render()
+        internal void render(Vector3 posCamara)
         {
             quad.Position = posicion;
             quad.Size = tamanio;
-            quad.RotationMatrix.RotateY(GuiController.Instance.CurrentCamera.getLookAt().Y);
+            Vector3 posQuad = quad.Position;
+            //RotateY(GuiController.Instance.CurrentCamera.getLookAt().Y);
             //quad.Normal = normal;
+
             quad.IsAlphaBlendEnabled = true;
             quad._UpdateValues();
             quad.Render();

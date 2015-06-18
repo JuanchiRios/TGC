@@ -884,7 +884,7 @@ namespace AlumnoEjemplos.MiGrupo
                     mesh.render();
                 }*/
                 emisorHumo.update(elapsedTime, GuiController.Instance.CurrentCamera.getLookAt(), auto.rotacion, autoMesh.Position, anguloDerrape, direcGiroDerrape, auto.nitro);
-                emisorHumo.render();
+                emisorHumo.render(GuiController.Instance.CurrentCamera.getPosition());
                 textTiempo.render();
                 contadorDeFrames++;
 

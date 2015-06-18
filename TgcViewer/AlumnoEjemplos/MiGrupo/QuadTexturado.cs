@@ -10,12 +10,14 @@ using TgcViewer;
 using TgcViewer.Utils;
 using TgcViewer.Utils.Shaders;
 using TgcViewer.Utils.TgcSceneLoader;
+using TgcViewer.Utils.TgcGeometry;
 
 namespace AlumnoEjemplos.MiGrupo
 {
     public class TexturedQuad : IDisposable
     {
         #region Constructors
+        
         private Boolean _OldValues = true;
         private CustomVertex.PositionTextured[] _Vertices = new CustomVertex.PositionTextured[6];
         public TexturedQuad()
@@ -29,6 +31,7 @@ namespace AlumnoEjemplos.MiGrupo
         #endregion Constructors
 
         #region Properties
+        public Vector3 Normal { get; set; }
         public Effect Shader { get; set; }
         public String Technique { get; set; }
         public Vector2 Tile { get; set; }
@@ -56,6 +59,8 @@ namespace AlumnoEjemplos.MiGrupo
             get { return _Position; }
             set { _Position = value; _OldValues = true; }
         }
+
+ 
         private Vector2 _Size;
         public Vector2 Size
         {
@@ -129,10 +134,12 @@ namespace AlumnoEjemplos.MiGrupo
             //Transformar todos los puntos
 
             Matrix t = _RotationMatrix * Matrix.Translation(_Position);
+            
             for (int i = 0; i < _Vertices.Length; i++)
             {
                 _Vertices[i].Position = Vector3.TransformCoordinate(_Vertices[i].Position, t);
             }
+
         }
         #endregion TextureMethods
     }

@@ -85,16 +85,16 @@ namespace AlumnoEjemplos.MiGrupo
                 particula.resetear(3.0f,new List<float> { -19f + random1, 126f + random2 });               
                 }
 
-            particula.setNormal(normal);
+            particula.setNormal(new Vector3(0,rotacionAuto,0));
 
             particula.calcularAlpha();
             particula.calcularTamanio();
             }
         }
-        public void render()
+        public void render(Vector3 posCamara)
         {
             foreach (HumoParticula particula in quadPool) { 
-            particula.render();
+            particula.render(posCamara);
             }
         }
 
