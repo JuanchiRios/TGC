@@ -33,8 +33,8 @@ namespace AlumnoEjemplos.MiGrupo
             screenSize = GuiController.Instance.Panel3d.Size;
             velocimetro = new TgcSprite();
             agujaVelocimetro = new TgcSprite();
-            llenadoNitro = new TgcSprite();
             barraNitro = new TgcSprite();
+            llenadoNitro = new TgcSprite();            
             agujaTacometro = new TgcSprite();
             sprites = new List<TgcSprite> { velocimetro, agujaVelocimetro, agujaTacometro, llenadoNitro, barraNitro };
 
@@ -54,12 +54,16 @@ namespace AlumnoEjemplos.MiGrupo
             agujaTacometro.Texture = TgcTexture.createTexture(GuiController.Instance.AlumnoEjemplosMediaDir + "TheC#\\Texturas\\Sprites\\agujaTacometro.png");
             agujaTacometro.Position = new Vector2(screenSize.Width - 260, screenSize.Height - 260);
             agujaTacometro.RotationCenter = new Vector2(68, 183.5f);
-            
-            llenadoNitro.Texture =
-            llenadoNitro.Position = new Vector2(screenSize.Width - textureSizeVelocimetro.Width,screenSize.Height- textureSizeVelocimetro.Height));
-            
-            barraNitro.Texture = 
-            barraNitro.Position = new Vector2(FastMath.Max(screenSize.Width / 2 - textureSizeVelocimetro.Width / 2, 0), FastMath.Max(screenSize.Height / 2 - textureSizeVelocimetro.Height / 2, 0));
+
+            barraNitro.Texture = TgcTexture.createTexture(GuiController.Instance.AlumnoEjemplosMediaDir + "TheC#\\Texturas\\Sprites\\barraNitro.png");
+            barraNitro.Position = new Vector2(10f, 12f);
+            barraNitro.Scaling = new Vector2(0.75f, 1f);
+
+            llenadoNitro.Texture = TgcTexture.createTexture(GuiController.Instance.AlumnoEjemplosMediaDir + "TheC#\\Texturas\\Sprites\\llenadoNitro.png");
+            llenadoNitro.Position = new Vector2(20f,20f);
+            llenadoNitro.Scaling = new Vector2(0.75f,1f); 
+
+
                                    
             
 
@@ -68,8 +72,8 @@ namespace AlumnoEjemplos.MiGrupo
         public void render(float velocidad,float cantNitro)
         {
             
-            agujaVelocimetro.Rotation = velocidad / 2000 * FastMath.PI/2;
-            llenadoNitro.Scaling = new Vector2(1f,cantNitro);
+            agujaVelocimetro.Rotation = FastMath.Abs(velocidad) / 1000 * FastMath.PI/2;
+            llenadoNitro.Scaling = new Vector2(0.60f*cantNitro,0.50f);
             //llenadoNitro.Color = Color.Black;
 
             //Iniciar dibujado de todos los Sprites de la escena (en este caso es solo uno)
@@ -79,6 +83,7 @@ namespace AlumnoEjemplos.MiGrupo
             foreach(TgcSprite sprite in sprites){
                 sprite.render();
             }
+            llenadoNitro.render();
             //Finalizar el dibujado de Sprites
             GuiController.Instance.Drawer2D.endDrawSprite();
         }

@@ -874,7 +874,7 @@ namespace AlumnoEjemplos.MiGrupo
                         }
                         else if (gano == true)
                         {
-
+                            
                         }
                         else
                         {
@@ -891,7 +891,7 @@ namespace AlumnoEjemplos.MiGrupo
                 emisorHumo.render(GuiController.Instance.CurrentCamera.getPosition());
                 textTiempo.render();
                 contadorDeFrames++;
-                hud.render(auto.velocidad);
+                hud.render(auto.velocidad,1f);
             }//cierra el if de que no esta en pantalla inicio
 
         }
