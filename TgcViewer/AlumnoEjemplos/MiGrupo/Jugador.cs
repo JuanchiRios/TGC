@@ -29,9 +29,8 @@ namespace AlumnoEjemplos.MiGrupo
 
         public void jugar(float cantidadDeNitro)
         {
-            if (input.keyDown(Key.LeftControl) || input.keyDown(Key.LeftShift))
+            if ((input.keyDown(Key.LeftControl) || input.keyDown(Key.LeftShift)) && (cantidadDeNitro>1))
             {
-                if(cantidadDeNitro>15)
                 auto.ponerNitro();
             }
             else
