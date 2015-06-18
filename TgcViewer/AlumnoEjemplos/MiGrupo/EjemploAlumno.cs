@@ -132,7 +132,7 @@ namespace AlumnoEjemplos.MiGrupo
 
         public override string getDescription()
         {
-            return "Juego de carreras. El auto se mueve con las flechas o wasd, el nitro es con shift o control.";
+            return "Juego de carreras. El auto se mueve con las flechas o wasd, el nitro es con shift o control, la música se apaga con X, el freno de mano es con barra espaciadora, se cambia la camara con M y con TAB se para mira atrás";
         }
 
 
@@ -325,9 +325,9 @@ namespace AlumnoEjemplos.MiGrupo
             textTiempo.Position = new Point(50, 20);
             textTiempo.Text = "10";
             textTiempo.Color = Color.White;
-
+          
             textIngreseTecla = new TgcText2d();
-            textIngreseTecla.Text = " Utilize las flechas o W,A,S,D para moverse. \n Shift izquierdo para activar el nitro \n M para cambiar la camara \n Ingrese barra espaciadora para comenzar ";
+            textIngreseTecla.Text = " Utilize las flechas o W,A,S,D para moverse. \n Shift o control izquierdo para activar el nitro \n M para cambiar la camara \n TAB mirar para atrás \n Ingrese barra espaciadora para comenzar ";
             textIngreseTecla.Position = new Point(150, 290);
             textIngreseTecla.Align = TgcText2d.TextAlign.LEFT;
             textIngreseTecla.changeFont(new System.Drawing.Font("TimesNewRoman", 23, FontStyle.Bold | FontStyle.Bold));
