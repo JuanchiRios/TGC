@@ -11,15 +11,6 @@ using TgcViewer.Utils.Shaders;
 using TgcViewer.Utils.TgcSceneLoader;
 using TgcViewer.Utils.TgcGeometry;
 
-using System;
-using System.Collections.Generic;
-using System.Text;
-using Microsoft.DirectX;
-using Microsoft.DirectX.Direct3D;
-using TgcViewer.Utils.TgcSceneLoader;
-using System.Drawing;
-using TgcViewer.Utils.Shaders;
-
 namespace AlumnoEjemplos.MiGrupo
 {
     public class QuadConTextura
@@ -215,18 +206,6 @@ namespace AlumnoEjemplos.MiGrupo
             vertices[3] = new CustomVertex.PositionTextured(bLeft, offsetU + uTile, offsetV + vTile);
             vertices[4] = new CustomVertex.PositionTextured(tRight, offsetU, offsetV);
             vertices[5] = new CustomVertex.PositionTextured(bRight, offsetU + uTile, offsetV);
-
-            /*Versión con triángulos para el otro sentido
-            //Primer triangulo
-            vertices[0] = new CustomVertex.PositionTextured(tLeft, 0 * this.uTile, 1 * this.vTile);
-            vertices[1] = new CustomVertex.PositionTextured(bLeft, 1 * this.uTile, 1 * this.vTile);
-            vertices[2] = new CustomVertex.PositionTextured(bRight, 1 * this.uTile, 0 * this.vTile);
-
-            //Segundo triangulo
-            vertices[3] = new CustomVertex.PositionTextured(bRight, 1 * this.uTile, 0 * this.vTile);
-            vertices[4] = new CustomVertex.PositionTextured(tRight, 0 * this.uTile, 0 * this.vTile);
-            vertices[5] = new CustomVertex.PositionTextured(tLeft, 0 * this.uTile, 1 * this.vTile);
-            */
 
             //BoundingBox
             normal = (origin - GuiController.Instance.CurrentCamera.getLookAt());

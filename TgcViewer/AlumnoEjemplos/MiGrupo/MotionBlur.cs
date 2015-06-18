@@ -60,10 +60,6 @@ namespace AlumnoEjemplos.MiGrupo
                 mesh.Effect = effect;
             }
             
-            /*GuiController.Instance.RotCamera.Enable = true;
-            GuiController.Instance.RotCamera.CameraCenter = new Vector3(0, 0, 0);
-            GuiController.Instance.RotCamera.CameraDistance = 150;
-            GuiController.Instance.BackgroundColor = Color.Black;*/
             // stencil
             g_pDepthStencil = d3dDevice.CreateDepthStencilSurface(d3dDevice.PresentationParameters.BackBufferWidth,
                                                                          d3dDevice.PresentationParameters.BackBufferHeight,
@@ -113,12 +109,6 @@ namespace AlumnoEjemplos.MiGrupo
         {
             time += elapsedTime;
             float r = 40;
- 
-            /*foreach(TgcMesh mesh in meshes)
-            { 
-            mesh.Position = new Vector3(r * (float)Math.Cos(time * 0.5), 0, 0 * (float)Math.Sin(time * 0.5));
-            }*/
-            //mesh.rotateY(elapsedTime);
         }
 
         public void renderScene(String technique)

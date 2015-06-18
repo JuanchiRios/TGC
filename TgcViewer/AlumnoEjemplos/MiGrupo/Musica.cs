@@ -38,15 +38,12 @@ namespace AlumnoEjemplos.MiGrupo
              currentFile = archivo;
 
              GuiController.Instance.Mp3Player.FileName = currentFile;
-
-                //currentMusicText.Text = "Playing: " + new FileInfo(currentFile).Name;
             
         }
         //Ver si cambio el MP3
        public void verSiCambioMP3()
        {
            if(empezado==false){
-          // string filePath = (string)GuiController.Instance.Modifiers["MP3-File"];
            loadMp3(archivo);
            reproducir();
            empezado = true;

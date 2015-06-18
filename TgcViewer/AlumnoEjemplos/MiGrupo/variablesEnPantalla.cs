@@ -39,10 +39,6 @@ namespace AlumnoEjemplos.MiGrupo
              int a;
              a = (int)myFloat;
              return a;
-            // int a = (int)Math.Ceiling(myFloat);
-           // Convert.ToInt32(myFloat);
-             //  return   Math.Round(myFloat);
-           //   return (float)(Math.Round((double)a, 2));
              
          }
     }

@@ -116,7 +116,6 @@ namespace AlumnoEjemplos.MiGrupo
             return new float[] { v.X, v.Y, v.Z };
         }
 
-
         /// <summary>
         /// Testear si hay colision entre dos OBB
         /// </summary>

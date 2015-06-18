@@ -75,8 +75,6 @@ namespace AlumnoEjemplos.MiGrupo
             quad.Position = posicion;
             quad.Size = tamanio;
             Vector3 posQuad = quad.Position;
-            //RotateY(GuiController.Instance.CurrentCamera.getLookAt().Y);
-            //quad.Normal = normal;
 
             quad.AlphaBlendEnable = true;
             quad.updateValues();
