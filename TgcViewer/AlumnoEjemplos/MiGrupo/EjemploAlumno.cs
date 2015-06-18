@@ -662,7 +662,7 @@ namespace AlumnoEjemplos.MiGrupo
                 cantidadDeNitro = FastMath.Min(cantidadDeNitro, 100f);
                 if (auto.nitro )
                 {
-                    cantidadDeNitro-=5*elapsedTime ;
+                    cantidadDeNitro-=7*elapsedTime ;
                     cantidadDeNitro = FastMath.Max(cantidadDeNitro, 0f);
                     if (cantidadDeNitro > 1) {                     
                     humo.Enabled = false;

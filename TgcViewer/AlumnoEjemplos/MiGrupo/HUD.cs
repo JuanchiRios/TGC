@@ -62,9 +62,8 @@ namespace AlumnoEjemplos.MiGrupo
 
             llenadoNitro.Texture = TgcTexture.createTexture(GuiController.Instance.AlumnoEjemplosMediaDir + "TheC#\\Texturas\\Sprites\\llenadoNitro.png");
             llenadoNitro.Position = new Vector2(20f,20f);
-            llenadoNitro.Scaling = new Vector2(0.75f,1f); 
-
-                                     
+            llenadoNitro.Scaling = new Vector2(0.75f,1f);
+                             
             
 
         }
@@ -75,6 +74,10 @@ namespace AlumnoEjemplos.MiGrupo
             agujaVelocimetro.Rotation = FastMath.Abs(velocidad) / 1000 * FastMath.PI/2;
             llenadoNitro.Scaling = new Vector2(0.73f*cantNitro/100,0.50f);
             //llenadoNitro.Color = Color.Black;
+
+            llenadoNitro.Color = Color.FromArgb(255, (int)((100 - cantNitro) * 2.55), 0, (int)(cantNitro * 2.55));
+
+            //velocimetro.Color = Color.FromArgb(255, 245, 245, 255);
 
             //Iniciar dibujado de todos los Sprites de la escena (en este caso es solo uno)
             GuiController.Instance.Drawer2D.beginDrawSprite();
