@@ -45,7 +45,7 @@ namespace AlumnoEjemplos.MiGrupo
         List<float> dyAColision;
         List<TgcObb> objetosColisionables;
 
-        TgcObb posteDeSemaforo;
+        TgcObb posteDeSemaforoOBB;
 
         float rotacionVertical;
         float prevCameraRotation = 300;
@@ -156,10 +156,6 @@ namespace AlumnoEjemplos.MiGrupo
             //sprite.Scaling = new Vector2(1.3f,1.5f);
 
 
-            objetosColisionables = new List<TgcObb>();
-            objetosColisionables = cargarObbObjetos();
-
-
             texturaHumo = TgcTexture.createTexture(GuiController.Instance.AlumnoEjemplosMediaDir + "TheC#\\Particulas\\Textures\\humo.png");
             texturaFuego = TgcTexture.createTexture(GuiController.Instance.AlumnoEjemplosMediaDir + "TheC#\\Particulas\\Textures\\fuego.png");
 
@@ -198,8 +194,8 @@ namespace AlumnoEjemplos.MiGrupo
            NO BORREN ESTO!!!!!!!!!!!!!!!!!
              guardarObbs(objetosColisionables);NO ME BORREN*/
             objetosColisionables = cargarObbObjetos();
-            //cargarobbParticular(new Vector3(-1193.647f, -649.2448f, 948.8185f), new Vector3(-1147f, 596.6053f, 1051.182f), posteDeSemaforo);
-
+            posteDeSemaforoOBB = cargarobbParticular(new Vector3(-1193.647f, -649.2448f, 948.8185f), new Vector3(-1147f, 596.6053f, 1051.182f));
+            objetosColisionables.Add(posteDeSemaforoOBB);
             //Solo nos interesa el primer modelo de esta escena (tiene solo uno)
 
             autoMesh = scene1.Meshes[0];
@@ -443,7 +439,12 @@ namespace AlumnoEjemplos.MiGrupo
             }
         }
         //fin guardar
-
+        //carga alguno especial porque su AABB esta mal
+        public TgcObb cargarobbParticular(Vector3 min, Vector3 max)
+        {
+            TgcBoundingBox objetoABB = new TgcBoundingBox(min, max);
+            return TgcObb.computeFromAABB(objetoABB);
+        }
 
         public override void render(float elapsedTime)
         {
