@@ -24,6 +24,7 @@ namespace AlumnoEjemplos.MiGrupo
     /// </summary>
     public class ProbandoMovAuto : TgcExample
     {
+        //variables globales
         HUD hud;
         EmisorHumo emisorHumo;
         bool motionBlurFlag;
@@ -44,9 +45,7 @@ namespace AlumnoEjemplos.MiGrupo
         List<float> dxAColision;
         List<float> dyAColision;
         List<TgcObb> objetosColisionables;
-
         TgcObb posteDeSemaforoOBB;
-
         float rotacionVertical;
         float prevCameraRotation = 300;
         Auto auto;
@@ -63,7 +62,6 @@ namespace AlumnoEjemplos.MiGrupo
         TgcTexture texturaHumo;
         TgcTexture texturaFuego;
         int flagInicio = 0;
-
         TgcScene scenePista;
         int coheficienteCamara;
 
@@ -150,16 +148,10 @@ namespace AlumnoEjemplos.MiGrupo
             //Ubicarlo centrado en la pantalla
             Size screenSize = GuiController.Instance.Panel3d.Size;
             Size textureSize = sprite.Texture.Size;
-            //Modifiers para variar parametros del sprite
-            /*GuiController.Instance.Modifiers.addVertex2f("position", new Vector2(0, 0), new Vector2(screenSize.Width, screenSize.Height), sprite.Position);
-            GuiController.Instance.Modifiers.addVertex2f("scaling", new Vector2(0, 0), new Vector2(4, 4),new Vector2(1.4f,1.6f));// sprite.Scaling);
-            GuiController.Instance.Modifiers.addFloat("rotation", 0, 360, 0);*/
-            //sprite.Position = new Vector2(FastMath.Max(screenSize.Width / 2 - textureSize.Width / 2, 0), FastMath.Max(screenSize.Height / 2 - textureSize.Height / 2, 0));
             sprite.Position = new Vector2(0, 0);
             sprite.Scaling = new Vector2((float)screenSize.Width / textureSize.Width, (float)screenSize.Height / textureSize.Height + 0.01f);
-            //sprite.Scaling = new Vector2(1.3f,1.5f);
 
-
+            //Texturas para particulas
             texturaHumo = TgcTexture.createTexture(GuiController.Instance.AlumnoEjemplosMediaDir + "TheC#\\Particulas\\Textures\\humo.png");
             texturaFuego = TgcTexture.createTexture(GuiController.Instance.AlumnoEjemplosMediaDir + "TheC#\\Particulas\\Textures\\fuego.png");
 
@@ -187,27 +179,28 @@ namespace AlumnoEjemplos.MiGrupo
             TgcScene sceneAutoIA = loader.loadSceneFromFile(GuiController.Instance.AlumnoEjemplosMediaDir + "TheC#\\Auto\\\\autoVerde-TgcScene.xml");
             //cargo obbs
             objetosColisionables = new List<TgcObb>();
-          /*  foreach (TgcMesh mesh in scenePista.Meshes)
-            {
-                if (mesh.Name.Contains("borde") || mesh.Name.Contains("col") || mesh.Name.Contains("Patrullero"))
-                {
-                    Vector3[] vertices = mesh.getVertexPositions();
-                    objetosColisionables.Add(TgcObb.computeFromPoints(vertices));
-                }
-            }
-           NO BORREN ESTO!!!!!!!!!!!!!!!!!
-             guardarObbs(objetosColisionables);NO ME BORREN*/
+            /*  Esto de aca comentado sirve para cuando se agregan nuevos meshes a pistaentera-TgcScene.xml entonces
+             * obtiene su OBB de los AABB de los meshes, esta comentado porque el archivo .xml esta actualizado
+             * y aparte detiene mucho su inicio
+             * foreach (TgcMesh mesh in scenePista.Meshes)
+              {
+                  if (mesh.Name.Contains("borde") || mesh.Name.Contains("col") || mesh.Name.Contains("Patrullero"))
+                  {
+                      Vector3[] vertices = mesh.getVertexPositions();
+                      objetosColisionables.Add(TgcObb.computeFromPoints(vertices));
+                  }
+              }
+               guardarObbs(objetosColisionables);*/
             objetosColisionables = cargarObbObjetos();
             posteDeSemaforoOBB = cargarobbParticular(new Vector3(-1193.647f, -649.2448f, 948.8185f), new Vector3(-1147f, 596.6053f, 1051.182f));
             objetosColisionables.Add(posteDeSemaforoOBB);
-            //Solo nos interesa el primer modelo de esta escena (tiene solo uno)
 
+            //Solo nos interesa el primer modelo de estas escenas
             autoMesh = scene1.Meshes[0];
             ruedaDerechaDelanteraMesh = scene2.Meshes[0];
             ruedaDerechaTraseraMesh = scene3.Meshes[0];
             ruedaIzquierdaDelanteraMesh = scene4.Meshes[0];
             ruedaIzquierdaTraseraMesh = scene5.Meshes[0];
-            //humo = scene6.Meshes[0];
 
             //creo el mesh del auto de IA
             meshAutoIA = sceneAutoIA.Meshes[0];
