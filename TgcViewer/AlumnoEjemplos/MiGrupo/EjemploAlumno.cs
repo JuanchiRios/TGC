@@ -24,6 +24,7 @@ namespace AlumnoEjemplos.MiGrupo
     /// </summary>
     public class ProbandoMovAuto : TgcExample
     {
+        bool motionBlurFlag;
         MotionBlur motionBlur;
         TgcBox humo;
         TgcBox fuego;
@@ -41,7 +42,7 @@ namespace AlumnoEjemplos.MiGrupo
         List<float> dxAColision;
         List<float> dyAColision;
         List<TgcObb> objetosColisionables;
-<<<<<<< HEAD
+
         TgcObb posteDeSemaforo;
         TgcObb patrullero1;
         TgcObb patrullero2;
@@ -53,10 +54,10 @@ namespace AlumnoEjemplos.MiGrupo
         TgcObb patrullero8;
         TgcObb patrullero9;
         TgcObb patrullero10;
-=======
 
 
->>>>>>> 92fbe86bfbafe303544e2aaf40a32fdd44683a5c
+
+
         float rotacionVertical;
         float prevCameraRotation = 300;
         Auto auto;
@@ -162,13 +163,11 @@ namespace AlumnoEjemplos.MiGrupo
             sprite.Position = new Vector2(0, 0);
             sprite.Scaling = new Vector2((float)screenSize.Width / textureSize.Width, (float)screenSize.Height / textureSize.Height + 0.01f);
             //sprite.Scaling = new Vector2(1.3f,1.5f);
-<<<<<<< HEAD
-            
-=======
+
 
             objetosColisionables = new List<TgcObb>();
             objetosColisionables = cargarObbObjetos();
->>>>>>> 92fbe86bfbafe303544e2aaf40a32fdd44683a5c
+
 
             texturaHumo = TgcTexture.createTexture(GuiController.Instance.AlumnoEjemplosMediaDir + "TheC#\\Particulas\\Textures\\humo.png");
             texturaFuego = TgcTexture.createTexture(GuiController.Instance.AlumnoEjemplosMediaDir + "TheC#\\Particulas\\Textures\\fuego.png");
@@ -208,7 +207,7 @@ namespace AlumnoEjemplos.MiGrupo
            NO BORREN ESTO!!!!!!!!!!!!!!!!!
              guardarObbs(objetosColisionables);NO ME BORREN*/
             objetosColisionables = cargarObbObjetos();
-            cargarobbParticular(new Vector3(-1193.647f, -649.2448f, 948.8185f), new Vector3(-1147f, 596.6053f, 1051.182f), posteDeSemaforo);
+            //cargarobbParticular(new Vector3(-1193.647f, -649.2448f, 948.8185f), new Vector3(-1147f, 596.6053f, 1051.182f), posteDeSemaforo);
 
             //Solo nos interesa el primer modelo de esta escena (tiene solo uno)
 
@@ -345,7 +344,7 @@ namespace AlumnoEjemplos.MiGrupo
             ///////////////MODIFIERS//////////////////
             GuiController.Instance.Modifiers.addFloat("velocidadMaxima", 1000, 7000, 1800f);
             GuiController.Instance.Modifiers.addBoolean("jugarConTiempo", "jugar con tiempo:", true);
-
+            GuiController.Instance.Modifiers.addBoolean("motionBlurFlag", "Motion Blur", false);
             //////////////Reflejo de luz en auto////////////////
             reflejo = new ReflejoLuzEnAuto(autoMesh);
 
@@ -362,6 +361,9 @@ namespace AlumnoEjemplos.MiGrupo
             //motionBlur = new MotionBlur(scenePista.Meshes);
             //motionBlur.motionBlurInit(0);
             musica.inicializar();
+
+            motionBlur = new MotionBlur(scenePista.Meshes);
+            motionBlur.motionBlurInit(0);
         }
 
         //OBB
@@ -453,6 +455,7 @@ namespace AlumnoEjemplos.MiGrupo
         public override void render(float elapsedTime)
         {
 
+            motionBlurFlag = (bool)GuiController.Instance.Modifiers["motionBlurFlag"];
             TgcTexture texture = TgcTexture.createTexture(GuiController.Instance.AlumnoEjemplosMediaDir + "TheC#\\Pista\\pistaCarreras.png");
 
             Microsoft.DirectX.Direct3D.Device d3dDevice = GuiController.Instance.D3dDevice;
@@ -530,7 +533,7 @@ namespace AlumnoEjemplos.MiGrupo
                 //Detección de colisiones
                 //Hubo colisión con un objeto. Guardar resultado y abortar loop.
 
-                //motionBlur.update(elapsedTime);
+                
 
 
                 //Si hubo alguna colisión, hacer esto:
@@ -740,9 +743,20 @@ namespace AlumnoEjemplos.MiGrupo
                 //Dibujar objeto principal
                 //Siempre primero hacer todos los cálculos de lógica e input y luego al final dibujar todo (ciclo update-render)
 
-
-                //motionBlur.motionBlurRender(elapsedTime, HighResolutionTimer.Instance.FramesPerSecond, auto.velocidad, 0);
-                scenePista.renderAll();
+                if (motionBlurFlag)
+                {             
+                motionBlur.update(elapsedTime);
+                motionBlur.motionBlurRender(elapsedTime, HighResolutionTimer.Instance.FramesPerSecond, auto.velocidad, 0);
+                }
+                else
+                {
+                  foreach (TgcMesh mesh in scenePista.Meshes)
+                    {
+                        mesh.Technique = "DefaultTechnique";
+                        mesh.render();
+                    }
+                }
+                //scenePista.renderAll();
 
                 //Hago visibles los obb
                 oBBAuto.render();
