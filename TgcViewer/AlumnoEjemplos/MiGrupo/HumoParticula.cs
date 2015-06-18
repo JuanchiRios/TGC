@@ -19,7 +19,7 @@ namespace AlumnoEjemplos.MiGrupo
         public bool activa;
         Vector3 normal;
         float alpha;
-        TexturedQuad quad;
+        QuadConTextura quad;
         Vector2 tamanio;
         public float posX;
         public float posZ;
@@ -27,7 +27,7 @@ namespace AlumnoEjemplos.MiGrupo
         public HumoParticula(float tiempo, List<float> posicionesRelativas)
         {
             tiempoDeVida = tiempo;
-            quad = new TexturedQuad();
+            quad = new QuadConTextura();
             tamanio = new Vector2(0.3f, 0.3f);
             posX = posicionesRelativas[0];
             posZ = posicionesRelativas[1];
@@ -73,7 +73,7 @@ namespace AlumnoEjemplos.MiGrupo
         internal void render(Vector3 posCamara)
         {
             quad.Position = posicion;
-            quad.Size = tamanio;
+            quad._Size = tamanio;
             Vector3 posQuad = quad.Position;
             //RotateY(GuiController.Instance.CurrentCamera.getLookAt().Y);
             //quad.Normal = normal;
