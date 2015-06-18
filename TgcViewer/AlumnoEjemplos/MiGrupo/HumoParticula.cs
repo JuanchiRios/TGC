@@ -35,7 +35,7 @@ namespace AlumnoEjemplos.MiGrupo
 
         public void setTextura(TgcTexture textura)
         {
-            quad.Texture = textura;
+            quad.setTexture(textura);
         }
 
         public void setPosicion(Vector3 unaPos){
@@ -73,14 +73,14 @@ namespace AlumnoEjemplos.MiGrupo
         internal void render(Vector3 posCamara)
         {
             quad.Position = posicion;
-            quad._Size = tamanio;
+            quad.Size = tamanio;
             Vector3 posQuad = quad.Position;
             //RotateY(GuiController.Instance.CurrentCamera.getLookAt().Y);
             //quad.Normal = normal;
 
-            quad.IsAlphaBlendEnabled = true;
-            quad._UpdateValues();
-            quad.Render();
+            quad.AlphaBlendEnable = true;
+            quad.updateValues();
+            quad.render();
         }
 
         internal void calcularTamanio()
