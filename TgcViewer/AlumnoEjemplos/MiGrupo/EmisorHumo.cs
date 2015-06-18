@@ -67,7 +67,7 @@ namespace AlumnoEjemplos.MiGrupo
             particula.setPosicion(new Vector3(posicion_xhumo, 16.0f, posicion_yhumo) + posicionAuto);
             i++;
 
-            particula.disminuirVida(4 * elapsedTime, FastMath.Max(0.3f, autoVelocidad / 1000f));
+            particula.disminuirVida(2 * elapsedTime, FastMath.Max(0.3f, autoVelocidad / 300f));
 
             if (nitro)
             {

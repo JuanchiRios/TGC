@@ -54,7 +54,7 @@ namespace AlumnoEjemplos.MiGrupo
             rotacion += (elapsedTime * direccion * (velocidad / 1000)); //direccion puede ser 1 o -1, 1 es derecha y -1 izquierda
             ajustarRotacion();
         }
-        //       ruedas = new List<TgcViewer.Utils.TgcSceneLoader.TgcMesh> { ruedaDerechaDelanteraMesh, ruedaDerechaTraseraMesh, ruedaIzquierdaDelanteraMesh, ruedaIzquierdaTraseraMesh }
+
         public float rotarRueda(int i){
                 if (i == 0 || i == 2)
                 {
@@ -70,7 +70,7 @@ namespace AlumnoEjemplos.MiGrupo
             nitro = false;
         }
         //Metodos Internos
-            //DeVelocidad
+        //De Velocidad
 
         private void acelerar(float aumento)
         {

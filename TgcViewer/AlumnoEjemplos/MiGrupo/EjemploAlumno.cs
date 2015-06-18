@@ -770,23 +770,13 @@ namespace AlumnoEjemplos.MiGrupo
                             mesh.render();
                     }
                 }
-               // scenePista.renderAll();
-
-                //Hago visibles los obb
-                oBBAuto.render();
-
-                foreach (TgcObb obbColisionable in objetosColisionables)
-                {
-                    obbColisionable.render();
-                }
 
                 //Mostrar al auto IA
                 meshAutoIA.render();
 
                 //Muestro el punto siguiente
                 trayecto[0].render();
-                trayectoDeIA[0].render();
-
+                //mostrar el auto manejado por el humano
                 autoMesh.render();
 
                 for (int i = 0; i < 4; i++)
@@ -888,10 +878,6 @@ namespace AlumnoEjemplos.MiGrupo
                         }
                     }
                 }
-                /*foreach (TgcMesh mesh in scenePista.Meshes)
-                {
-                    mesh.render();
-                }*/
                 emisorHumo.update(elapsedTime, GuiController.Instance.CurrentCamera.getLookAt(), auto.rotacion, autoMesh.Position, anguloDerrape, direcGiroDerrape, auto.nitro && (cantidadDeNitro>1), auto.velocidad);
                 emisorHumo.render(GuiController.Instance.CurrentCamera.getPosition());
                 textTiempo.render();
@@ -960,8 +946,6 @@ namespace AlumnoEjemplos.MiGrupo
             }
             return false;
         }
-
-
     }
 }
 
