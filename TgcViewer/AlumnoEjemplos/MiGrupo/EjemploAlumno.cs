@@ -24,8 +24,6 @@ namespace AlumnoEjemplos.MiGrupo
     /// </summary>
     public class ProbandoMovAuto : TgcExample
     {
-        bool motionBlurFlag;
-        EmisorHumo emisorDeHumo;
         MotionBlur motionBlur;
         TgcBox humo;
         TgcBox fuego;
@@ -43,6 +41,7 @@ namespace AlumnoEjemplos.MiGrupo
         List<float> dxAColision;
         List<float> dyAColision;
         List<TgcObb> objetosColisionables;
+<<<<<<< HEAD
         TgcObb posteDeSemaforo;
         TgcObb patrullero1;
         TgcObb patrullero2;
@@ -54,6 +53,10 @@ namespace AlumnoEjemplos.MiGrupo
         TgcObb patrullero8;
         TgcObb patrullero9;
         TgcObb patrullero10;
+=======
+
+
+>>>>>>> 92fbe86bfbafe303544e2aaf40a32fdd44683a5c
         float rotacionVertical;
         float prevCameraRotation = 300;
         Auto auto;
@@ -93,6 +96,7 @@ namespace AlumnoEjemplos.MiGrupo
         TgcText2d textGanaste;
         float contadorDeFrames = 0;
         private DateTime horaInicio;
+        Musica musica = new Musica();
 
         //colisiones entre los autos
         Colisiones colision = new Colisiones();
@@ -122,7 +126,6 @@ namespace AlumnoEjemplos.MiGrupo
 
         //Reflejo de luz en el auto
         ReflejoLuzEnAuto reflejo;
-        
 
 
         public override string getCategory()
@@ -159,7 +162,13 @@ namespace AlumnoEjemplos.MiGrupo
             sprite.Position = new Vector2(0, 0);
             sprite.Scaling = new Vector2((float)screenSize.Width / textureSize.Width, (float)screenSize.Height / textureSize.Height + 0.01f);
             //sprite.Scaling = new Vector2(1.3f,1.5f);
+<<<<<<< HEAD
             
+=======
+
+            objetosColisionables = new List<TgcObb>();
+            objetosColisionables = cargarObbObjetos();
+>>>>>>> 92fbe86bfbafe303544e2aaf40a32fdd44683a5c
 
             texturaHumo = TgcTexture.createTexture(GuiController.Instance.AlumnoEjemplosMediaDir + "TheC#\\Particulas\\Textures\\humo.png");
             texturaFuego = TgcTexture.createTexture(GuiController.Instance.AlumnoEjemplosMediaDir + "TheC#\\Particulas\\Textures\\fuego.png");
@@ -326,17 +335,17 @@ namespace AlumnoEjemplos.MiGrupo
             textTiempo.Color = Color.White;
 
             textIngreseTecla = new TgcText2d();
-            textIngreseTecla.Text = "  Ingrese barra espaciadora para comenzar ";
-            textIngreseTecla.Position = new Point(150, 310);
+            textIngreseTecla.Text = " Utilize las flechas o W,A,S,D para moverse. \n Shift izquierdo para activar el nitro \n M para cambiar la camara \n Ingrese barra espaciadora para comenzar ";
+            textIngreseTecla.Position = new Point(150, 290);
             textIngreseTecla.Align = TgcText2d.TextAlign.LEFT;
-            textIngreseTecla.changeFont(new System.Drawing.Font("TimesNewRoman", 23, FontStyle.Bold | FontStyle.Italic));
+            textIngreseTecla.changeFont(new System.Drawing.Font("TimesNewRoman", 23, FontStyle.Bold | FontStyle.Bold));
             textIngreseTecla.Color = Color.White;
 
             textoVelocidad.inicializarTextoVelocidad(auto.velocidad);
             ///////////////MODIFIERS//////////////////
             GuiController.Instance.Modifiers.addFloat("velocidadMaxima", 1000, 7000, 1800f);
-            GuiController.Instance.Modifiers.addBoolean("jugarConTiempo", "Jugar con tiempo:", true);
-            GuiController.Instance.Modifiers.addBoolean("motionBlurFlag", "Motion Blur", false);
+            GuiController.Instance.Modifiers.addBoolean("jugarConTiempo", "jugar con tiempo:", true);
+
             //////////////Reflejo de luz en auto////////////////
             reflejo = new ReflejoLuzEnAuto(autoMesh);
 
@@ -350,20 +359,11 @@ namespace AlumnoEjemplos.MiGrupo
             List<TgcMesh> autoIAList = new List<TgcMesh>();
             autoIAList.Add(meshAutoIA);
 
-
-            motionBlur = new MotionBlur(scenePista.Meshes);
-            motionBlur.motionBlurInit(0);
-
-            emisorDeHumo = new EmisorHumo();
-            emisorDeHumo.crearQuads(10);
-
+            //motionBlur = new MotionBlur(scenePista.Meshes);
+            //motionBlur.motionBlurInit(0);
+            musica.inicializar();
         }
-        //metodo auxiliar
-        private void cargarobbParticular(Vector3 min, Vector3 max, TgcObb objetoOBB){
-            TgcBoundingBox objetoAABB = new TgcBoundingBox(min, max);
-            objetoOBB = TgcObb.computeFromAABB(objetoAABB);
-            objetosColisionables.Add(objetoOBB);
-        }
+
         //OBB
         private List<TgcObb> cargarObbObjetos()
         {
@@ -452,7 +452,7 @@ namespace AlumnoEjemplos.MiGrupo
 
         public override void render(float elapsedTime)
         {
-            motionBlurFlag = (bool)GuiController.Instance.Modifiers["motionBlurFlag"];
+
             TgcTexture texture = TgcTexture.createTexture(GuiController.Instance.AlumnoEjemplosMediaDir + "TheC#\\Pista\\pistaCarreras.png");
 
             Microsoft.DirectX.Direct3D.Device d3dDevice = GuiController.Instance.D3dDevice;
@@ -473,6 +473,7 @@ namespace AlumnoEjemplos.MiGrupo
                 GuiController.Instance.Drawer2D.endDrawSprite();
                 flagInicio = jugador.verSiAprietaSpace();
                 textIngreseTecla.render();
+                musica.verSiCambioMP3();
             }
             else
             {
@@ -529,7 +530,7 @@ namespace AlumnoEjemplos.MiGrupo
                 //Detección de colisiones
                 //Hubo colisión con un objeto. Guardar resultado y abortar loop.
 
-                
+                //motionBlur.update(elapsedTime);
 
 
                 //Si hubo alguna colisión, hacer esto:
@@ -636,7 +637,7 @@ namespace AlumnoEjemplos.MiGrupo
                 }
 
                 //comienzo humo
-                /*float rohumo, alfa_humo;
+                float rohumo, alfa_humo;
                 float posicion_xhumo;
                 float posicion_yhumo;
                 rohumo = FastMath.Sqrt(-19f * -19f + 126f * 126f);
@@ -645,10 +646,7 @@ namespace AlumnoEjemplos.MiGrupo
                 posicion_xhumo = FastMath.Sin(alfa_humo + auto.rotacion + (anguloDerrape * direcGiroDerrape)) * rohumo;
                 posicion_yhumo = FastMath.Cos(alfa_humo + auto.rotacion + (anguloDerrape * direcGiroDerrape)) * rohumo;
 
-                humo.Position = (new Vector3(posicion_xhumo, 15.5f, posicion_yhumo) + autoMesh.Position);*/
-
-                
-
+                humo.Position = (new Vector3(posicion_xhumo, 15.5f, posicion_yhumo) + autoMesh.Position);
                 //Si no aprieta para los costados, dejo la rueda derecha (por ahora, esto se puede modificar)
                 if (input.keyDown(Key.Left) || input.keyDown(Key.A) || input.keyDown(Key.Right) || input.keyDown(Key.D))
                 {
@@ -702,19 +700,6 @@ namespace AlumnoEjemplos.MiGrupo
                     }
                 }
 
-                if (motionBlurFlag)
-                {             
-                motionBlur.update(elapsedTime);
-                motionBlur.motionBlurRender(elapsedTime, HighResolutionTimer.Instance.FramesPerSecond, auto.velocidad, 0);
-                }
-                else
-                {
-                  foreach (TgcMesh mesh in scenePista.Meshes)
-                    {
-                        mesh.Technique = "DefaultTechnique";
-                        mesh.render();
-                    }
-                }
                 for (int i = 0; i < lineaDeFrenado.Length; i++)
                 {
                     lineaDeFrenado[i].render();
@@ -748,23 +733,25 @@ namespace AlumnoEjemplos.MiGrupo
                     prevCameraRotation -= 360;
                 }
                 prevCameraRotation = GuiController.Instance.ThirdPersonCamera.RotationY;
+                
+                ///////Musica/////////
+                jugador.verSiModificaMusica(musica);
 
-                emisorDeHumo.update(elapsedTime, GuiController.Instance.ThirdPersonCamera.getLookAt(), auto.rotacion, autoMesh.Position, anguloDerrape, direcGiroDerrape);
                 //Dibujar objeto principal
                 //Siempre primero hacer todos los cálculos de lógica e input y luego al final dibujar todo (ciclo update-render)
-                
-                //scenePista.renderAll();
+
 
                 //motionBlur.motionBlurRender(elapsedTime, HighResolutionTimer.Instance.FramesPerSecond, auto.velocidad, 0);
- 
+                scenePista.renderAll();
+
                 //Hago visibles los obb
-                //oBBAuto.render();
-                /*
+                oBBAuto.render();
+
                 foreach (TgcObb obbColisionable in objetosColisionables)
                 {
                     obbColisionable.render();
                 }
-                */
+
                 //Mostrar al auto IA
                 meshAutoIA.render();
 
@@ -783,14 +770,12 @@ namespace AlumnoEjemplos.MiGrupo
 
                 autoMesh.render();
 
-                emisorDeHumo.render();
-
                 for (int i = 0; i < 4; i++)
                 {
                     ruedas[i].render();
                 }
 
-                //humo.render();
+                humo.render();
                 fuego.render();
 
 
@@ -863,14 +848,8 @@ namespace AlumnoEjemplos.MiGrupo
                 textPuntosDeControlAlcanzados.render();
                 textPosicionDelAutoActual.render();
 
-
-
-
-
                 //Cosas del tiempo
                 tiempo.incrementarTiempo(this, elapsedTime, (bool)GuiController.Instance.Modifiers["jugarConTiempo"]);
-                               
-
 
                 //Actualizo y dibujo el relops
                 if ((bool)GuiController.Instance.Modifiers["jugarConTiempo"])
@@ -896,7 +875,10 @@ namespace AlumnoEjemplos.MiGrupo
                         }
                     }
                 }
-               
+                /*foreach (TgcMesh mesh in scenePista.Meshes)
+                {
+                    mesh.render();
+                }*/
                 textTiempo.render();
                 contadorDeFrames++;
 

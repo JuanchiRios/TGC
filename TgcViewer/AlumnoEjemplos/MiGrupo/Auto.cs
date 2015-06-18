@@ -20,6 +20,7 @@ namespace AlumnoEjemplos.MiGrupo
         float velocidadMaxima=3000f;
         List<TgcViewer.Utils.TgcSceneLoader.TgcMesh> ruedas;
         float direccion;
+   
 
         public Boolean nitro = false;
                 
