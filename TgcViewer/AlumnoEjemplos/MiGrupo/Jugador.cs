@@ -151,5 +151,11 @@ namespace AlumnoEjemplos.MiGrupo
         }
 
 
+
+        internal void verSiModificaMusica(Musica musica)
+        {
+            if (input.keyPressed(Key.S)) 
+                musica.verSiCambioMP3();
+        }
     }
 }

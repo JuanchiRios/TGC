@@ -19,6 +19,8 @@ namespace AlumnoEjemplos.MiGrupo
         string currentFile;
         private string archivo;
         private bool empezado;
+        TgcMp3Player player = GuiController.Instance.Mp3Player;
+
 
         public void inicializar(){
             archivo = (string)GuiController.Instance.AlumnoEjemplosMediaDir + "TheC#\\Musica\\The Beatles - Back in the USSR.mp3";
@@ -47,13 +49,25 @@ namespace AlumnoEjemplos.MiGrupo
           // string filePath = (string)GuiController.Instance.Modifiers["MP3-File"];
            loadMp3(archivo);
            reproducir();
-           empezado = true;}
+           empezado = true;
+           return;
+           }
+           TgcMp3Player.States currentState = player.getStatus();
+           if (currentState == TgcMp3Player.States.Playing)
+           {
+               //Pausar el MP3
+               player.pause();
+           }
+           if (currentState == TgcMp3Player.States.Paused)
+                {
+                    //Resumir la ejecución del MP3
+                    player.resume();
+                }
+                   
        }
        public void reproducir()
        {
            //Reproducir MP3
-
-           TgcMp3Player player = GuiController.Instance.Mp3Player;
            TgcMp3Player.States currentState = player.getStatus();
            if (currentState == TgcMp3Player.States.Open)
            {

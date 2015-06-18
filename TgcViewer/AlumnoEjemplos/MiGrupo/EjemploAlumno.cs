@@ -654,6 +654,9 @@ namespace AlumnoEjemplos.MiGrupo
                     prevCameraRotation -= 360;
                 }
                 prevCameraRotation = GuiController.Instance.ThirdPersonCamera.RotationY;
+                
+                ///////Musica/////////
+                jugador.verSiModificaMusica(musica);
 
                 //Dibujar objeto principal
                 //Siempre primero hacer todos los cálculos de lógica e input y luego al final dibujar todo (ciclo update-render)
