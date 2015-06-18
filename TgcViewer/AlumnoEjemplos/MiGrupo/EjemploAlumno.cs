@@ -85,6 +85,7 @@ namespace AlumnoEjemplos.MiGrupo
         TgcText2d textPerdiste;
         TgcText2d textGanaste;
         TgcText2d textFPS;
+        private TgcText2d textIngreseTeclaSombra;
         float contadorDeFrames = 0;
         private DateTime horaInicio;
         Musica musica = new Musica();
@@ -118,6 +119,7 @@ namespace AlumnoEjemplos.MiGrupo
         //Reflejo de luz en el auto
         ReflejoLuzEnAuto reflejo;
         private float cantidadDeNitro;
+
 
 
         public override string getCategory()
@@ -322,8 +324,9 @@ namespace AlumnoEjemplos.MiGrupo
 
             this.horaInicio = DateTime.Now;
             textTiempo = new TgcText2d();
-            textTiempo.Position = new Point(50, 20);
+            textTiempo.Position = new Point(screenSize.Width/2-50, 20);
             textTiempo.Text = "10";
+            textTiempo.changeFont(new System.Drawing.Font("TimesNewRoman", 23, FontStyle.Bold | FontStyle.Bold));
             textTiempo.Color = Color.White;
           
             textIngreseTecla = new TgcText2d();
@@ -332,6 +335,13 @@ namespace AlumnoEjemplos.MiGrupo
             textIngreseTecla.Align = TgcText2d.TextAlign.LEFT;
             textIngreseTecla.changeFont(new System.Drawing.Font("TimesNewRoman", 23, FontStyle.Bold | FontStyle.Bold));
             textIngreseTecla.Color = Color.White;
+
+            textIngreseTeclaSombra = new TgcText2d();
+            textIngreseTeclaSombra.Text = " Utilize las flechas o W,A,S,D para moverse. \n Shift o control izquierdo para activar el nitro \n M para cambiar la camara \n TAB mirar para atrás \n Ingrese barra espaciadora para comenzar ";
+            textIngreseTeclaSombra.Position = new Point(149, 288);
+            textIngreseTeclaSombra.Align = TgcText2d.TextAlign.LEFT;
+            textIngreseTeclaSombra.changeFont(new System.Drawing.Font("TimesNewRoman", 23, FontStyle.Bold | FontStyle.Bold));
+            textIngreseTeclaSombra.Color = Color.Black;
 
             textoVelocidad.inicializarTextoVelocidad(auto.velocidad);
             ///////////////MODIFIERS//////////////////
@@ -477,6 +487,7 @@ namespace AlumnoEjemplos.MiGrupo
                 //Finalizar el dibujado de Sprites
                 GuiController.Instance.Drawer2D.endDrawSprite();
                 flagInicio = jugador.verSiAprietaSpace();
+                textIngreseTeclaSombra.render();
                 textIngreseTecla.render();
                 musica.verSiCambioMP3();
             }

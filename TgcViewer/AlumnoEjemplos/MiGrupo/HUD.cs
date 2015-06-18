@@ -77,7 +77,7 @@ namespace AlumnoEjemplos.MiGrupo
 
             llenadoNitro.Color = Color.FromArgb(255, (int)((100 - cantNitro) * 2.55), 0, (int)(cantNitro * 2.55));
 
-            //velocimetro.Color = Color.FromArgb(255, 245, 245, 255);
+            velocimetro.Color = Color.FromArgb(255, 215, 215, 235);
 
             //Iniciar dibujado de todos los Sprites de la escena (en este caso es solo uno)
             GuiController.Instance.Drawer2D.beginDrawSprite();
