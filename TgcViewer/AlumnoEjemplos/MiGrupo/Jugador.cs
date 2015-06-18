@@ -27,10 +27,11 @@ namespace AlumnoEjemplos.MiGrupo
             camaraCamibada = true;
         }
 
-        public void jugar()
+        public void jugar(float cantidadDeNitro)
         {
             if (input.keyDown(Key.LeftControl) || input.keyDown(Key.LeftShift))
             {
+                if(cantidadDeNitro>15)
                 auto.ponerNitro();
             }
             else

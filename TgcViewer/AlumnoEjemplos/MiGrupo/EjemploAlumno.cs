@@ -503,7 +503,7 @@ namespace AlumnoEjemplos.MiGrupo
                 //El jugador envia mensajes al auto dependiendo de que tecla presiono
                 //Se pone un tiempo para que luego de chocar 2 autos, estos no puedan ingresar movimiento (sólo se mueve por inercia)
                 if (colision.getTiempoQueChoco() == 0)
-                    jugador.jugar();
+                    jugador.jugar(cantidadDeNitro);
                 else
                 {
                     colision.setTiempoQueChoco(colision.getTiempoQueChoco() - (8 * elapsedTime));
