@@ -24,6 +24,7 @@ namespace AlumnoEjemplos.MiGrupo
     /// </summary>
     public class ProbandoMovAuto : TgcExample
     {
+        HUD hud;
         EmisorHumo emisorHumo;
         bool motionBlurFlag;
         MotionBlur motionBlur;
@@ -135,6 +136,8 @@ namespace AlumnoEjemplos.MiGrupo
 
         public override void init()
         {
+            hud = new HUD();
+            hud.init();
             Microsoft.DirectX.Direct3D.Device d3dDevice = GuiController.Instance.D3dDevice;
             //Crear Sprite
             sprite = new TgcSprite();
@@ -887,7 +890,7 @@ namespace AlumnoEjemplos.MiGrupo
                 emisorHumo.render(GuiController.Instance.CurrentCamera.getPosition());
                 textTiempo.render();
                 contadorDeFrames++;
-
+                hud.render(auto.velocidad);
             }//cierra el if de que no esta en pantalla inicio
 
         }
