@@ -43,9 +43,9 @@ namespace AlumnoEjemplos.MiGrupo
         }
         
     
-        internal void disminuirVida(float tiempo)
+        internal void disminuirVida(float tiempo, float velocidad)
         {
- 	        tiempoDeVida-=tiempo;
+ 	        tiempoDeVida-=tiempo*velocidad;
         }
 
 

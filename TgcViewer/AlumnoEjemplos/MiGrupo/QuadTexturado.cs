@@ -131,9 +131,9 @@ namespace AlumnoEjemplos.MiGrupo
             _Vertices[4] = new CustomVertex.PositionTextured(tRight, UVOffset.X + Tile.X, UVOffset.Y);
             _Vertices[5] = new CustomVertex.PositionTextured(bRight, UVOffset.X + Tile.X, UVOffset.Y + Tile.Y);
 
-            //Transformar todos los puntos
 
             Matrix t = _RotationMatrix * Matrix.Translation(_Position);
+            
             
             for (int i = 0; i < _Vertices.Length; i++)
             {

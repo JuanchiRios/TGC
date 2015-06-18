@@ -48,7 +48,7 @@ namespace AlumnoEjemplos.MiGrupo
             }
         }
 
-        public void update(float elapsedTime, Vector3 normal, float rotacionAuto, Vector3 posicionAuto, float anguloDerrape, float direcGiroDerrape, bool nitro)
+        public void update(float elapsedTime, Vector3 normal, float rotacionAuto, Vector3 posicionAuto, float anguloDerrape, float direcGiroDerrape, bool nitro, float autoVelocidad)
         {
             int i = 0;
             foreach (HumoParticula particula in quadPool)
@@ -67,21 +67,23 @@ namespace AlumnoEjemplos.MiGrupo
             particula.setPosicion(new Vector3(posicion_xhumo, 16.0f, posicion_yhumo) + posicionAuto);
             i++;
 
-            particula.disminuirVida(4*elapsedTime);
+            particula.disminuirVida(4 * elapsedTime, FastMath.Max(0.3f, autoVelocidad / 300f));
 
             if (nitro)
             {
+                
                 particula.setTextura(TgcTexture.createTexture(GuiController.Instance.AlumnoEjemplosMediaDir + "TheC#\\Particulas\\Textures\\fuego.png"));
             }
             else
             {
+
                 particula.setTextura(TgcTexture.createTexture(GuiController.Instance.AlumnoEjemplosMediaDir + "TheC#\\Particulas\\Textures\\humo.png"));
             }
             
             if (particula.tiempoDeVida < 0.0f)
                 {
-                int random1 = random.Next(10) - 1;
-                int random2 = random.Next(10) - 1;
+                int random1 = random.Next(10) - 5;
+                int random2 = random.Next(30) - 15;
                 particula.resetear(3.0f,new List<float> { -19f + random1, 126f + random2 });               
                 }
 
