@@ -119,7 +119,7 @@ namespace AlumnoEjemplos.MiGrupo
 
         public int verSiAprietaSpace()
         {
-            if (input.keyDown(Key.Space))
+            if (input.keyPressed(Key.Space))
                 return 1;
             return 0;
         }

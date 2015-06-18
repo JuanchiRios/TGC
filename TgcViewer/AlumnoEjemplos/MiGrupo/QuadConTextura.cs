@@ -1,5 +1,4 @@
-﻿using System;
-using Microsoft.DirectX;
+﻿using Microsoft.DirectX;
 using Microsoft.DirectX.Direct3D;
 using System;
 using System.Collections.Generic;
@@ -12,113 +11,313 @@ using TgcViewer.Utils.Shaders;
 using TgcViewer.Utils.TgcSceneLoader;
 using TgcViewer.Utils.TgcGeometry;
 
+using System;
+using System.Collections.Generic;
+using System.Text;
+using Microsoft.DirectX;
+using Microsoft.DirectX.Direct3D;
+using TgcViewer.Utils.TgcSceneLoader;
+using System.Drawing;
+using TgcViewer.Utils.Shaders;
+
 namespace AlumnoEjemplos.MiGrupo
 {
     public class QuadConTextura
     {
-      
-        private CustomVertex.PositionTextured[] _Vertices = new CustomVertex.PositionTextured[6];
-        public QuadConTextura()
+        private CustomVertex.PositionTextured[] vertices;
+
+        readonly Vector3 ORIGINAL_DIR = new Vector3(0, 1, 0);
+
+        Vector3 normal;
+        /// <summary>
+        /// Normal del plano
+        /// </summary>
+        public Vector3 Normal
         {
-            Enabled = true;
-            IsAlphaBlendEnabled = true;
-            Tile = new Vector2(1f, 1f);
-            Efecto = GuiController.Instance.Shaders.VariosShader;
-            Technique = TgcShaders.T_POSITION_TEXTURED;
+            get { return normal; }
+            set { normal = value; }
         }
 
-        public Vector3 Normal { get; set; }
-        public Effect Efecto { get; set; }
-        public String Technique { get; set; }
-        public Vector2 Tile { get; set; }
-        public Vector2 UVOffset { get; set; }
-        public Boolean Enabled { get; set; }
-        public Boolean IsAlphaBlendEnabled { get; set; }
-        private void setAlphaBlend(Boolean isAlphaEnabled)
+        Vector3 origin;
+        /// <summary>
+        /// Origen de coordenadas de la pared.
+        /// Llamar a updateValues() para aplicar cambios.
+        /// </summary>
+        public Vector3 Origin
         {
-            Device device = GuiController.Instance.D3dDevice;
-            device.RenderState.AlphaTestEnable = isAlphaEnabled;
-            device.RenderState.AlphaBlendEnable = isAlphaEnabled;
+            get { return origin; }
+            set { origin = value; }
         }
-        public Vector3 Position {get ;set;}
 
+        Vector2 size;
+        /// <summary>
+        /// Tamaño del plano, en ancho y longitud
+        /// </summary>
+        public Vector2 Size
+        {
+            get { return size; }
+            set { size = value; }
+        }
 
- 
-        public Vector2 _Size {get;set;}
-
-        public Matrix RotationMatrix{get;set;}
-        Matrix _RotationMatrix = Matrix.Identity;
-        private TgcTexture _Texture;
+        TgcTexture texture;
+        /// <summary>
+        /// Textura de la pared
+        /// </summary>
         public TgcTexture Texture
         {
-            get { return _Texture; }
-            set
+            get { return texture; }
+        }
+
+        protected Effect effect;
+        /// <summary>
+        /// Shader del mesh
+        /// </summary>
+        public Effect Effect
+        {
+            get { return effect; }
+            set { effect = value; }
+        }
+
+        protected string technique;
+        /// <summary>
+        /// Technique que se va a utilizar en el effect.
+        /// Cada vez que se llama a render() se carga este Technique (pisando lo que el shader ya tenia seteado)
+        /// </summary>
+        public string Technique
+        {
+            get { return technique; }
+            set { technique = value; }
+        }
+
+        float uTile;
+        /// <summary>
+        /// Cantidad de tile de la textura en coordenada U.
+        /// Llamar a updateValues() para aplicar cambios.
+        /// </summary>
+        public float UTile
+        {
+            get { return uTile; }
+            set { uTile = value; }
+        }
+
+        float vTile;
+        /// <summary>
+        /// Cantidad de tile de la textura en coordenada V.
+        /// Llamar a updateValues() para aplicar cambios.
+        /// </summary>
+        public float VTile
+        {
+            get { return vTile; }
+            set { vTile = value; }
+        }
+
+        bool autoAdjustUv;
+        /// <summary>
+        /// Auto ajustar coordenadas UV en base a la relación de tamaño de la pared y la textura
+        /// Llamar a updateValues() para aplicar cambios.
+        /// </summary>
+        public bool AutoAdjustUv
+        {
+            get { return autoAdjustUv; }
+            set { autoAdjustUv = value; }
+        }
+
+        Vector2 uvOffset;
+        /// <summary>
+        /// Offset UV de textura
+        /// </summary>
+        public Vector2 UVOffset
+        {
+            get { return uvOffset; }
+            set { uvOffset = value; }
+        }
+
+        private bool enabled;
+        /// <summary>
+        /// Indica si la pared esta habilitada para ser renderizada
+        /// </summary>
+        public bool Enabled
+        {
+            get { return enabled; }
+            set { enabled = value; }
+        }
+
+        private TgcBoundingBox boundingBox;
+        /// <summary>
+        /// BoundingBox de la pared
+        /// </summary>
+        public TgcBoundingBox BoundingBox
+        {
+            get { return boundingBox; }
+        }
+
+        public Vector3 Position
+        {
+            get { return origin; }
+            set { origin = value; }
+        }
+
+        private bool alphaBlendEnable;
+        /// <summary>
+        /// Habilita el renderizado con AlphaBlending para los modelos
+        /// con textura o colores por vértice de canal Alpha.
+        /// Por default está deshabilitado.
+        /// </summary>
+        public bool AlphaBlendEnable
+        {
+            get { return alphaBlendEnable; }
+            set { alphaBlendEnable = value; }
+        }
+
+        /// <summary>
+        /// Crea una Quad con Textura vacio.
+        /// </summary>
+        public QuadConTextura()
+        {
+            this.vertices = new CustomVertex.PositionTextured[6];
+            this.autoAdjustUv = false;
+            this.enabled = true;
+            this.boundingBox = new TgcBoundingBox();
+            this.uTile = 1;
+            this.vTile = 1;
+            this.alphaBlendEnable = false;
+            this.uvOffset = new Vector2(0, 0);
+
+            //Shader
+            this.effect = GuiController.Instance.Shaders.VariosShader;
+            this.technique = TgcShaders.T_POSITION_TEXTURED;
+
+        }
+
+
+        /// <summary>
+        /// Actualizar parámetros de la pared en base a los valores configurados
+        /// </summary>
+        public void updateValues()
+        {
+
+
+            //Calcular los 4 corners de la pared, segun el tipo de orientacion
+            Vector3 bLeft = new Vector3(-size.X / 2, 0, -size.Y / 2);
+            Vector3 tLeft = new Vector3(size.X / 2, 0, -size.Y / 2);
+            Vector3 bRight = new Vector3(-size.X / 2, 0, size.Y / 2);
+            Vector3 tRight = new Vector3(size.X / 2, 0, size.Y / 2);
+            //Auto ajustar UV
+            float offsetU = this.uvOffset.X;
+            float offsetV = this.uvOffset.Y;
+
+            //Primer triangulo
+            vertices[0] = new CustomVertex.PositionTextured(bLeft, offsetU + uTile, offsetV + vTile);
+            vertices[1] = new CustomVertex.PositionTextured(tLeft, offsetU, offsetV + vTile);
+            vertices[2] = new CustomVertex.PositionTextured(tRight, offsetU, offsetV);
+
+            //Segundo triangulo
+            vertices[3] = new CustomVertex.PositionTextured(bLeft, offsetU + uTile, offsetV + vTile);
+            vertices[4] = new CustomVertex.PositionTextured(tRight, offsetU, offsetV);
+            vertices[5] = new CustomVertex.PositionTextured(bRight, offsetU + uTile, offsetV);
+
+            /*Versión con triángulos para el otro sentido
+            //Primer triangulo
+            vertices[0] = new CustomVertex.PositionTextured(tLeft, 0 * this.uTile, 1 * this.vTile);
+            vertices[1] = new CustomVertex.PositionTextured(bLeft, 1 * this.uTile, 1 * this.vTile);
+            vertices[2] = new CustomVertex.PositionTextured(bRight, 1 * this.uTile, 0 * this.vTile);
+
+            //Segundo triangulo
+            vertices[3] = new CustomVertex.PositionTextured(bRight, 1 * this.uTile, 0 * this.vTile);
+            vertices[4] = new CustomVertex.PositionTextured(tRight, 0 * this.uTile, 0 * this.vTile);
+            vertices[5] = new CustomVertex.PositionTextured(tLeft, 0 * this.uTile, 1 * this.vTile);
+            */
+
+            //BoundingBox
+            normal = (origin - GuiController.Instance.CurrentCamera.getLookAt());
+            normal.Normalize();
+            float angle = FastMath.Acos(Vector3.Dot(ORIGINAL_DIR, normal));
+            Vector3 axisRotation = Vector3.Cross(ORIGINAL_DIR, normal);
+            axisRotation.Normalize();
+            Matrix t = Matrix.RotationAxis(axisRotation, angle) * Matrix.Translation(origin);
+
+            //Transformar todos los puntos
+            for (int i = 0; i < vertices.Length; i++)
             {
-                if (_Texture != null)
-                    _Texture.dispose();
-                _Texture = value;
+                vertices[i].Position = Vector3.TransformCoordinate(vertices[i].Position, t);
             }
-        }
-        public void Dispose()
-        {
-            Texture = null;
+
         }
 
-
-        #region TextureMethods
-        public void Render()
+        /// <summary>
+        /// Configurar textura de la pared
+        /// </summary>
+        public void setTexture(TgcTexture texture)
         {
-            if (!Enabled) return;
+            if (this.texture != null)
+            {
+                this.texture.dispose();
+            }
+            this.texture = texture;
+        }
+
+        /// <summary>
+        /// Renderizar la pared
+        /// </summary>
+        public void render()
+        {
+            if (!enabled)
+                return;
 
             Device d3dDevice = GuiController.Instance.D3dDevice;
             TgcTexture.Manager texturesManager = GuiController.Instance.TexturesManager;
-            setAlphaBlend(IsAlphaBlendEnabled);
-            texturesManager.shaderSet(Efecto, "texDiffuseMap", _Texture);
+
+            activateAlphaBlend();
+
+            texturesManager.shaderSet(effect, "texDiffuseMap", texture);
             texturesManager.clear(1);
-            GuiController.Instance.Shaders.setShaderMatrixIdentity(this.Efecto);
+            GuiController.Instance.Shaders.setShaderMatrixIdentity(this.effect);
             d3dDevice.VertexDeclaration = GuiController.Instance.Shaders.VdecPositionTextured;
-            Efecto.Technique = Technique;
+            effect.Technique = this.technique;
+
             //Render con shader
-            Efecto.Begin(0);
-            Efecto.BeginPass(0);
-            d3dDevice.DrawUserPrimitives(PrimitiveType.TriangleList, 2, _Vertices);
-            Efecto.EndPass();
-            Efecto.End();
-            setAlphaBlend(false);
+            effect.Begin(0);
+            effect.BeginPass(0);
+            d3dDevice.DrawUserPrimitives(PrimitiveType.TriangleList, 2, vertices);
+            effect.EndPass();
+            effect.End();
+
+            resetAlphaBlend();
         }
-        public void _UpdateValues()
+
+        /// <summary>
+        /// Activar AlphaBlending, si corresponde
+        /// </summary>
+        protected void activateAlphaBlend()
         {
-            //TODO:Calcular los 4 corners de la pared, segun el tipo de orientacion
-            Vector3 bLeft = new Vector3(-_Size.X / 2, -_Size.Y / 2, 0);
-            Vector3 bRight = new Vector3(_Size.X / 2, -_Size.Y / 2, 0);
-            Vector3 tLeft = new Vector3(-_Size.X / 2, _Size.Y / 2, 0);
-            Vector3 tRight = new Vector3(_Size.X / 2, _Size.Y / 2, 0);
-            //Primer triangulo
-            _Vertices[0] = new CustomVertex.PositionTextured(bLeft, UVOffset.X, UVOffset.Y + Tile.Y);
-            _Vertices[1] = new CustomVertex.PositionTextured(tLeft, UVOffset.X, UVOffset.Y);
-            _Vertices[2] = new CustomVertex.PositionTextured(tRight, UVOffset.X + Tile.X, UVOffset.Y);
-            //Segundo triangulo
-            _Vertices[3] = new CustomVertex.PositionTextured(bLeft, UVOffset.X, UVOffset.Y + Tile.Y);
-            _Vertices[4] = new CustomVertex.PositionTextured(tRight, UVOffset.X + Tile.X, UVOffset.Y);
-            _Vertices[5] = new CustomVertex.PositionTextured(bRight, UVOffset.X + Tile.X, UVOffset.Y + Tile.Y);
-
-
-            Vector3 normal;
-            normal = (Position- GuiController.Instance.CurrentCamera.getLookAt());
-            normal.Normalize();
-            float angle = FastMath.Acos(Vector3.Dot(new Vector3(0,0,1), normal));
-            Vector3 axisRotation = Vector3.Cross((new Vector3(0,0,1)), normal);
-            axisRotation.Normalize();
-            Matrix t = Matrix.RotationAxis(axisRotation, angle) * Matrix.Translation(Position);
-
-            //Transformar todos los puntos
-            for (int i = 0; i < _Vertices.Length; i++)
+            Device device = GuiController.Instance.D3dDevice;
+            if (alphaBlendEnable)
             {
-                _Vertices[i].Position = Vector3.TransformCoordinate(_Vertices[i].Position, t);
+                device.RenderState.AlphaTestEnable = true;
+                device.RenderState.AlphaBlendEnable = true;
             }
-
-
         }
-        #endregion TextureMethods
+
+        /// <summary>
+        /// Desactivar AlphaBlending
+        /// </summary>
+        protected void resetAlphaBlend()
+        {
+            Device device = GuiController.Instance.D3dDevice;
+            device.RenderState.AlphaTestEnable = false;
+            device.RenderState.AlphaBlendEnable = false;
+        }
+
+
+
+        /// <summary>
+        /// Liberar recursos de la pared
+        /// </summary>
+        public void dispose()
+        {
+            texture.dispose();
+        }
+
+     
     }
 }

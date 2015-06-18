@@ -662,7 +662,7 @@ namespace AlumnoEjemplos.MiGrupo
                 cantidadDeNitro = FastMath.Min(cantidadDeNitro, 100f);
                 if (auto.nitro )
                 {
-                    cantidadDeNitro-=15*elapsedTime ;
+                    cantidadDeNitro-=5*elapsedTime ;
                     cantidadDeNitro = FastMath.Max(cantidadDeNitro, 0f);
                     if (cantidadDeNitro > 1) {                     
                     humo.Enabled = false;
@@ -897,7 +897,7 @@ namespace AlumnoEjemplos.MiGrupo
                 {
                     mesh.render();
                 }*/
-                emisorHumo.update(elapsedTime, GuiController.Instance.CurrentCamera.getLookAt(), auto.rotacion, autoMesh.Position, anguloDerrape, direcGiroDerrape, auto.nitro && (cantidadDeNitro>15), auto.velocidad);
+                emisorHumo.update(elapsedTime, GuiController.Instance.CurrentCamera.getLookAt(), auto.rotacion, autoMesh.Position, anguloDerrape, direcGiroDerrape, auto.nitro && (cantidadDeNitro>1), auto.velocidad);
                 emisorHumo.render(GuiController.Instance.CurrentCamera.getPosition());
                 textTiempo.render();
                 contadorDeFrames++;
