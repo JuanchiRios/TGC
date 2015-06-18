@@ -90,9 +90,14 @@
     <Compile Include="MiGrupo\Auto.cs" />
     <Compile Include="MiGrupo\Colisiones.cs" />
     <Compile Include="MiGrupo\EjemploAlumno.cs" />
+    <Compile Include="MiGrupo\Humo.cs" />
+    <Compile Include="MiGrupo\HumoParticula.cs" />
+    <Compile Include="MiGrupo\HumoQuad.cs" />
     <Compile Include="MiGrupo\IA.cs" />
     <Compile Include="MiGrupo\Jugador.cs" />
     <Compile Include="MiGrupo\LineaDeFrenado.cs" />
+    <Compile Include="MiGrupo\MotionBlur.cs" />
+    <Compile Include="MiGrupo\Particulas.cs" />
     <Compile Include="MiGrupo\PuntoDeControl.cs" />
     <Compile Include="MiGrupo\ReflejoLuzEnAuto.cs" />
     <Compile Include="MiGrupo\Tiempo.cs" />
