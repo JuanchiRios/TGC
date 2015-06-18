@@ -55,6 +55,7 @@ namespace AlumnoEjemplos.MiGrupo
             agujaTacometro.Position = new Vector2(screenSize.Width - 260, screenSize.Height - 260);
             agujaTacometro.RotationCenter = new Vector2(68, 183.5f);
 
+
             barraNitro.Texture = TgcTexture.createTexture(GuiController.Instance.AlumnoEjemplosMediaDir + "TheC#\\Texturas\\Sprites\\barraNitro.png");
             barraNitro.Position = new Vector2(10f, 12f);
             barraNitro.Scaling = new Vector2(0.75f, 1f);
@@ -63,8 +64,7 @@ namespace AlumnoEjemplos.MiGrupo
             llenadoNitro.Position = new Vector2(20f,20f);
             llenadoNitro.Scaling = new Vector2(0.75f,1f); 
 
-
-                                   
+                                     
             
 
         }
@@ -73,7 +73,7 @@ namespace AlumnoEjemplos.MiGrupo
         {
             
             agujaVelocimetro.Rotation = FastMath.Abs(velocidad) / 1000 * FastMath.PI/2;
-            llenadoNitro.Scaling = new Vector2(0.60f*cantNitro,0.50f);
+            llenadoNitro.Scaling = new Vector2(0.73f*cantNitro/100,0.50f);
             //llenadoNitro.Color = Color.Black;
 
             //Iniciar dibujado de todos los Sprites de la escena (en este caso es solo uno)

@@ -116,6 +116,7 @@ namespace AlumnoEjemplos.MiGrupo
 
         //Reflejo de luz en el auto
         ReflejoLuzEnAuto reflejo;
+        private float cantidadDeNitro;
 
 
         public override string getCategory()
@@ -165,7 +166,7 @@ namespace AlumnoEjemplos.MiGrupo
             humo.AlphaBlendEnable = true;
             fuego = TgcBox.fromSize(centerHumo, sizeHumo, texturaFuego);
             fuego.AlphaBlendEnable = true;
-
+            cantidadDeNitro = 100f;
 
             // cosas del tiempo
             tiempoTrans = 100f; //tiempo transcurrido desde el defasaje de rotacion de camara y rotacion del mesh
@@ -657,9 +658,12 @@ namespace AlumnoEjemplos.MiGrupo
                 fuego.Rotation = humo.Rotation;
                 //fin fuego
 
-
-                if (auto.nitro)
+                cantidadDeNitro += 0.5f * elapsedTime;
+                cantidadDeNitro = FastMath.Min(cantidadDeNitro, 100f);
+                if (auto.nitro && (cantidadDeNitro>15))
                 {
+                    cantidadDeNitro-=15*elapsedTime ;
+                    cantidadDeNitro = FastMath.Max(cantidadDeNitro, 0f);
                     humo.Enabled = false;
                     fuego.Enabled = false;
                 }
@@ -736,7 +740,10 @@ namespace AlumnoEjemplos.MiGrupo
 
                 //Dibujar objeto principal
                 //Siempre primero hacer todos los cálculos de lógica e input y luego al final dibujar todo (ciclo update-render)
-
+                foreach (TgcMesh mesh in scenePista.Meshes)
+                {
+                    mesh.Enabled = (TgcCollisionUtils.classifyFrustumAABB(GuiController.Instance.Frustum, mesh.BoundingBox) != TgcCollisionUtils.FrustumResult.OUTSIDE);
+                }
                 if (motionBlurFlag)
                 {             
                 motionBlur.update(elapsedTime);
@@ -746,11 +753,12 @@ namespace AlumnoEjemplos.MiGrupo
                 {
                   foreach (TgcMesh mesh in scenePista.Meshes)
                     {
-                        mesh.Technique = "DefaultTechnique";
-                        mesh.render();
+                        
+                            mesh.Technique = "DefaultTechnique";
+                            mesh.render();
                     }
                 }
-                //scenePista.renderAll();
+               // scenePista.renderAll();
 
                 //Hago visibles los obb
                 oBBAuto.render();
@@ -887,11 +895,13 @@ namespace AlumnoEjemplos.MiGrupo
                 {
                     mesh.render();
                 }*/
-                emisorHumo.update(elapsedTime, GuiController.Instance.CurrentCamera.getLookAt(), auto.rotacion, autoMesh.Position, anguloDerrape, direcGiroDerrape, auto.nitro, auto.velocidad);
+                emisorHumo.update(elapsedTime, GuiController.Instance.CurrentCamera.getLookAt(), auto.rotacion, autoMesh.Position, anguloDerrape, direcGiroDerrape, auto.nitro && (cantidadDeNitro>15), auto.velocidad);
                 emisorHumo.render(GuiController.Instance.CurrentCamera.getPosition());
                 textTiempo.render();
                 contadorDeFrames++;
-                hud.render(auto.velocidad,1f);
+
+                hud.render(auto.velocidad,cantidadDeNitro);
+
             }//cierra el if de que no esta en pantalla inicio
 
         }
