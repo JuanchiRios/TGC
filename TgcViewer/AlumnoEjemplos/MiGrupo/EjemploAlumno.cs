@@ -84,6 +84,7 @@ namespace AlumnoEjemplos.MiGrupo
         TgcText2d textTiempo;
         TgcText2d textPerdiste;
         TgcText2d textGanaste;
+        TgcText2d textFPS;
         float contadorDeFrames = 0;
         private DateTime horaInicio;
         Musica musica = new Musica();
@@ -299,6 +300,11 @@ namespace AlumnoEjemplos.MiGrupo
             textPuntosDeControlAlcanzados.Text = "Puntos De Control Alcanzados = ";
             textPuntosDeControlAlcanzados.Color = Color.White;
 
+            textFPS = new TgcText2d();
+            textFPS.Position = new Point((screenSize.Width /(-2)), 0);
+            textFPS.Text = "FPS: ";
+            textFPS.Color = Color.Yellow;
+
             textGanaste = new TgcText2d();
             textGanaste.Position = new Point(0, 200);
             textGanaste.Color = Color.LightGreen;
@@ -454,6 +460,7 @@ namespace AlumnoEjemplos.MiGrupo
             TgcTexture texture = TgcTexture.createTexture(GuiController.Instance.AlumnoEjemplosMediaDir + "TheC#\\Pista\\pistaCarreras.png");
 
             Microsoft.DirectX.Direct3D.Device d3dDevice = GuiController.Instance.D3dDevice;
+
 
             //pantalla De Inicio
             if (flagInicio == 0)
@@ -905,11 +912,14 @@ namespace AlumnoEjemplos.MiGrupo
                 hud.render(auto.velocidad,cantidadDeNitro);
 
             }//cierra el if de que no esta en pantalla inicio
-
+            textFPS.Text = "            FPS: " + HighResolutionTimer.Instance.FramesPerSecond.ToString();
+            textFPS.render();
+           
         }
 
         public override void close()
         {
+            textFPS.dispose();
             scenePista.disposeAll();
             humo.dispose();
             fuego.dispose();
