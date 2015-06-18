@@ -589,14 +589,6 @@ namespace AlumnoEjemplos.MiGrupo
                 }
 
                 colision.colisionEntreAutos(obbsAuto, obbsOtroAuto, jugador, auto, autoIA, autoMesh, meshAutoIA, elapsedTime);
-                /*//Aca muestro las cajas de colision entre los autos
-                for (int i = 0; i < 4; i++)
-                {
-                    obbsAuto[i].render();
-                    obbsOtroAuto[i].render();
-                }*/
-
-                //Fin colisión entre  los autos
 
                 //Cosas sobre derrape
                 int direcGiroDerrape = 0;
@@ -795,15 +787,6 @@ namespace AlumnoEjemplos.MiGrupo
                 trayecto[0].render();
                 trayectoDeIA[0].render();
 
-
-
-
-
-
-
-
-
-
                 autoMesh.render();
 
                 for (int i = 0; i < 4; i++)
@@ -813,8 +796,6 @@ namespace AlumnoEjemplos.MiGrupo
 
                 humo.render();
                 fuego.render();
-
-
 
                 //Colision con puntos de control, tanto de persona como IA
                 for (int i = 0; i < trayecto.Count; i++)
@@ -870,10 +851,6 @@ namespace AlumnoEjemplos.MiGrupo
                         }
                     }
                 }
-
-
-                // textPosicionDelAutoActual.Text = (jugadorIA.angulo(trayecto[0].Center, meshAutoIA.Position)).ToString();
-                //textPosicionDelAutoActual.Text = jugadorIA.getRotacion().ToString();
 
                 textPosicionDelAutoActual.Text = autoMesh.Position.ToString();
 
