@@ -137,7 +137,7 @@ namespace AlumnoEjemplos.MiGrupo
         public override void init()
         {
             hud = new HUD();
-            hud.init();
+          //  hud.init();
             Microsoft.DirectX.Direct3D.Device d3dDevice = GuiController.Instance.D3dDevice;
             //Crear Sprite
             sprite = new TgcSprite();
@@ -736,7 +736,10 @@ namespace AlumnoEjemplos.MiGrupo
 
                 //Dibujar objeto principal
                 //Siempre primero hacer todos los cálculos de lógica e input y luego al final dibujar todo (ciclo update-render)
-
+                foreach (TgcMesh mesh in scenePista.Meshes)
+                {
+                    mesh.Enabled = (TgcCollisionUtils.classifyFrustumAABB(GuiController.Instance.Frustum, mesh.BoundingBox) != TgcCollisionUtils.FrustumResult.OUTSIDE);
+                }
                 if (motionBlurFlag)
                 {             
                 motionBlur.update(elapsedTime);
@@ -746,11 +749,12 @@ namespace AlumnoEjemplos.MiGrupo
                 {
                   foreach (TgcMesh mesh in scenePista.Meshes)
                     {
-                        mesh.Technique = "DefaultTechnique";
-                        mesh.render();
+                        
+                            mesh.Technique = "DefaultTechnique";
+                            mesh.render();
                     }
                 }
-                //scenePista.renderAll();
+               // scenePista.renderAll();
 
                 //Hago visibles los obb
                 oBBAuto.render();
@@ -891,7 +895,7 @@ namespace AlumnoEjemplos.MiGrupo
                 emisorHumo.render(GuiController.Instance.CurrentCamera.getPosition());
                 textTiempo.render();
                 contadorDeFrames++;
-                hud.render(auto.velocidad);
+              //  hud.render(auto.velocidad);
             }//cierra el if de que no esta en pantalla inicio
 
         }

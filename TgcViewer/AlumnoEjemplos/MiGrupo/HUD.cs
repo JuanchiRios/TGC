@@ -13,7 +13,7 @@ using TgcViewer.Utils.TgcSceneLoader;
 namespace AlumnoEjemplos.MiGrupo
 {
     class HUD
-    {
+    {/*
         //
         List<TgcSprite> sprites;
         TgcSprite velocimetro;
@@ -56,10 +56,10 @@ namespace AlumnoEjemplos.MiGrupo
             agujaTacometro.RotationCenter = new Vector2(68, 183.5f);
             
             llenadoNitro.Texture =
-            llenadoNitro.Position = new Vector2(screenSize.Width - textureSizeVelocimetro.Width,screenSize.Height- textureSizeVelocimetro.Height));
+          llenadoNitro.Position = new Vector2(screenSize.Width - textureSizeVelocimetro.Width,screenSize.Height- textureSizeVelocimetro.Height));
             
             barraNitro.Texture = 
-            barraNitro.Position = new Vector2(FastMath.Max(screenSize.Width / 2 - textureSizeVelocimetro.Width / 2, 0), FastMath.Max(screenSize.Height / 2 - textureSizeVelocimetro.Height / 2, 0));
+           barraNitro.Position = new Vector2(FastMath.Max(screenSize.Width / 2 - textureSizeVelocimetro.Width / 2, 0), FastMath.Max(screenSize.Height / 2 - textureSizeVelocimetro.Height / 2, 0));
                                    
             
 
@@ -81,6 +81,6 @@ namespace AlumnoEjemplos.MiGrupo
             }
             //Finalizar el dibujado de Sprites
             GuiController.Instance.Drawer2D.endDrawSprite();
-        }
+        }*/
     }
 }
