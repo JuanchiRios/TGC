@@ -89,25 +89,17 @@
   <ItemGroup>
     <Compile Include="MiGrupo\Auto.cs" />
     <Compile Include="MiGrupo\AutoMejorado.cs" />
-    <Compile Include="MiGrupo\HumoParticula.cs" />
-    <Compile Include="MiGrupo\HumoQuad.cs" />
-    <Compile Include="MiGrupo\Musica.cs" />
     <Compile Include="MiGrupo\Colisiones.cs" />
     <Compile Include="MiGrupo\EjemploAlumno.cs" />
     <Compile Include="MiGrupo\Humo.cs" />
-<<<<<<< HEAD
     <Compile Include="MiGrupo\HumoParticula.cs" />
     <Compile Include="MiGrupo\HumoQuad.cs" />
-    <Compile Include="MiGrupo\IA.cs" />
-    <Compile Include="MiGrupo\Jugador.cs" />
-    <Compile Include="MiGrupo\LineaDeFrenado.cs" />
-=======
     <Compile Include="MiGrupo\IA.cs" />
     <Compile Include="MiGrupo\Jugador.cs" />
     <Compile Include="MiGrupo\LineaDeFrenado.cs" />
     <Compile Include="MiGrupo\Matemagicas.cs" />
->>>>>>> 92fbe86bfbafe303544e2aaf40a32fdd44683a5c
     <Compile Include="MiGrupo\MotionBlur.cs" />
+    <Compile Include="MiGrupo\Musica.cs" />
     <Compile Include="MiGrupo\Particulas.cs" />
     <Compile Include="MiGrupo\PuntoDeControl.cs" />
     <Compile Include="MiGrupo\ReflejoLuzEnAuto.cs" />
