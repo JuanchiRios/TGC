@@ -45,19 +45,6 @@ namespace AlumnoEjemplos.MiGrupo
         List<TgcObb> objetosColisionables;
 
         TgcObb posteDeSemaforo;
-        TgcObb patrullero1;
-        TgcObb patrullero2;
-        TgcObb patrullero3;
-        TgcObb patrullero4;
-        TgcObb patrullero5;
-        TgcObb patrullero6;
-        TgcObb patrullero7;
-        TgcObb patrullero8;
-        TgcObb patrullero9;
-        TgcObb patrullero10;
-
-
-
 
         float rotacionVertical;
         float prevCameraRotation = 300;
@@ -194,7 +181,7 @@ namespace AlumnoEjemplos.MiGrupo
             TgcScene scene4 = loader.loadSceneFromFile(GuiController.Instance.AlumnoEjemplosMediaDir + "TheC#\\Auto\\\\Auto_Rueda_Izquierda-TgcScene.xml");
             TgcScene scene5 = loader.loadSceneFromFile(GuiController.Instance.AlumnoEjemplosMediaDir + "TheC#\\Auto\\\\Auto_Rueda_Izquierda-TgcScene.xml");
             scenePista = loader.loadSceneFromFile(GuiController.Instance.AlumnoEjemplosMediaDir + "TheC#\\Auto\\\\pistaentera-TgcScene.xml");
-            TgcScene sceneAutoIA = loader.loadSceneFromFile(GuiController.Instance.AlumnoEjemplosMediaDir + "TheC#\\Auto\\\\autoRojo-TgcScene.xml");
+            TgcScene sceneAutoIA = loader.loadSceneFromFile(GuiController.Instance.AlumnoEjemplosMediaDir + "TheC#\\Auto\\\\autoVerde-TgcScene.xml");
             //cargo obbs
             objetosColisionables = new List<TgcObb>();
           /*  foreach (TgcMesh mesh in scenePista.Meshes)
@@ -221,7 +208,6 @@ namespace AlumnoEjemplos.MiGrupo
 
             //creo el mesh del auto de IA
             meshAutoIA = sceneAutoIA.Meshes[0];
-
             //creo la lista de ruedas
             ruedas = new List<TgcViewer.Utils.TgcSceneLoader.TgcMesh> { ruedaDerechaDelanteraMesh, ruedaDerechaTraseraMesh, ruedaIzquierdaDelanteraMesh, ruedaIzquierdaTraseraMesh };
 
