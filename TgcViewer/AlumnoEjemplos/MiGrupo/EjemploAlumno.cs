@@ -24,6 +24,7 @@ namespace AlumnoEjemplos.MiGrupo
     /// </summary>
     public class ProbandoMovAuto : TgcExample
     {
+        EmisorHumo emisorHumo;
         bool motionBlurFlag;
         MotionBlur motionBlur;
         TgcBox humo;
@@ -364,6 +365,9 @@ namespace AlumnoEjemplos.MiGrupo
 
             motionBlur = new MotionBlur(scenePista.Meshes);
             motionBlur.motionBlurInit(0);
+
+            emisorHumo = new EmisorHumo();
+            emisorHumo.crearQuads(20);
         }
 
         //OBB
@@ -667,11 +671,11 @@ namespace AlumnoEjemplos.MiGrupo
                 if (auto.nitro)
                 {
                     humo.Enabled = false;
-                    fuego.Enabled = true;
+                    fuego.Enabled = false;
                 }
                 else
                 {
-                    humo.Enabled = true;
+                    humo.Enabled = false;
                     fuego.Enabled = false;
                 }
                 tiempoHumo += elapsedTime;
@@ -893,6 +897,8 @@ namespace AlumnoEjemplos.MiGrupo
                 {
                     mesh.render();
                 }*/
+                emisorHumo.update(elapsedTime, GuiController.Instance.CurrentCamera.getLookAt(), auto.rotacion, autoMesh.Position, anguloDerrape, direcGiroDerrape, auto.nitro);
+                emisorHumo.render();
                 textTiempo.render();
                 contadorDeFrames++;
 
