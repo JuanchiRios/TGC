@@ -83,6 +83,7 @@ namespace AlumnoEjemplos.MiGrupo
         TgcText2d textPerdiste;
         TgcText2d textGanaste;
         TgcText2d textFPS;
+        TgcText2d stringTiempo;
         private TgcText2d textIngreseTeclaSombra;
         float contadorDeFrames = 0;
         private DateTime horaInicio;
@@ -320,7 +321,13 @@ namespace AlumnoEjemplos.MiGrupo
             textTiempo.Position = new Point(screenSize.Width/2-50, 20);
             textTiempo.Text = "10";
             textTiempo.changeFont(new System.Drawing.Font("TimesNewRoman", 23, FontStyle.Bold | FontStyle.Bold));
-            textTiempo.Color = Color.White;
+            textTiempo.Color = Color.Red;
+
+            stringTiempo = new TgcText2d();
+            stringTiempo.Position = new Point(screenSize.Width / 2 - 130, 20);
+            stringTiempo.Text = "Tiempo: ";
+            stringTiempo.changeFont(new System.Drawing.Font("TimesNewRoman", 23, FontStyle.Bold | FontStyle.Bold));
+            stringTiempo.Color = Color.Red;
           
             textIngreseTecla = new TgcText2d();
             textIngreseTecla.Text = " Utilize las flechas o W,A,S,D para moverse. \n Shift o control izquierdo para activar el nitro \n M para cambiar la camara \n TAB mirar para atrás \n Ingrese barra espaciadora para comenzar ";
@@ -823,7 +830,7 @@ namespace AlumnoEjemplos.MiGrupo
                             trayecto.Add(cilindroModificado);
                             contadorDeActivacionesDePuntosDeControl++;
                             textPuntosDeControlAlcanzados.Text = "Puntos De Control Alcanzados = " + contadorDeActivacionesDePuntosDeControl.ToString();
-                            textTiempo.Text = (Convert.ToDouble(textTiempo.Text) + 3).ToString();
+                            textTiempo.Text =(Convert.ToDouble(textTiempo.Text) + 3).ToString();
 
                         }
                         else
@@ -911,6 +918,7 @@ namespace AlumnoEjemplos.MiGrupo
                 emisorHumo.update(elapsedTime, GuiController.Instance.CurrentCamera.getLookAt(), auto.rotacion, autoMesh.Position, anguloDerrape, direcGiroDerrape, auto.nitro && (cantidadDeNitro>1), auto.velocidad);
                 emisorHumo.render(GuiController.Instance.CurrentCamera.getPosition());
                 textTiempo.render();
+                stringTiempo.render();
                 contadorDeFrames++;
 
                 hud.render(auto.velocidad,cantidadDeNitro);
@@ -958,6 +966,7 @@ namespace AlumnoEjemplos.MiGrupo
             textPuntosDeControlAlcanzados.dispose();
             textPosicionDelAutoActual.dispose();
             textIngreseTecla.dispose();
+            stringTiempo.dispose();
 
             //para que una vez cerrado el juego y vuelto a abrir, comience nuevamente en la pantalla de inicio
             flagInicio = 0;
